@@ -70,6 +70,7 @@ export default function TableWorkItem({ work }) {
   // handleChangeInvoice
   const getNetAmount = (prev, assign, price, index, current) => {
     const totalAmount = getTotalAmount(prev, assign, index, price, current);
+
     return (
       totalAmount *
       (valueInputCompletionPercentage[index] / 100 || 100 / 100) *
@@ -81,6 +82,7 @@ export default function TableWorkItem({ work }) {
     const netAmount = getNetAmount(prev, assign, price, index, current);
     return netAmount - prevNetAmount;
   };
+  console.log(data);
   // function calcute
   async function handleSubmitCalculate(
     id,
@@ -88,7 +90,8 @@ export default function TableWorkItem({ work }) {
     netAmount,
     DuoAmount,
     totalQuantity,
-    assign
+    assign,
+    totalAmount
   ) {
     if (!current || current === 0)
       return toast.error("you must enter different current quantity");
@@ -106,6 +109,7 @@ export default function TableWorkItem({ work }) {
         dueAmount: DuoAmount,
         previousNetAmount: netAmount,
         previousDueAmount: DuoAmount,
+        totalAmount: totalAmount,
       })
       .then(() => {
         toast.success("calculate successfully");
@@ -215,15 +219,7 @@ export default function TableWorkItem({ work }) {
                 {/* // price  */}
                 <td className="border-none">{e?.workDetails?.price}</td>
                 {/* /getTotalAmount/ */}
-                <td className="border-none">
-                  {getTotalAmount(
-                    e?.previousQuantity,
-                    e?.workDetails?.assignedQuantity,
-                    i,
-                    e?.workDetails?.price,
-                    e?.currentQuantity
-                  )}
-                </td>
+                <td className="border-none">{e?.totalAmount}</td>
                 {/* /completionPercentage/ */}
                 {work?.data?.data?.completionPercentage && (
                   <td className="border-none">
@@ -255,16 +251,7 @@ export default function TableWorkItem({ work }) {
                     type="number"
                     readOnly
                     className="outline-none"
-                    value={
-                      // getNetAmount(
-                      //   e?.previousQuantity,
-                      //   e?.currentQuantity,
-                      //   e?.workDetails?.price,
-                      //   i
-                      // ) ||
-
-                      e?.previousNetAmount
-                    }
+                    value={e?.previousNetAmount}
                     defaultValue={0}
                   />
                 </td>
@@ -274,17 +261,7 @@ export default function TableWorkItem({ work }) {
                     type="number"
                     readOnly
                     className="outline-none"
-                    value={
-                      // getDuoAmount(
-                      //   e?.previousDueAmount,
-                      //   e?.previousQuantity,
-                      //   e?.currentQuantity,
-                      //   e?.workDetails?.price,
-                      //   i
-                      // ) ||
-
-                      e?.previousDueAmount
-                    }
+                    value={e?.previousDueAmount}
                   />
                 </td>
                 {/* // calculate  */}
@@ -296,7 +273,7 @@ export default function TableWorkItem({ work }) {
                         e?._id,
                         valueInputCurrentQuantity[i],
                         getNetAmount(
-                          e?.previousQuantity,
+                          e?.totalOfQuantityAndPrevious,
                           e?.workDetails?.assignedQuantity,
                           e?.workDetails?.price,
                           i,
@@ -304,18 +281,25 @@ export default function TableWorkItem({ work }) {
                         ) || 0,
                         getDuoAmount(
                           e?.previousNetAmount,
-                          e?.previousQuantity,
+                          e?.totalOfQuantityAndPrevious,
                           e?.workDetails?.assignedQuantity,
                           e?.workDetails?.price,
                           i,
                           e?.currentQuantity
                         ) || 0,
                         getTotlalQuantity(
-                          e?.previousQuantity,
+                          e?.totalOfQuantityAndPrevious,
                           e?.workDetails?.assignedQuantity,
                           i
                         ),
-                        e?.workDetails?.assignedQuantity
+                        e?.workDetails?.assignedQuantity,
+                        getTotalAmount(
+                          e?.totalOfQuantityAndPrevious,
+                          e?.workDetails?.assignedQuantity,
+                          i,
+                          e?.workDetails?.price,
+                          e?.currentQuantity
+                        )
                       )
                     }
                   >
