@@ -68,8 +68,8 @@ export default function TableWorkItem({ work }) {
     }));
   };
   // handleChangeInvoice
-  const getNetAmount = (prev, assign, price, index) => {
-    const totalAmount = getTotalAmount(prev, assign, index, price);
+  const getNetAmount = (prev, assign, price, index, current) => {
+    const totalAmount = getTotalAmount(prev, assign, index, price, current);
     return (
       totalAmount *
       (valueInputCompletionPercentage[index] / 100 || 100 / 100) *
@@ -77,8 +77,8 @@ export default function TableWorkItem({ work }) {
     );
   };
   // handle Duo Amount
-  const getDuoAmount = (prevNetAmount, prev, assign, price, index) => {
-    const netAmount = getNetAmount(prev, assign, price, index);
+  const getDuoAmount = (prevNetAmount, prev, assign, price, index, current) => {
+    const netAmount = getNetAmount(prev, assign, price, index, current);
     return netAmount - prevNetAmount;
   };
   // function calcute
@@ -299,14 +299,16 @@ export default function TableWorkItem({ work }) {
                           e?.previousQuantity,
                           e?.workDetails?.assignedQuantity,
                           e?.workDetails?.price,
-                          i
+                          i,
+                          e?.currentQuantity
                         ) || 0,
                         getDuoAmount(
                           e?.previousNetAmount,
                           e?.previousQuantity,
                           e?.workDetails?.assignedQuantity,
                           e?.workDetails?.price,
-                          i
+                          i,
+                          e?.currentQuantity
                         ) || 0,
                         getTotlalQuantity(
                           e?.previousQuantity,
