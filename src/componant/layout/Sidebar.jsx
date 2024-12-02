@@ -62,12 +62,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           <FaFileContract size={20} />
           {openSidebar && <h1>Contracts</h1>}
         </Link>
-        <Link
-          to={`/${user?.companyName}/workconfirm`}
-          className={`flex items-center gap-2 text-grayColor p-3 ${
-            pathname.includes("workconfirm") && "activeSidebar"
-          }`}
-        >
+        <Link to={"/"} className="flex items-center gap-2 text-grayColor p-3">
           <FaCheckCircle size={20} />
           {openSidebar && <h1>Work Confirmation</h1>}
         </Link>
