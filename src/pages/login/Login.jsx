@@ -5,6 +5,7 @@ import { axiosInstance } from "../../axios/axios";
 import { toast } from "react-toastify";
 import { setUser } from "../../redux/features/userSlice";
 import { useDispatch } from "react-redux";
+import { FaSpinner } from "react-icons/fa"; // Icon for loading spinner
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,89 +15,66 @@ export default function Login() {
     register,
     formState: { errors, isSubmitting },
   } = useForm();
-  async function onSubmit(data) {
-    await axiosInstance
-      .post("/api/auth/login", data)
-      .then( ( result ) => {
-        console.log(result)
-        if (result.status === 200) {
-          localStorage.setItem(
-            "inform_user",
-            JSON.stringify(result?.data?.user)
-          );
-          sessionStorage.removeItem("data_register");
-          dispatch(setUser(result?.data?.user));
-          navigate(`/${result?.data?.user?.companyName}/projects`);
-        }
-      })
-      .catch((error) => {
-        toast.error(error?.response?.data?.message);
-      });
-  }
-  return (
-    <div className="w-full min-h-screen  flex items-center justify-between overflow-x-hidden text-white">
-      <div className="lg:w-[49%] bg-[#06385c] min-h-screen w-[100%] flex justify-center items-center">
-        <div className="w-[90%] flex flex-col gap-5 items-center">
-          <h1 className="text-[2rem] font-semibold">Hi, Welcome back!</h1>
-          <div className="w-[80%] h-[2px] bg-bgWhite  relative mt-2">
-            <div className="absolute rounded-full left-[50%] translate-x-[-50%] -top-6 bg-[#06385c] font-semibold py-3 px-3">
-              Sign in
-            </div>
-          </div>
 
-          <form
-            className="flex flex-col gap-5 w-full"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            {[
-              { label: "Email", type: "email", name: "email" },
-              { label: "Password", type: "password", name: "password" },
-              {
-                label: "Organization Name",
-                type: "text",
-                name: "companyName",
-              },
-            ].map((email, item) => (
-              <div className="flex flex-col gap-2 w-full" key={item}>
-                <label htmlFor="">
-                  {email.label} <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type={email.type}
-                  placeholder={email.label}
-                  className="py-2 px-3 placeholder:text-gray-400 outline-none border border-white rounded-md bg-transparent"
-                  {...register(email.name, {
-                    required: `${email.name} is required`,
-                    minLength:
-                      email.name === "password"
-                        ? {
-                            value: 6,
-                            message: "min length 6 character",
-                          }
-                        : undefined,
-                  })}
-                />
-                <p className="text-red-400 text-[0.8rem] -mb-3">
-                  {errors[email.name] && errors[email.name].message}
-                </p>
-              </div>
-            ))}
-            <button
-              className={`border  rounded-lg w-full  p-1 font-semibold mt-2`}
-            >
-              {isSubmitting ? "Loading..." : "Sign in"}
-            </button>
-            <div className="flex items-center justify-between  font-semibold ">
-              <Link to={"/register"} className="text-black text-[0.9rem]">
-                Not have account?{" "}
-                <span className=" cursor-pointer text-white"> Register</span>
-              </Link>
+  async function onSubmit(data) {
+    try {
+      const result = await axiosInstance.post("/api/auth/login", data);
+      if (result.status === 200) {
+        localStorage.setItem("inform_user", JSON.stringify(result?.data?.user));
+        sessionStorage.removeItem("data_register");
+        dispatch(setUser(result?.data?.user));
+        navigate(`/${result?.data?.user?.companyName}/projects`);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Login failed. Please try again.");
+    }
+  }
+
+  return (
+    <div className="w-full min-h-screen flex items-center justify-center lg:justify-between overflow-x-hidden text-white bg-[#06385c]">
+      <div className="lg:w-1/2 flex flex-col items-center justify-center p-8">
+        <h1 className="text-3xl font-semibold text-center mb-4">Welcome Back!</h1>
+        <p className="text-lg text-gray-300 mb-8 text-center">Please sign in to your account</p>
+        
+        <form className="w-full max-w-md space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {[
+            { label: "Email", type: "email", name: "email", validation: { pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/ } },
+            { label: "Password", type: "password", name: "password", validation: { minLength: { value: 6, message: "Password must be at least 6 characters long" } } },
+            { label: "Organization Name", type: "text", name: "companyName" },
+          ].map((field, index) => (
+            <div key={index} className="flex flex-col w-full">
+              <label className="text-gray-100 font-medium mb-1" htmlFor={field.name}>
+                {field.label} <span className="text-red-400">*</span>
+              </label>
+              <input
+                id={field.name}
+                type={field.type}
+                placeholder={`Enter ${field.label}`}
+                className={`py-2 px-3 placeholder-gray-400 outline-none border ${errors[field.name] ? "border-red-500" : "border-gray-300"} rounded-md bg-white text-black`}
+                {...register(field.name, { required: `${field.label} is required`, ...field.validation })}
+              />
+              {errors[field.name] && <p className="text-red-500 text-sm mt-1">{errors[field.name].message}</p>}
             </div>
-          </form>
-        </div>
+          ))}
+          
+          <button
+            type="submit"
+            className={`w-full py-2 font-semibold text-lg rounded-lg bg-blue-600 text-white flex items-center justify-center transition duration-300 hover:bg-blue-700 ${isSubmitting && "opacity-50 cursor-not-allowed"}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <FaSpinner className="animate-spin mr-2" /> : "Sign in"}
+          </button>
+
+          <div className="flex justify-between items-center mt-4 text-sm text-gray-400">
+            <span>Don't have an account?</span>
+            <Link to="/register" className="text-blue-400 hover:underline">Register</Link>
+          </div>
+        </form>
       </div>
-      <div className="lg:w-[49%] hidden lg:flex justify-center items-center  relative">
-        <img src={imageLogin} alt="login" className="w-[80%]" />
+
+      {/* Image Section (only on large screens) */}
+      <div className="hidden lg:flex w-1/2 items-center justify-center">
+        <img src={imageLogin} alt="login illustration" className="w-3/4 max-w-sm" />
       </div>
     </div>
   );
