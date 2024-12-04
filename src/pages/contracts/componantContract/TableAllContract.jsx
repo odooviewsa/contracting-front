@@ -23,9 +23,9 @@ export default function TableAllContract({
   const end = start + contracts.length - 1;
 
   return (
-    <div>
-      <div className="scrollbar min-h-[70vh] overflow-auto">
-        <table>
+    <div className="">
+      <div className="scrollbar min-h-auto  shadow-md overflow-x-auto">
+        <table className="min-w-full bg-white rounded-lg overflow-y-visible ">
           <thead>
             <tr className="bg-primaryColor text-white">
               <th className="thContract">Code</th>
@@ -45,21 +45,21 @@ export default function TableAllContract({
                   )
                 }
                 key={contract._id}
-                className="cursor-pointer"
+                className="text-center border-b cursor-pointer"
               >
-                <td className="text-blue-600 w-2 thContract">
+                <td className="text-blue-600 w-2 thContract p-4">
                   {contract.code}
                 </td>
-                <td className="text-blue-600 thContract">
+                <td className="text-blue-600 thContract p-4">
                   {contract.project?.projectName}
                 </td>
-                <td className="text-blue-600 thContract">
+                <td className="text-blue-600 thContract p-4">
                   {contract.partner?.partnerName}
                 </td>
-                <td className="text-blue-600 thContract">
+                <td className="text-blue-600 thContract p-4">
                   {contract?.contractType}
                 </td>
-                <td className="flex justify-center thContract">
+                <td className="flex justify-center thContract p-4">
                   <div
                     className={`flex items-center gap-2 ${
                       contract.status === "Estimation"
@@ -71,7 +71,7 @@ export default function TableAllContract({
                     <p>{contract.status}</p>
                   </div>
                 </td>
-                <td>
+                <td className=" thContract p-4">
                   <div className="flex justify-center relative">
                     {openModalDetails && i === idContract && (
                       <ModalDetails

@@ -53,7 +53,7 @@ export default function TableWorkConfirmation() {
         </div>
       ) : (
         <div>
-          <div className="scrollbar min-h-[60vh] overflow-auto">
+          <div className="scrollbar min-h-[60vh] overflow-auto shadow-md">
             <table>
               <thead>
                 <tr className="bg-primaryColor text-white">
@@ -97,10 +97,10 @@ export default function TableWorkConfirmation() {
                     </td>
                     <td className="text-blue-600 thContract">{work.partner}</td>
                     <td className="text-blue-600 thContract">
-                      {work.totalNetAmount}
+                      {work.netAmount}
                     </td>
                     <td className="text-blue-600 thContract">
-                      {work.totalDueAmount}
+                      {work.dueAmount}
                     </td>
                     <td className="flex justify-center thContract">
                       <div
@@ -110,7 +110,7 @@ export default function TableWorkConfirmation() {
                         <p>{work.status}</p>
                       </div>
                     </td>
-                    <td>
+                    <td className="text-blue-800 thContract">
                       <div className="flex justify-center relative">
                         {openModalDetails && work._id === idContract && (
                           <ModalDetailsWork

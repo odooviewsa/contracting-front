@@ -33,7 +33,7 @@ export default function TaxDetailsConfirmation() {
     >
       <div className="flex justify-between">
         <h4 className="text-blue-950 font-semibold text-[0.8rem] md:text-[1rem]">
-          TAX Detils
+          Tax Details
         </h4>
         <motion.div
           className="cursor-pointer"

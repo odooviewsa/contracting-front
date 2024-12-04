@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 export default function EditSingleConfirmation() {
   const nav = useNavigate();
   const { workconfirm } = useParams();
-
   // get Single Work Confirmation
   function getSingleWorkConfirmationForUpdate() {
     return axiosInstance.get(`/api/workConfirmation/${workconfirm}`);
@@ -24,6 +23,8 @@ export default function EditSingleConfirmation() {
   const [isCompletionActive, setIsCompletionActive] = useState(
     data?.data?.data?.completionPercentage
   );
+
+  // console.log(data?.data?.data);
 
   // add work confirmation
   const {
@@ -51,7 +52,7 @@ export default function EditSingleConfirmation() {
         toast.error(error?.response?.data?.message);
       });
   }
-  
+
   // set value
   useEffect(() => {
     if (data) {
@@ -88,9 +89,9 @@ export default function EditSingleConfirmation() {
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder="Contract Name"
+            placeholder="Contract Number"
             readOnly
-            value={data?.code || ""}
+            value={data?.data?.data?.contractId?.code || ""}
           />
         </div>
 
@@ -175,8 +176,22 @@ export default function EditSingleConfirmation() {
             })}
           >
             <option value="">Select</option>
-            <option value="one">one</option>
-            <option value="two">two</option>
+            <option value="progress">Progress Work Confirmation</option>
+            <option value="inspection">Inspection-Based Confirmation</option>
+            <option value="substantial">
+              Substantial Completion Confirmation
+            </option>
+            <option value="final">Final Work Confirmation</option>
+            <option value="material">
+              Material and Equipment Receipt Confirmation
+            </option>
+            <option value="safety">Safety and Compliance Confirmation</option>
+            <option value="daily">Daily Work Reports (DWR)</option>
+            <option value="punch">Punch List Completion Confirmation</option>
+            <option value="changeOrder">Change Order Work Confirmation</option>
+            <option value="warranty">
+              Warranty and Maintenance Confirmation
+            </option>
           </select>
           <p className="text-red-400 text-[0.8rem] -mb-3">
             {errors["workConfirmationType"] &&

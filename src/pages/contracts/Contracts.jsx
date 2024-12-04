@@ -69,32 +69,25 @@ export default function Contracts() {
     <>
       <div className="p-2 pg:p-5 flex flex-col gap-5">
         <Header first="Home" second="Contract" />
-        <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="flex flex-col-reverse  gap-2 md:flex-row justify-between items-center">
+          {/* Search Input */}
+
+          <div className="w-full md:w-fit">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Search contracts..."
+              className="border rounded-md p-2 w-full"
+            />
+          </div>
+
           <Link
             to={`/${user?.companyName}/contracts/addContract`}
             className="p-2 bg-primaryColor rounded-md text-white text-[0.8rem] w-fit"
           >
             + Add Contract
           </Link>
-
-          {/* Search Input */}
-          <div className="flex justify-between items-center mt-4">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearch}
-              placeholder="Search contracts..."
-              className="border rounded-md p-2 sm:w-full"
-            />
-            {searchQuery && (
-              <button
-                onClick={handleResetSearch}
-                className="ml-2 p-2 text-sm text-gray-500 hover:text-gray-700"
-              >
-                Reset
-              </button>
-            )}
-          </div>
         </div>
 
         {contracts.length > 0 ? (

@@ -17,17 +17,17 @@ function WorkConfirmation() {
       <div className="flex flex-col gap-4">
         <Header first={"Home"} second={"Work Confirmation"} />
         <div className="flex md:flex-row flex-col gap-3 md:justify-between md:items-center">
+          <input
+            type="text"
+            placeholder="Search work confirmation..."
+            className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
+          />
           <Link
             to={`/${user?.companyName}/workconfirm/addConfirmation`}
             className="p-2 bg-primaryColor rounded-md text-white text-[0.8rem] w-fit"
           >
             + Create Work Confirmation
           </Link>
-          <input
-            type="text"
-            placeholder="Search work confirmation..."
-            className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
-          />
         </div>
 
         {work ? (

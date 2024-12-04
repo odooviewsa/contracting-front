@@ -125,7 +125,6 @@ export default function Projects() {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-        <AddProjectButton />
         <div className="flex gap-4 w-full sm:w-auto">
           <input
             type="text"
@@ -134,13 +133,16 @@ export default function Projects() {
             onChange={handleSearch}
             className="border px-3 py-2 rounded-md w-full sm:w-60"
           />
-          <FaRedo
-            className="text-primaryColor"
-            size={25}
-            cursor={"pointer"}
-            onClick={handleResetSearch}
-          />
+          <div className="flex items-center">
+            <FaRedo
+              className="text-primaryColor"
+              size={25}
+              cursor={"pointer"}
+              onClick={handleResetSearch}
+            />
+          </div>
         </div>
+        <AddProjectButton />
       </div>
 
       <ProjectTable

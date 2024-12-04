@@ -34,7 +34,11 @@ export default function BlockSureDeleteWork({
         <h1 className="font-bold text-[2rem]">Are You Sure!</h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
-            onClick={() => setOpenDeleteWorkId(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenDeleteWorkId(false);
+              setOpenModalDetails(false);
+            }}
             className="border rounded-md py-2 px-5 font-semibold"
           >
             Back

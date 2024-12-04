@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AdditionConfirmationTable from "./Components/AdditionConfirmationTable";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 function AdditionConfirmation() {
-  // const { id } = useParams();
-  // const user = useSelector((state) => state?.user);
+  const { id, contractId } = useParams();
+  const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
 
   return (
@@ -20,6 +20,12 @@ function AdditionConfirmation() {
         <button
           type="submit"
           className="text-white bg-primaryColor border border-primaryColor px-3 pt-1 pb-2 rounded-md"
+          onClick={() => {
+            event.preventDefault();
+            navigate(
+              `/${user?.companyName}/workconfirm/addConfirmation/summary/${id}/${contractId}`
+            );
+          }}
         >
           Next
         </button>

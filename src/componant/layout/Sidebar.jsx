@@ -82,7 +82,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <TiGroup size={20} />
-          {openSidebar && <h1>Partenrs</h1>}
+          {openSidebar && <h1>Partners</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/setting`}

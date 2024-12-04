@@ -34,6 +34,7 @@ import ConfirmationForm from "./pages/WorkConfirmation/confirmationForm/Confirma
 import DetailsConfirmation from "./pages/WorkConfirmation/DetailsConfirmation/DetailsConfirmation";
 import DeductionConfirmation from "./pages/WorkConfirmation/DeductionConfirmation/DeductionConfirmation";
 import AdditionConfirmation from "./pages/WorkConfirmation/AdditionConfirmation/AdditionConfirmation";
+import SummaryWorkConfirmation from "./pages/WorkConfirmation/Summary/SummaryWorkConfirmation";
 
 function App() {
   const user = useSelector((state) => state?.user);
@@ -180,6 +181,14 @@ function App() {
             {
               path: "addition/:id/:contractId",
               element: <AdditionConfirmation />,
+            },
+            {
+              path: "addition/:id/:contractId",
+              element: <AdditionConfirmation />,
+            },
+            {
+              path: "summary/:id/:contractId",
+              element: <SummaryWorkConfirmation />,
             },
           ],
         },
