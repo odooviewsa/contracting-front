@@ -12,7 +12,7 @@ function DetailsConfirmation() {
   function getSingleWorkConfirmation() {
     return axiosInstance.get(`/api/workConfirmation/${workId}`);
   }
-  const { data: work } = useQuery({
+  const { data: work , refetch} = useQuery({
     queryKey: ["getSingleWorkConfirmation", workId],
     queryFn: getSingleWorkConfirmation,
   });
@@ -31,7 +31,7 @@ function DetailsConfirmation() {
       <TaxDetailsConfirmation />
       <div className="mt-10 flex flex-col gap-3">
         {/* <PartHeaderTableWork /> */}
-        <TableWorkItem work={work} />
+        <TableWorkItem work={work} refetch={refetch} />
       </div>
     </div>
   );

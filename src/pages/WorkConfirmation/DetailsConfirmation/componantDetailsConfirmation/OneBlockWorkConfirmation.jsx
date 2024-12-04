@@ -14,7 +14,7 @@ export default function OneBlockWorkConfirmation({ icon, label, value }) {
 }
 
 OneBlockWorkConfirmation.propTypes = {
-  icon: PropTypes.element,
-  label: PropTypes.string,
-  value: PropTypes.string,
+  icon: PropTypes.any,
+  label: PropTypes.any,
+  value: PropTypes.any,
 };

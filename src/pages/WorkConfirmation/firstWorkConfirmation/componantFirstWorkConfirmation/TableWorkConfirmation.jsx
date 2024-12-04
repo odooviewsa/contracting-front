@@ -20,7 +20,7 @@ export default function TableWorkConfirmation() {
 
   const fetchWorkConfirmations = async (page) => {
     const response = await axiosInstance.get(
-      `/api/workConfirmation?page=${page}&limit=5`
+      `/api/workConfirmation?page=${page}&limit=20`
     );
     return response.data;
   };
@@ -30,8 +30,6 @@ export default function TableWorkConfirmation() {
     queryFn: () => fetchWorkConfirmations(page),
     keepPreviousData: true,
   });
-
-  console.log(data);
 
   if (isLoading) {
     return (
@@ -60,6 +58,7 @@ export default function TableWorkConfirmation() {
                   <th className="thContract">Name</th>
                   <th className="thContract">Type</th>
                   <th className="thContract">Contract</th>
+                  <th className="thContract">arrange for contract</th>
                   <th className="thContract">Date</th>
                   <th className="thContract">Project</th>
                   <th className="thContract">Partner</th>
@@ -87,7 +86,10 @@ export default function TableWorkConfirmation() {
                       {work.contractType}
                     </td>
                     <td className="text-blue-600 thContract">
-                      {work.withContract ? "Yes" : "No"}
+                      {work?.contractId?.code}
+                    </td>
+                    <td className="text-blue-600 thContract">
+                      {work?.numberWithSpecificContract}
                     </td>
                     <td className="text-blue-600 thContract">
                       {new Date(work.startDate).toLocaleDateString()}

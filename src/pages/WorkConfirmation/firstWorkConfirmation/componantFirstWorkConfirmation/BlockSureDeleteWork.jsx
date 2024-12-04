@@ -63,7 +63,7 @@ BlockSureDeleteWork.propTypes = {
   setOpenDeleteWorkId: PropTypes.func,
   onConfirmDelete: PropTypes.func,
   isLoading: PropTypes.bool,
-  workConfirmationId: PropTypes.number,
+  workConfirmationId: PropTypes.any,
   refetchData: PropTypes.func,
   setOpenModalDetails: PropTypes.func,
 };
