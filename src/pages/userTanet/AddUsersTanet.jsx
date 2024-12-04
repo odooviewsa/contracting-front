@@ -17,9 +17,7 @@ export default function AddUsersTanet() {
     await axiosInstance
       .post("/api/auth/addTenantToGroup", formData)
       .then((result) => {
-     
-        if ( result.status === 201 ) {
-          
+        if (result.status === 201) {
           toast.success("create user successfully");
         }
       })
