@@ -17,6 +17,7 @@ export default function TableWorkItem({ work, refetch }) {
   const [valueInputInvoicePercentage, setValueInputInvoicePercentage] =
     useState({});
   const { contractId, workId } = useParams();
+
   // handleChangeCurrentQuantity
   const handleChangeCurrentQuantity = (value, index) => {
     setValueInputCurrentQuantity((prev) => ({
@@ -110,14 +111,7 @@ export default function TableWorkItem({ work, refetch }) {
                   {e?.workItemId?.workDetails?.assignedQuantity}
                 </td>
                 {/* // previeous quantity */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    defaultValue={e?.previousQuantity || 0}
-                    readOnly
-                    className="outline-none "
-                  />
-                </td>
+                <td className="border-none">{e?.previousQuantity}</td>
 
                 {/* // current quantity */}
                 <td className="border-none">
@@ -128,35 +122,22 @@ export default function TableWorkItem({ work, refetch }) {
                       handleChangeCurrentQuantity(e.target.value, i)
                     }
                     value={
-                      valueInputCurrentQuantity[i]
-                        ? valueInputCurrentQuantity[i]
-                        : work?.data?.data?.typeOfProgress ===
+                      e?.currentQuantity
+                        ? work?.data?.data?.typeOfProgress ===
                           "Percentage per Line"
-                        ? (e?.currentQuantity * 100) / e?.assignedQuantity
-                        : e?.currentQuantity
+                          ? (e?.currentQuantity * 100) /
+                            e?.workItemId?.workDetails?.assignedQuantity
+                          : e?.currentQuantity
+                        : valueInputCurrentQuantity[i]
                     }
                   />
                 </td>
                 {/* // special of percentage  */}
                 {work?.data?.data?.typeOfProgress === "Percentage per Line" && (
-                  <td>
-                    <input
-                      type="number"
-                      className="outline-none "
-                      readOnly
-                      defaultValue={e?.currentQuantity || 0}
-                    />
-                  </td>
+                  <td>{e?.currentQuantity || 0}</td>
                 )}
                 {/* // total quantity  */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    defaultValue={e?.totalQuantity || 0}
-                    readOnly
-                    className="outline-none "
-                  />
-                </td>
+                <td className="border-none">{e?.totalQuantity}</td>
                 {/* // price  */}
                 <td className="border-none">
                   {e?.workItemId?.workDetails?.price}
@@ -197,23 +178,9 @@ export default function TableWorkItem({ work, refetch }) {
                   </td>
                 )}
                 {/* // Net Amount  */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    readOnly
-                    className="outline-none"
-                    defaultValue={e?.netAmount || 0}
-                  />
-                </td>
+                <td className="border-none">{e?.netAmount || 0}</td>
                 {/* // getDuoAmount */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    readOnly
-                    className="outline-none"
-                    defaultValue={e?.dueAmount || 0}
-                  />
-                </td>
+                <td className="border-none">{e?.dueAmount || 0}</td>
                 {/* // calculate  */}
                 <td>
                   <button
@@ -226,7 +193,9 @@ export default function TableWorkItem({ work, refetch }) {
                       )
                     }
                   >
-                    {loading === e?._id ? "Loading..." : "Calculate"}
+                    {loading === e?.workItemId?._id
+                      ? "Loading..."
+                      : "Calculate"}
                   </button>
                 </td>
               </tr>

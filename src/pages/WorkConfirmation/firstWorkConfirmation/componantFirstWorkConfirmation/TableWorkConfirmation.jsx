@@ -75,7 +75,7 @@ export default function TableWorkConfirmation() {
                     key={i}
                     onClick={() =>
                       navigate(
-                        `/${user?.companyName}/workconfirm/addConfirmation/Details/${work._id}/${work.contractId}`
+                        `/${user?.companyName}/workconfirm/addConfirmation/Details/${work._id}/${work?.contractId?._id}`
                       )
                     }
                   >

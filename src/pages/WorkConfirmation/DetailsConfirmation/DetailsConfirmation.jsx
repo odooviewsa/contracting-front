@@ -12,7 +12,7 @@ function DetailsConfirmation() {
   function getSingleWorkConfirmation() {
     return axiosInstance.get(`/api/workConfirmation/${workId}`);
   }
-  const { data: work , refetch} = useQuery({
+  const { data: work, refetch } = useQuery({
     queryKey: ["getSingleWorkConfirmation", workId],
     queryFn: getSingleWorkConfirmation,
   });
