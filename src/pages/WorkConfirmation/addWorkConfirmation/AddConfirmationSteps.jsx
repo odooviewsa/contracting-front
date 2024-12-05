@@ -2,7 +2,7 @@ import { MdOutlineNoteAdd } from "react-icons/md";
 import { IoListSharp } from "react-icons/io5";
 import { FiMinusCircle } from "react-icons/fi";
 import { FiPlusCircle } from "react-icons/fi";
-import { BiSticker } from "react-icons/bi";
+// import { BiSticker } from "react-icons/bi";
 
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -32,14 +32,14 @@ const steps = [
     icon: <FiPlusCircle />,
     path: "addition",
   },
-  {
-    name: "forthProgressDahedLine",
-  },
-  {
-    name: "Summary",
-    icon: <BiSticker />,
-    path: "summary",
-  },
+  // {
+  //   name: "forthProgressDahedLine",
+  // },
+  // {
+  //   name: "Summary",
+  //   icon: <BiSticker />,
+  //   path: "summary",
+  // },
 ];
 function AddConfirmationSteps() {
   const location = useLocation();

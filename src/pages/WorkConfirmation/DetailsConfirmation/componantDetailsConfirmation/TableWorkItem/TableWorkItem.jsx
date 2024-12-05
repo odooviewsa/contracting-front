@@ -39,7 +39,7 @@ export default function TableWorkItem({ work, refetch }) {
       [Number(index)]: Number(value),
     }));
   };
-  console.log(work);
+  
   // function calcute
   async function handleSubmitCalculate(id, assign, index) {
     if (valueInputCurrentQuantity[index] <= 0)
