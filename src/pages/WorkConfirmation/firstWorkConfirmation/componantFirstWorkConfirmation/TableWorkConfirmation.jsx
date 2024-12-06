@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCircle } from "react-icons/fa6";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import ModalDetailsWork from "./ModalDetailsWork";
@@ -15,12 +15,18 @@ export default function TableWorkConfirmation() {
   const [page, setPage] = useState(1);
   const [openModalDetails, setOpenModalDetails] = useState(false);
   const [idContract, setIdContract] = useState(null);
-
+  const [heigthTR, setHeigthTR] = useState();
+  const trRef = useRef();
+  useEffect(() => {
+    if (trRef.current) {
+      setHeigthTR(trRef.current.scrollHeight);
+    }
+  }, []);
   const user = useSelector((state) => state?.user);
 
   const fetchWorkConfirmations = async (page) => {
     const response = await axiosInstance.get(
-      `/api/workConfirmation?page=${page}&limit=5`
+      `/api/workConfirmation?page=${page}&limit=20`
     );
     return response.data;
   };
@@ -30,8 +36,6 @@ export default function TableWorkConfirmation() {
     queryFn: () => fetchWorkConfirmations(page),
     keepPreviousData: true,
   });
-
-  console.log(data);
 
   if (isLoading) {
     return (
@@ -60,6 +64,7 @@ export default function TableWorkConfirmation() {
                   <th className="thContract">Name</th>
                   <th className="thContract">Type</th>
                   <th className="thContract">Contract</th>
+                  <th className="thContract">arrange for contract</th>
                   <th className="thContract">Date</th>
                   <th className="thContract">Project</th>
                   <th className="thContract">Partner</th>
@@ -76,9 +81,10 @@ export default function TableWorkConfirmation() {
                     key={i}
                     onClick={() =>
                       navigate(
-                        `/${user?.companyName}/workconfirm/addConfirmation/Details/${work._id}/${work.contractId}`
+                        `/${user?.companyName}/workconfirm/addConfirmation/Details/${work._id}/${work?.contractId?._id}`
                       )
                     }
+                    ref={trRef}
                   >
                     <td className="text-blue-600 w-2 thContract">
                       {work.projectName}
@@ -87,7 +93,10 @@ export default function TableWorkConfirmation() {
                       {work.contractType}
                     </td>
                     <td className="text-blue-600 thContract">
-                      {work.withContract ? "Yes" : "No"}
+                      {work?.contractId?.code}
+                    </td>
+                    <td className="text-blue-600 thContract">
+                      {work?.numberWithSpecificContract}
                     </td>
                     <td className="text-blue-600 thContract">
                       {new Date(work.startDate).toLocaleDateString()}
@@ -97,14 +106,16 @@ export default function TableWorkConfirmation() {
                     </td>
                     <td className="text-blue-600 thContract">{work.partner}</td>
                     <td className="text-blue-600 thContract">
-                      {work.netAmount}
+                      {work.totalAmount}
                     </td>
                     <td className="text-blue-600 thContract">
                       {work.dueAmount}
                     </td>
-                    <td className="flex justify-center thContract">
+                    <td
+                      className={`flex justify-center items-center thContract h-[${heigthTR}px]`}
+                    >
                       <div
-                        className={`flex items-center gap-2 bg-green-200 text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}
+                        className={`flex items-center gap-2 bg-green-200 h-fit text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}
                       >
                         <FaCircle />
                         <p>{work.status}</p>

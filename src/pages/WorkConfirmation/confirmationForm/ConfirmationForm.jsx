@@ -47,7 +47,7 @@ const ConfirmationForm = () => {
       contractId: codeContract,
       activateInvoicingByPercentage: isInvoicingActive,
       completionPercentage: isCompletionActive,
-      status: "ahmed",
+      status: "Estimation",
     };
     if (!formData?.contractId) return toast.error("you must choose contract");
     await axiosInstance

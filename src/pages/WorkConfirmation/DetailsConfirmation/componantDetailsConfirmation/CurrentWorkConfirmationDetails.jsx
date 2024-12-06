@@ -59,7 +59,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
         {[
           {
             label: "Total Current Work",
-            value: data?.totalNetAmount,
+            value: data?.totalAmount,
             icon: <img src={money1} alt="victor" className="w-full h-full" />,
           },
           {
@@ -79,7 +79,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
           },
           {
             label: "Due Amount",
-            value: data?.totalDueAmount,
+            value: data?.dueAmount,
             icon: <img src={victor} alt="victor" className="w-full h-full" />,
           },
         ].map((e, i) => (

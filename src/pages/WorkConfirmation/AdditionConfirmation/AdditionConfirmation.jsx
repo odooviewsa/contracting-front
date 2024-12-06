@@ -23,7 +23,7 @@ function AdditionConfirmation() {
           onClick={() => {
             event.preventDefault();
             navigate(
-              `/${user?.companyName}/workconfirm/addConfirmation/summary/${id}/${contractId}`
+              `/${user?.companyName}/workconfirm/addConfirmation/Details/${id}/${contractId}`
             );
           }}
         >

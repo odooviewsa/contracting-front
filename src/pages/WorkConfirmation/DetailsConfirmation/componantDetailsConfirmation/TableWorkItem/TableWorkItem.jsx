@@ -1,11 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../../../../axios/axios";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
-export default function TableWorkItem({ work }) {
+export default function TableWorkItem({ work, refetch }) {
   const nav = useNavigate();
   const user = useSelector((state) => state?.user);
   const [loading, setLoading] = useState(null);
@@ -19,15 +18,6 @@ export default function TableWorkItem({ work }) {
     useState({});
   const { contractId, workId } = useParams();
 
-  // get work confiration for contract
-  function getWorkConfirationForContract() {
-    return axiosInstance.get(`/api/work/${contractId}`);
-  }
-  const { data, refetch } = useQuery({
-    queryKey: ["getWorkConfirationForContract", contractId],
-    queryFn: getWorkConfirationForContract,
-  });
-
   // handleChangeCurrentQuantity
   const handleChangeCurrentQuantity = (value, index) => {
     setValueInputCurrentQuantity((prev) => ({
@@ -35,24 +25,6 @@ export default function TableWorkItem({ work }) {
       [Number(index)]: Number(value),
     }));
   };
-  // get Total Quantity
-  const getTotlalQuantity = (prev, assign, index, current) => {
-    if (!valueInputCurrentQuantity[index]) {
-      return work?.data?.data?.typeOfProgress === "Percentage per Line"
-        ? prev + (current / 100) * assign
-        : prev + current;
-    }
-    return work?.data?.data?.typeOfProgress === "Percentage per Line"
-      ? prev + (valueInputCurrentQuantity[index] / 100) * assign || 0
-      : prev + valueInputCurrentQuantity[index] || 0;
-  };
-
-  // get total amount
-  const getTotalAmount = (prev, assign, index, price, current) => {
-    const totalQuantity = getTotlalQuantity(prev, assign, index, current);
-    return totalQuantity * price;
-  };
-
   // handleChangeCompletion
   const handleChangeCompletion = (value, index) => {
     setValueInputCompletionPercentage((prev) => ({
@@ -67,55 +39,30 @@ export default function TableWorkItem({ work }) {
       [Number(index)]: Number(value),
     }));
   };
-  // handleChangeInvoice
-  const getNetAmount = (prev, assign, price, index, current) => {
-    const totalAmount = getTotalAmount(prev, assign, index, price, current);
-
-    return (
-      totalAmount *
-      (valueInputCompletionPercentage[index] / 100 || 100 / 100) *
-      (valueInputInvoicePercentage[index] / 100 || 100 / 100)
-    );
-  };
-  // handle Duo Amount
-  const getDuoAmount = (prevNetAmount, prev, assign, price, index, current) => {
-    const netAmount = getNetAmount(prev, assign, price, index, current);
-    return netAmount - prevNetAmount;
-  };
-  console.log(data);
+  
   // function calcute
-  async function handleSubmitCalculate(
-    id,
-    current,
-    netAmount,
-    DuoAmount,
-    totalQuantity,
-    assign,
-    totalAmount
-  ) {
-    if (!current || current === 0)
-      return toast.error("you must enter different current quantity");
+  async function handleSubmitCalculate(id, assign, index) {
+    if (valueInputCurrentQuantity[index] <= 0)
+      return toast.error("you must enter current geather from 0");
     setLoading(id);
     await axiosInstance
-      .put(`/api/work/workConfirmation/${workId}/${id}`, {
-        previousQuantity: totalQuantity,
-        currentQuantity: current,
-        totalOfQuantityAndPrevious: totalQuantity,
-        newCurrent:
+      .put(`/api/workConfirmation/workConfirmation/${workId}/${id}`, {
+        currentQuantity:
           work?.data?.data?.typeOfProgress === "Percentage per Line"
-            ? (current / 100) * assign
-            : current,
-        netAmount: netAmount,
-        dueAmount: DuoAmount,
-        previousNetAmount: netAmount,
-        previousDueAmount: DuoAmount,
-        totalAmount: totalAmount,
+            ? (valueInputCurrentQuantity[index] / 100) * assign
+            : valueInputCurrentQuantity[index],
+        invoicing: valueInputInvoicePercentage[index] || 100,
+        completion: valueInputCompletionPercentage[index] || 100,
       })
-      .then(() => {
+      .then((result) => {
+        console.log(result);
         toast.success("calculate successfully");
         refetch();
       })
-      .catch((error) => toast.error(error?.response?.data?.message))
+      .catch((error) => {
+        console.log(error);
+        toast.error(error?.response?.data?.message);
+      })
       .finally(() => setLoading(null));
   }
 
@@ -154,22 +101,17 @@ export default function TableWorkItem({ work }) {
             </tr>
           </thead>
           <tbody>
-            {data?.data?.data.map((e, i) => (
+            {work?.data?.data?.workItems?.map((e, i) => (
               <tr className="cursor-pointer text-primaryColor" key={i}>
-                <td className="border-none">{e?.workItemName}</td>
-                <td className="border-none">{e?.workDetails?.unitOfMeasure}</td>
+                <td className="border-none">{e?.workItemId?.workItemName}</td>
                 <td className="border-none">
-                  {e?.workDetails?.assignedQuantity}
+                  {e?.workItemId?.workDetails?.unitOfMeasure}
+                </td>
+                <td className="border-none">
+                  {e?.workItemId?.workDetails?.assignedQuantity}
                 </td>
                 {/* // previeous quantity */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    value={e?.previousQuantity}
-                    readOnly
-                    className="outline-none "
-                  />
-                </td>
+                <td className="border-none">{e?.previousQuantity}</td>
 
                 {/* // current quantity */}
                 <td className="border-none">
@@ -179,45 +121,27 @@ export default function TableWorkItem({ work }) {
                     onChange={(e) =>
                       handleChangeCurrentQuantity(e.target.value, i)
                     }
-                    defaultValue={e?.currentQuantity}
+                    value={
+                      e?.currentQuantity
+                        ? work?.data?.data?.typeOfProgress ===
+                          "Percentage per Line"
+                          ? (e?.currentQuantity * 100) /
+                            e?.workItemId?.workDetails?.assignedQuantity
+                          : e?.currentQuantity
+                        : valueInputCurrentQuantity[i]
+                    }
                   />
                 </td>
                 {/* // special of percentage  */}
                 {work?.data?.data?.typeOfProgress === "Percentage per Line" && (
-                  <td>
-                    <input
-                      type="number"
-                      className="outline-none "
-                      readOnly
-                      value={
-                        (valueInputCurrentQuantity[i] / 100) *
-                          e?.workDetails?.assignedQuantity ||
-                        (e?.currentQuantity / 100) *
-                          e?.workDetails?.assignedQuantity ||
-                        0
-                      }
-                    />
-                  </td>
+                  <td>{e?.currentQuantity || 0}</td>
                 )}
                 {/* // total quantity  */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    value={
-                      e?.totalOfQuantityAndPrevious
-                      // getTotlalQuantity(
-                      // e?.previousQuantity,
-                      // e?.workDetails?.assignedQuantity,
-                      // i,
-                      // e?.currentQuantity
-                      // )
-                    }
-                    readOnly
-                    className="outline-none "
-                  />
-                </td>
+                <td className="border-none">{e?.totalQuantity}</td>
                 {/* // price  */}
-                <td className="border-none">{e?.workDetails?.price}</td>
+                <td className="border-none">
+                  {e?.workItemId?.workDetails?.price}
+                </td>
                 {/* /getTotalAmount/ */}
                 <td className="border-none">{e?.totalAmount}</td>
                 {/* /completionPercentage/ */}
@@ -226,7 +150,11 @@ export default function TableWorkItem({ work }) {
                     <input
                       type="number"
                       className="outline-none border px-1"
-                      value={valueInputCompletionPercentage[i] || 100}
+                      value={
+                        valueInputCompletionPercentage[i] ??
+                        e?.workItemId?.workDetails?.completion ??
+                        100
+                      }
                       onChange={(e) =>
                         handleChangeCompletion(e.target.value, i)
                       }
@@ -240,70 +168,34 @@ export default function TableWorkItem({ work }) {
                     <input
                       type="number"
                       className="outline-none border px-1"
-                      value={valueInputInvoicePercentage[i] || 100}
+                      value={
+                        valueInputInvoicePercentage[i] ??
+                        e?.workItemId?.workDetails?.invoicing ??
+                        100
+                      }
                       onChange={(e) => handleChangeInvoice(e.target.value, i)}
                     />
                   </td>
                 )}
                 {/* // Net Amount  */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    readOnly
-                    className="outline-none"
-                    value={e?.previousNetAmount}
-                    defaultValue={0}
-                  />
-                </td>
+                <td className="border-none">{e?.netAmount || 0}</td>
                 {/* // getDuoAmount */}
-                <td className="border-none">
-                  <input
-                    type="number"
-                    readOnly
-                    className="outline-none"
-                    value={e?.previousDueAmount}
-                  />
-                </td>
+                <td className="border-none">{e?.dueAmount || 0}</td>
                 {/* // calculate  */}
                 <td>
                   <button
                     className="text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor"
                     onClick={() =>
                       handleSubmitCalculate(
-                        e?._id,
-                        valueInputCurrentQuantity[i],
-                        getNetAmount(
-                          e?.totalOfQuantityAndPrevious,
-                          e?.workDetails?.assignedQuantity,
-                          e?.workDetails?.price,
-                          i,
-                          e?.currentQuantity
-                        ) || 0,
-                        getDuoAmount(
-                          e?.previousNetAmount,
-                          e?.totalOfQuantityAndPrevious,
-                          e?.workDetails?.assignedQuantity,
-                          e?.workDetails?.price,
-                          i,
-                          e?.currentQuantity
-                        ) || 0,
-                        getTotlalQuantity(
-                          e?.totalOfQuantityAndPrevious,
-                          e?.workDetails?.assignedQuantity,
-                          i
-                        ),
-                        e?.workDetails?.assignedQuantity,
-                        getTotalAmount(
-                          e?.totalOfQuantityAndPrevious,
-                          e?.workDetails?.assignedQuantity,
-                          i,
-                          e?.workDetails?.price,
-                          e?.currentQuantity
-                        )
+                        e?.workItemId?._id,
+                        e?.workItemId?.workDetails?.assignedQuantity,
+                        i
                       )
                     }
                   >
-                    {loading === e?._id ? "Loading..." : "Calculate"}
+                    {loading === e?.workItemId?._id
+                      ? "Loading..."
+                      : "Calculate"}
                   </button>
                 </td>
               </tr>
@@ -346,4 +238,5 @@ export default function TableWorkItem({ work }) {
 }
 TableWorkItem.propTypes = {
   work: PropTypes.any,
+  refetch: PropTypes.func,
 };
