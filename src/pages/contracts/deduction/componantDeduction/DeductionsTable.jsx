@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
+// import DeductionSureDelete from "./DeductionSureDelete";
+// import { toast } from "react-toastify";
 
 const EmptyTable = () => (
   <div className="text-center py-10 text-gray-500">
@@ -15,6 +17,9 @@ const EmptyTable = () => (
 const DeductionsTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
+  // const [sureDeleteModel, setSureDeleteModel] = useState(false);
+  // const [loading, setLoading] = useState(false);
+
   const getDeductions = async () => {
     const response = await axiosInstance.get(`/api/deduction/${id}`);
     return response.data;
@@ -26,6 +31,22 @@ const DeductionsTable = () => {
     keepPreviousData: true,
   });
 
+  // const handleDeleteDeduction = async (id) => {
+  //   setLoading(true);
+  //   try {
+  //     await axiosInstance.delete(`/api/projects/${id}`);
+
+  //     refetch();
+  //     toast.success("Project deleted successfully!");
+  //   } catch (error) {
+  //     console.error("Error deleting project:", error);
+  //     toast.error("Error deleting project");
+  //   } finally {
+  //     setLoading(false);
+  //     setSureDeleteModel(false);
+  //   }
+  // };
+
   if (isLoading)
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -36,8 +57,6 @@ const DeductionsTable = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   const deductions = data.data || [];
-  console.log(deductions);
-
   const totalDeductions = deductions.reduce(
     (total, deduction) => total + deduction.amount,
     0
@@ -67,23 +86,15 @@ const DeductionsTable = () => {
                   <td className="border p-2 text-center">{deduction.amount}</td>
                 </tr>
               ))}
-              {/* {deductions.map((deduction, index) => (
-                <tr key={deduction._id}>
-                  <td className="border p-2 text-center">{index + 1}</td>
-                  <td className="border p-2 text-center">
-                    {deduction.deductionName}
-                  </td>
-                  <td className="border p-2 text-center">{deduction.type}</td>
-                  <td className="border p-2 text-center">{deduction.amount}</td>
-                </tr>
-              ))} */}
             </tbody>
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
                 <td colSpan="3" className="border p-2 text-center font-bold">
                   Total Deductions
                 </td>
-                <td className="border p-2 text-center">{totalDeductions}</td>
+                <td colSpan="2" className="border p-2 text-center">
+                  {totalDeductions}
+                </td>
               </tr>
             </tfoot>
           </table>

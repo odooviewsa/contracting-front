@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
 import AddDeductionComfirmationModal from "./AddDeductionComfirmationModal";
+import DeductionSureDelete from "../../../contracts/deduction/componantDeduction/DeductionSureDelete";
+import { toast } from "react-toastify";
 
 const EmptyTable = () => (
   <div className="text-center py-10 text-gray-500">
@@ -15,6 +17,24 @@ const EmptyTable = () => (
 function DeductionsConfirmationTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id: workConfirmationId, contractId } = useParams();
+  const [sureDeleteModel, setSureDeleteModel] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleDeleteDeduction = async (id) => {
+    setLoading(true);
+    try {
+      await axiosInstance.delete(`/api/deductionWorkConfirmation/${id}`);
+
+      refetch();
+      toast.success("Project deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      toast.error("Error deleting project");
+    } finally {
+      setLoading(false);
+      setSureDeleteModel(false);
+    }
+  };
 
   // Fetching data using React Query
   const fetchDeductions = async () => {
@@ -64,6 +84,7 @@ function DeductionsConfirmationTable() {
                 <th className="border p-2 bg-gray-100">Name of Addition</th>
                 <th className="border p-2 bg-gray-100">Type</th>
                 <th className="border p-2 bg-gray-100">Amount</th>
+                <th className="border p-2 bg-gray-100"></th>
               </tr>
             </thead>
             <tbody>
@@ -75,6 +96,7 @@ function DeductionsConfirmationTable() {
                   </td>
                   <td className="border p-2 text-center">{deduction.type}</td>
                   <td className="border p-2 text-center">{deduction.amount}</td>
+                  <td className="border p-2 text-center"></td>
                 </tr>
               ))}
               {deductionsConfirmations?.map((deductionsConfirmation, index) => (
@@ -91,6 +113,22 @@ function DeductionsConfirmationTable() {
                   <td className="border p-2 text-center">
                     {deductionsConfirmation.amount}
                   </td>
+                  <td className="border p-2 text-center">
+                    <button
+                      onClick={() => setSureDeleteModel(true)}
+                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600 "
+                    >
+                      Delete
+                    </button>
+                    {sureDeleteModel && (
+                      <DeductionSureDelete
+                        setSureDeleteModel={setSureDeleteModel}
+                        handleDeleteDeduction={handleDeleteDeduction}
+                        loading={loading}
+                        deductionId={deductionsConfirmation._id}
+                      />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -99,7 +137,7 @@ function DeductionsConfirmationTable() {
                 <td colSpan="3" className="border p-2 text-center font-bold">
                   Total Deductions
                 </td>
-                <td className="border p-2 text-center">
+                <td colSpan="2" className="border p-2 text-center">
                   {deductions.reduce(
                     (total, deduction) => total + deduction.amount,
                     0
@@ -110,7 +148,7 @@ function DeductionsConfirmationTable() {
                 <td colSpan="3" className="border p-2 text-center font-bold">
                   Total Confirmation Deductions
                 </td>
-                <td className="border p-2 text-center">
+                <td colSpan="2" className="border p-2 text-center">
                   {deductionsConfirmations.reduce(
                     (total, deductionsConfirmation) =>
                       total + deductionsConfirmation.amount,
@@ -139,6 +177,7 @@ function DeductionsConfirmationTable() {
             setIsModalOpen(false);
             refetch();
           }}
+          loading={loading}
         />
       )}
     </div>
