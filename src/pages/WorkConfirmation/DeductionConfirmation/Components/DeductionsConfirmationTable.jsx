@@ -26,10 +26,10 @@ function DeductionsConfirmationTable() {
       await axiosInstance.delete(`/api/deductionWorkConfirmation/${id}`);
 
       refetch();
-      toast.success("Project deleted successfully!");
+      toast.success("Item deleted successfully!");
     } catch (error) {
-      console.error("Error deleting project:", error);
-      toast.error("Error deleting project");
+      console.error("Error deleting Item:", error);
+      toast.error("Error deleting Item");
     } finally {
       setLoading(false);
       setSureDeleteModel(false);
@@ -79,11 +79,13 @@ function DeductionsConfirmationTable() {
         {deductions.length > 0 ? (
           <table className="w-full border-collapse">
             <thead>
-              <tr>
-                <th className="border p-2 bg-gray-100">Code</th>
-                <th className="border p-2 bg-gray-100">Name of Addition</th>
-                <th className="border p-2 bg-gray-100">Type</th>
-                <th className="border p-2 bg-gray-100">Amount</th>
+              <tr className="">
+                <th className="text-center border p-2 bg-gray-100">Code</th>
+                <th className="text-center border p-2 bg-gray-100">
+                  Name of Addition
+                </th>
+                <th className="text-center border p-2 bg-gray-100">Type</th>
+                <th className=" text-center border p-2 bg-gray-100">Amount</th>
                 <th className="border p-2 bg-gray-100"></th>
               </tr>
             </thead>
@@ -113,10 +115,10 @@ function DeductionsConfirmationTable() {
                   <td className="border p-2 text-center">
                     {deductionsConfirmation.amount}
                   </td>
-                  <td className="border p-2 text-center">
+                  <td className="border p-1 text-center">
                     <button
                       onClick={() => setSureDeleteModel(true)}
-                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600 "
+                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
                     >
                       Delete
                     </button>
@@ -134,10 +136,10 @@ function DeductionsConfirmationTable() {
             </tbody>
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan="3" className="border p-2 text-center font-bold">
+                <td colSpan="4" className="border p-2 text-center font-bold">
                   Total Deductions
                 </td>
-                <td colSpan="2" className="border p-2 text-center">
+                <td colSpan="1" className="border p-2 text-center">
                   {deductions.reduce(
                     (total, deduction) => total + deduction.amount,
                     0
@@ -145,10 +147,10 @@ function DeductionsConfirmationTable() {
                 </td>
               </tr>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan="3" className="border p-2 text-center font-bold">
+                <td colSpan="4" className="border p-2 text-center font-bold">
                   Total Confirmation Deductions
                 </td>
-                <td colSpan="2" className="border p-2 text-center">
+                <td colSpan="1" className="border p-2 text-center">
                   {deductionsConfirmations.reduce(
                     (total, deductionsConfirmation) =>
                       total + deductionsConfirmation.amount,

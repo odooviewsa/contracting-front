@@ -3,6 +3,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { useState } from "react";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
+import { toast } from "react-toastify";
 
 function AddDeductionComfirmationModal({ onClose, workConfirmationId }) {
   const [deductionName, setDeductionName] = useState("");
@@ -34,6 +35,7 @@ function AddDeductionComfirmationModal({ onClose, workConfirmationId }) {
 
       console.log("Deduction added:", response.data);
       onClose();
+      toast.success("Item Added successfully!");
     } catch (error) {
       console.error(
         "Error adding deduction:",

@@ -26,10 +26,9 @@ function AdditionConfirmationTable() {
       await axiosInstance.delete(`/api/additionWorkConfirmation/${id}`);
 
       refetch();
-      toast.success("Project deleted successfully!");
+      toast.success("Item deleted successfully!");
     } catch (error) {
-      console.error("Error deleting project:", error);
-      toast.error("Error deleting project");
+      console.error("Error deleting Item:", error);
     } finally {
       setLoading(false);
       setSureDeleteModel(false);
@@ -80,11 +79,13 @@ function AdditionConfirmationTable() {
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border p-2 bg-gray-100">Code</th>
-                <th className="border p-2 bg-gray-100">Name of Addition</th>
-                <th className="border p-2 bg-gray-100">Type</th>
-                <th className="border p-2 bg-gray-100">Amount</th>
-                <th className="border p-2 bg-gray-100"></th>
+                <th className="border p-2 bg-gray-100 text-center">Code</th>
+                <th className="border p-2 bg-gray-100 text-center">
+                  Name of Addition
+                </th>
+                <th className="border p-2 bg-gray-100 text-center ">Type</th>
+                <th className="border p-2 bg-gray-100 text-center">Amount</th>
+                <th className="border p-2 bg-gray-100 text-center"></th>
               </tr>
             </thead>
             <tbody>
@@ -96,6 +97,7 @@ function AdditionConfirmationTable() {
                   </td>
                   <td className="border p-2 text-center">{addition.type}</td>
                   <td className="border p-2 text-center">{addition.amount}</td>
+                  <td className="border p-2 text-center"></td>
                 </tr>
               ))}
 
@@ -116,7 +118,7 @@ function AdditionConfirmationTable() {
                   <td className="border p-2 text-center">
                     <button
                       onClick={() => setSureDeleteModel(true)}
-                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600 "
+                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
                     >
                       Delete
                     </button>
@@ -134,10 +136,10 @@ function AdditionConfirmationTable() {
             </tbody>
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan="3" className="border p-2 text-center font-bold">
+                <td colSpan="4" className="border p-2 text-center font-bold">
                   Total Additions
                 </td>
-                <td colSpan="2" className="border p-2 text-center">
+                <td colSpan="1" className="border p-2 text-center">
                   {additions.reduce(
                     (total, addition) => total + addition.amount,
                     0
@@ -145,10 +147,10 @@ function AdditionConfirmationTable() {
                 </td>
               </tr>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan="3" className="border p-2 text-center font-bold">
+                <td colSpan="4" className="border p-2 text-center font-bold">
                   Total Confirmations Additions
                 </td>
-                <td colSpan="2" className="border p-2 text-center">
+                <td colSpan="1" className="border p-2 text-center">
                   {additionsConfirmations.reduce(
                     (total, deductionsConfirmation) =>
                       total + deductionsConfirmation.amount,

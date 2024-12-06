@@ -8,9 +8,9 @@ function DeductionSureDelete({
 }) {
   return (
     <div className=" fixed top-0 left-0  w-full flex justify-center bg-bgOverlay items-center h-full  p-5 z-50">
-      <div className="bg-white rounded-lg shadow p-3  w-[300px]  text-textLabalForm flex flex-col items-center gap-5">
-        <h1 className="font-bold text-[1rem]">
-          Are You Sure Delete This Deduction Confirmation ?
+      <div className="bg-white rounded-lg shadow p-4  w-[300px]  text-textLabalForm flex flex-col items-center gap-5">
+        <h1 className="font-bold text-[25px]">
+          Are You Sure Delete This Item ?
         </h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button

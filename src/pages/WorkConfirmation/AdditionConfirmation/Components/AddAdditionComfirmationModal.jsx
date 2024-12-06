@@ -3,6 +3,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { useState } from "react";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
+import { toast } from "react-toastify";
 
 function AddAdditionComfirmationModal({ onClose, workConfirmationId }) {
   const [additionName, setAdditionName] = useState("");
@@ -33,6 +34,7 @@ function AddAdditionComfirmationModal({ onClose, workConfirmationId }) {
       );
 
       console.log("Addition added:", response.data);
+      toast.success("Item Added successfully!");
       onClose();
     } catch (error) {
       console.error(
