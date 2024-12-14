@@ -12,7 +12,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import PropTypes from "prop-types";
 import { logout } from "../../utils/logout";
 import { useDispatch, useSelector } from "react-redux";
-
+import { FaRegWindowRestore } from "react-icons/fa";
 export default function Sidebar({ setOpenSidebar, openSidebar }) {
   const { pathname } = useLocation();
   const user = useSelector((state) => state?.user);
@@ -68,6 +68,13 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
         >
           <FaCheckCircle size={20} />
           {openSidebar && <h1>Work Confirmation</h1>}
+        </Link>
+        <Link
+          to={`/${user?.companyName}/estimation`}
+          className="flex items-center gap-2 text-grayColor p-3"
+        >
+          <FaRegWindowRestore size={20} />
+          {openSidebar && <h1>Estimator</h1>}
         </Link>
         <Link to={"/"} className="flex items-center gap-2 text-grayColor p-3">
           <MdPayment size={20} />

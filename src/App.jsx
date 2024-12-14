@@ -35,6 +35,8 @@ import DetailsConfirmation from "./pages/WorkConfirmation/DetailsConfirmation/De
 import DeductionConfirmation from "./pages/WorkConfirmation/DeductionConfirmation/DeductionConfirmation";
 import AdditionConfirmation from "./pages/WorkConfirmation/AdditionConfirmation/AdditionConfirmation";
 import SummaryWorkConfirmation from "./pages/WorkConfirmation/Summary/SummaryWorkConfirmation";
+import EstimatorPage from "./pages/estimator/EstimatorPage";
+import TableEstimator from "./pages/estimator/TableEstimator";
 
 function App() {
   const user = useSelector((state) => state?.user);
@@ -191,6 +193,14 @@ function App() {
               element: <SummaryWorkConfirmation />,
             },
           ],
+        },
+        {
+          path: `:companyName/estimation`,
+          element: <TableEstimator />,
+        },
+        {
+          path: `:companyName/estimation/:id`,
+          element: <EstimatorPage />,
         },
       ],
     },
