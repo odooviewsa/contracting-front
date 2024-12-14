@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
 import AddAdditionComfirmationModal from "./AddAdditionComfirmationModal";
+import { toast } from "react-toastify";
+import DeductionSureDelete from "../../../contracts/deduction/componantDeduction/DeductionSureDelete";
 
 const EmptyTable = () => (
   <div className="text-center py-10 text-gray-500">
@@ -15,6 +17,23 @@ const EmptyTable = () => (
 function AdditionConfirmationTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id: workConfirmationId, contractId } = useParams();
+  const [sureDeleteModel, setSureDeleteModel] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleDeleteAdditton = async (id) => {
+    setLoading(true);
+    try {
+      await axiosInstance.delete(`/api/additionWorkConfirmation/${id}`);
+
+      refetch();
+      toast.success("Item deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting Item:", error);
+    } finally {
+      setLoading(false);
+      setSureDeleteModel(false);
+    }
+  };
 
   // Fetching data using React Query
   const fetchAdditions = async () => {
@@ -60,10 +79,13 @@ function AdditionConfirmationTable() {
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border p-2 bg-gray-100">Code</th>
-                <th className="border p-2 bg-gray-100">Name of Addition</th>
-                <th className="border p-2 bg-gray-100">Type</th>
-                <th className="border p-2 bg-gray-100">Amount</th>
+                <th className="border p-2 bg-gray-100 text-center">Code</th>
+                <th className="border p-2 bg-gray-100 text-center">
+                  Name of Addition
+                </th>
+                <th className="border p-2 bg-gray-100 text-center ">Type</th>
+                <th className="border p-2 bg-gray-100 text-center">Amount</th>
+                <th className="border p-2 bg-gray-100 text-center"></th>
               </tr>
             </thead>
             <tbody>
@@ -75,6 +97,7 @@ function AdditionConfirmationTable() {
                   </td>
                   <td className="border p-2 text-center">{addition.type}</td>
                   <td className="border p-2 text-center">{addition.amount}</td>
+                  <td className="border p-2 text-center"></td>
                 </tr>
               ))}
 
@@ -92,15 +115,31 @@ function AdditionConfirmationTable() {
                   <td className="border p-2 text-center">
                     {additionsConfirmation.amount}
                   </td>
+                  <td className="border p-2 text-center">
+                    <button
+                      onClick={() => setSureDeleteModel(true)}
+                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                    {sureDeleteModel && (
+                      <DeductionSureDelete
+                        setSureDeleteModel={setSureDeleteModel}
+                        handleDeleteDeduction={handleDeleteAdditton}
+                        loading={loading}
+                        deductionId={additionsConfirmation._id}
+                      />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan="3" className="border p-2 text-center font-bold">
+                <td colSpan="4" className="border p-2 text-center font-bold">
                   Total Additions
                 </td>
-                <td className="border p-2 text-center">
+                <td colSpan="1" className="border p-2 text-center">
                   {additions.reduce(
                     (total, addition) => total + addition.amount,
                     0
@@ -108,10 +147,10 @@ function AdditionConfirmationTable() {
                 </td>
               </tr>
               <tr className="bg-gray-50 font-semibold">
-                <td colSpan="3" className="border p-2 text-center font-bold">
+                <td colSpan="4" className="border p-2 text-center font-bold">
                   Total Confirmations Additions
                 </td>
-                <td className="border p-2 text-center">
+                <td colSpan="1" className="border p-2 text-center">
                   {additionsConfirmations.reduce(
                     (total, deductionsConfirmation) =>
                       total + deductionsConfirmation.amount,
@@ -140,6 +179,7 @@ function AdditionConfirmationTable() {
             setIsModalOpen(false);
             refetch();
           }}
+          loading={loading}
         />
       )}
     </div>

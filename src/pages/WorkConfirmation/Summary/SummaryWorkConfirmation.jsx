@@ -5,7 +5,6 @@ import { axiosInstance } from "../../../axios/axios";
 import CurrentWorkConfirmationDetails from "../DetailsConfirmation/componantDetailsConfirmation/CurrentWorkConfirmationDetails";
 import ContractDetailsConfirmation from "../DetailsConfirmation/componantDetailsConfirmation/ContractDetailsConfirmation";
 import TaxDetailsConfirmation from "../DetailsConfirmation/componantDetailsConfirmation/TaxDetailsConfirmation";
-import { useSelector } from "react-redux";
 function SummaryWorkConfirmation() {
   const navigate = useNavigate();
 
