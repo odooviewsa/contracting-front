@@ -2,40 +2,60 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  //   IconButton,
   TableCell,
   TableRow,
   TextField,
   Tooltip,
-  //   Tooltip,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import CreatableSelect from "react-select/creatable";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../../../axios/axios";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 export default function AddTabFourEstimation({
-  applyOn,
   currentTab,
   refetch,
   setNumberNewAddTab,
+  showProfitFromDatabase,
+  showTaxFromDatabase,
 }) {
   const [valueFull, setValuFull] = useState({});
+  const [workItems, setWorkItems] = useState([]);
+  // location params
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const applyOn = searchParams.get("applyOn");
+  const projectId = searchParams.get("projectId");
+  const contractId = searchParams.get("contractId");
+  // handlechange
   function handlechange(e) {
     setValuFull((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   }
+  // useEffect
+  useEffect(() => {
+    async function getWorkItemsName() {
+      const response = await axiosInstance.get(`/api/work/names/${contractId}`);
+      setWorkItems(response?.data);
+    }
+    if (contractId) {
+      getWorkItemsName();
+    }
+  }, [contractId]);
+
   const { id } = useParams();
   async function handleAddRow() {
     const formDate = {
       ...valueFull,
       category: currentTab,
       applyOn: applyOn,
-      contract: "674f9d510eec42308a494882",
-      projectName: "674bcb8cf20ca248e0ebf0c3",
+      contract: contractId,
+      projectName: projectId,
       estimatorId: id,
     };
 
@@ -46,10 +66,13 @@ export default function AddTabFourEstimation({
       !valueFull?.quantity
     )
       return toast.error("you must fill All Date");
+    if (!projectId) return toast.error("you must Enter Project Name");
+    if (!valueFull?.boqLineItem && applyOn === "BOQ Lines")
+      return toast.error("you must Enter Name Work Item");
+    if (!contractId) return toast.error("you must Enter Contract Code");
 
     try {
       const response = await axiosInstance.post(`/api/materials`, formDate);
-      console.log(response);
       if (response?.status === 201) {
         setNumberNewAddTab((prev) =>
           prev.map((item) =>
@@ -65,11 +88,73 @@ export default function AddTabFourEstimation({
       toast.error(error?.response?.data?.message);
     }
   }
+  // get name product
+  const fetchNameProduct = async () => {
+    const response = await axiosInstance.get(`/api/products/names`);
+    return response.data;
+  };
+
+  const { data: dataNameMaterial } = useQuery({
+    queryKey: ["fetchNameProduct"],
+    queryFn: fetchNameProduct,
+  });
+  // get previes name
+  const getPreviesName = async () => {
+    const response = await axiosInstance.get(
+      `/api/materials/names/${currentTab}/${id}`
+    );
+    return response.data;
+  };
+
+  const { data: dataPreviesName } = useQuery({
+    queryKey: ["getPreviesName", currentTab],
+    queryFn: getPreviesName,
+    enabled: currentTab !== "Material",
+  });
+
   return (
     <TableRow>
-      <TableCell>
-        <TextField size="small" onChange={handlechange} name="materialName" />
-      </TableCell>
+      {currentTab === "Material" ? (
+        <TableCell>
+          <TextField
+            select
+            fullWidth
+            size="small"
+            onChange={handlechange}
+            name="materialName"
+            label="Select Product"
+            variant="outlined"
+          >
+            <MenuItem value="" disabled>
+              Select Name
+            </MenuItem>
+            {dataNameMaterial?.data?.map((option) => (
+              <MenuItem key={option._id} value={option.name}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </TableCell>
+      ) : (
+        <TableCell>
+          <CreatableSelect
+            options={
+              dataPreviesName?.data?.map((option) => ({
+                label: option.materialName,
+                value: option.materialName,
+              })) || []
+            }
+            placeholder={`Enter name`}
+            name="materialName"
+            onChange={(selectedOption) =>
+              handlechange({
+                target: { name: "materialName", value: selectedOption?.value },
+              })
+            }
+          />
+        </TableCell>
+      )}
+
       <TableCell>
         <TextField size="small" onChange={handlechange} name="unitOfMeasure" />
       </TableCell>
@@ -108,16 +193,18 @@ export default function AddTabFourEstimation({
               <MenuItem value="" disabled>
                 Select BOQ Item
               </MenuItem>
-              <MenuItem value="Whole BOQ" size="small">
-                Whole BOQ
-              </MenuItem>
-              <MenuItem value="BOQ Lines" size="small">
-                BOQ Lines
-              </MenuItem>
+              {workItems?.data?.map((e, i) => (
+                <MenuItem key={i} value={e?._id} size="small">
+                  {e?.workItemName}
+                </MenuItem>
+              ))}
             </TextField>
           </Grid>
         </TableCell>
       )}
+      {showProfitFromDatabase && <TableCell></TableCell>}
+      {showTaxFromDatabase && <TableCell></TableCell>}
+
       <TableCell>{valueFull?.quantity * valueFull?.cost || 0}</TableCell>
       <TableCell>
         <Tooltip title="Add Row" onClick={handleAddRow}>
@@ -130,8 +217,9 @@ export default function AddTabFourEstimation({
   );
 }
 AddTabFourEstimation.propTypes = {
-  applyOn: PropTypes.any,
   currentTab: PropTypes.string,
   refetch: PropTypes.func,
   setNumberNewAddTab: PropTypes.func,
+  showProfitFromDatabase: PropTypes.any,
+  showTaxFromDatabase: PropTypes.any,
 };

@@ -21,12 +21,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { axiosInstance } from "../../../axios/axios";
 import { useQuery } from "@tanstack/react-query";
 import AddTabFourEstimation from "./AddTabFourEstimation";
-import PropTypes from "prop-types";
 import { ToastContainer } from "react-toastify";
 import SureDeleteEstimation from "./SureDeleteEstimation";
-export default function FourTabsEstimator({ applyOn }) {
-  const [currentTab, setCurrentTab] = useState("Material");
+import { useLocation, useParams } from "react-router-dom";
+import PropTypes from "prop-types";
+
+export default function FourTabsEstimator({ currentTab, setCurrentTab }) {
+  const { id } = useParams();
   const [sureDeleteRow, setSureDeleteRow] = useState(null);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const applyOn = searchParams.get("applyOn");
   const [numberNewAddTab, setNumberNewAddTab] = useState([
     {
       category: "Material",
@@ -55,12 +60,14 @@ export default function FourTabsEstimator({ applyOn }) {
   };
 
   const fetchEstimationFourTabs = async () => {
-    const response = await axiosInstance.get(`/api/materials/${currentTab}`);
+    const response = await axiosInstance.get(
+      `/api/materials/${currentTab}/${id}`
+    );
     return response.data;
   };
 
   const { data, refetch } = useQuery({
-    queryKey: ["fetchEstimationFourTabs", currentTab],
+    queryKey: ["fetchEstimationFourTabs", currentTab, id],
     queryFn: () => fetchEstimationFourTabs(currentTab),
     keepPreviousData: true,
   });
@@ -68,7 +75,7 @@ export default function FourTabsEstimator({ applyOn }) {
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
-
+  console.log(data);
   return (
     <>
       <ToastContainer />
@@ -115,6 +122,12 @@ export default function FourTabsEstimator({ applyOn }) {
                       <TableCell>BOQ Item</TableCell>
                     )}{" "}
                     {/* Dynamically show BOQ column */}
+                    {data?.data[0]?.showSales && (
+                      <TableCell>profitMargin</TableCell>
+                    )}
+                    {data?.data[0]?.includeTax && (
+                      <TableCell>includeTax</TableCell>
+                    )}
                     <TableCell>Total Cost</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
@@ -123,7 +136,10 @@ export default function FourTabsEstimator({ applyOn }) {
                   {data?.data?.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell>
-                        <TextField value={row?.materialName} size="small" />
+                        <TextField
+                          value={row?.materialName?.name || row?.materialName}
+                          size="small"
+                        />
                       </TableCell>
                       <TableCell>
                         <TextField value={row?.unitOfMeasure} size="small" />
@@ -145,13 +161,20 @@ export default function FourTabsEstimator({ applyOn }) {
                       {applyOn === "BOQ Lines" && (
                         <TableCell>
                           <TextField
-                            type="number"
-                            value={row?.boqLineItem?.workItemName}
+                            type="text"
+                            value={row?.boqLineItem?.workItemName || ""}
                             size="small"
                           />
                         </TableCell>
                       )}
+                      {row?.showSales && (
+                        <TableCell>{row?.profitValue}</TableCell>
+                      )}
+                      {row?.includeTax && (
+                        <TableCell>{row?.taxDeductedValue}</TableCell>
+                      )}
                       <TableCell>{row?.total.toFixed(2)}</TableCell>
+
                       <TableCell>
                         <Tooltip
                           title="Delete Row"
@@ -172,10 +195,11 @@ export default function FourTabsEstimator({ applyOn }) {
                   }).map((_, index) => (
                     <AddTabFourEstimation
                       key={index}
-                      applyOn={applyOn}
                       currentTab={currentTab}
                       refetch={refetch}
                       setNumberNewAddTab={setNumberNewAddTab}
+                      showTaxFromDatabase={data?.data[0]?.includeTax}
+                      showProfitFromDatabase={data?.data[0]?.showSales}
                     />
                   ))}
                 </TableBody>
@@ -210,6 +234,12 @@ export default function FourTabsEstimator({ applyOn }) {
     </>
   );
 }
+
 FourTabsEstimator.propTypes = {
-  applyOn: PropTypes.any,
+  valueIncludTax: PropTypes.any,
+  includeTax: PropTypes.any,
+  profitMargin: PropTypes.any,
+  showSalesPrice: PropTypes.any,
+  currentTab: PropTypes.any,
+  setCurrentTab: PropTypes.any,
 };

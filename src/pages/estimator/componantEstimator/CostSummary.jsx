@@ -2,39 +2,35 @@ import { Box, Collapse, Grid, Paper, Typography } from "@mui/material";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
-export default function CostSummary() {
+import { axiosInstance } from "../../../axios/axios";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import PropTypes from "prop-types";
+export default function CostSummary({ riskFactory }) {
   const [costSummaryExpanded, setCostSummaryExpanded] = useState(false);
   const categories = ["Material", "Labor", "Equipment", "Other Costs"];
-  const [includeTax] = useState(false);
-  const [riskFactor] = useState(0);
+
+  const { id } = useParams();
   const categoryColors = {
     Material: "#4caf50",
     Labor: "#ff9800",
     Equipment: "#2196f3",
     "Other Costs": "#9c27b0",
   };
-  const [rows] = useState({
-    Material: [],
-    Labor: [],
-    Equipment: [],
-    "Other Costs": [],
-  });
-  const calculateTotal = (category) => {
-    const baseTotal = rows[category].reduce(
-      (sum, row) => sum + row.quantity * row.cost + (includeTax ? row.tax : 0),
-      0
-    );
-    return (baseTotal * (1 + riskFactor / 100)).toFixed(2);
+
+  const fetchFourCostSummery = async () => {
+    const response = await axiosInstance.post(`/api/estimators/total/${id}`, {
+      riskFactor: riskFactory,
+    });
+    return response.data;
   };
 
-  const calculateOverallTotal = () => {
-    return categories
-      .reduce(
-        (total, category) => total + parseFloat(calculateTotal(category)),
-        0
-      )
-      .toFixed(2);
-  };
+  const { data } = useQuery({
+    queryKey: ["fetchFourCostSummery", riskFactory],
+    queryFn: fetchFourCostSummery,
+    enabled: !!riskFactory,
+  });
+
   return (
     <Paper elevation={3} sx={{ marginBottom: 4, borderRadius: 3 }}>
       {/* Header for collapsible section */}
@@ -75,17 +71,29 @@ export default function CostSummary() {
                 >
                   <Typography variant="h6">Total {category} Cost</Typography>
                   <Typography variant="h4">
-                    ${calculateTotal(category)}
+                    $
+                    {category === "Material"
+                      ? data?.data?.totalMaterialCost
+                      : category === "Labor"
+                      ? data?.data?.totalLaborCost
+                      : category === "Equipment"
+                      ? data?.data?.totalEquipmentCost
+                      : category === "Other Costs"
+                      ? data?.data?.totalOtherCost
+                      : ""}
                   </Typography>
                 </Paper>
               </Grid>
             ))}
           </Grid>
           <Typography variant="h5" sx={{ textAlign: "right", marginBottom: 2 }}>
-            Overall Total: ${calculateOverallTotal()}
+            Overall Total: ${data?.data?.overallTotal}
           </Typography>
         </Box>
       </Collapse>
     </Paper>
   );
 }
+CostSummary.propTypes = {
+  riskFactory: PropTypes.any,
+};

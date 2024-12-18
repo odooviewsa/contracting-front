@@ -37,6 +37,8 @@ import AdditionConfirmation from "./pages/WorkConfirmation/AdditionConfirmation/
 import SummaryWorkConfirmation from "./pages/WorkConfirmation/Summary/SummaryWorkConfirmation";
 import EstimatorPage from "./pages/estimator/EstimatorPage";
 import TableEstimator from "./pages/estimator/TableEstimator";
+import MaterialRequest from "./pages/elements/materialrequest/MaterialRequest";
+import ProductsManagement from "./pages/elements/products/ProductsManagement";
 
 function App() {
   const user = useSelector((state) => state?.user);
@@ -201,6 +203,14 @@ function App() {
         {
           path: `:companyName/estimation/:id`,
           element: <EstimatorPage />,
+        },
+        {
+          path: ":companyName/materials",
+          element: <MaterialRequest />,
+        },
+        {
+          path: ":companyName/productsManagemet",
+          element: <ProductsManagement />,
         },
       ],
     },

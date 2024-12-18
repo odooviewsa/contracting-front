@@ -36,7 +36,7 @@ const InputField = ({
         }`}
       >
         <option value="">{placeholder}</option>
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <option key={index} value={option.partnerName || option}>
             {isClient ? option.partnerName : option}
           </option>

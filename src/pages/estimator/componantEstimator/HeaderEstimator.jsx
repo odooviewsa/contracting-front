@@ -1,49 +1,44 @@
-import { Link } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { Box, Typography, Button } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import PrintIcon from "@mui/icons-material/Print";
-// import { useState } from "react";
+import { useState } from "react";
+import { axiosInstance } from "../../../axios/axios";
+import { toast } from "react-toastify";
+import PropTypes from "prop-types";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function HeaderEstimator() {
-  // const [snackbar, setSnackbar] = useState({
-  //   open: false,
-  //   message: "",
-  //   severity: "success",
-  // });
+export default function HeaderEstimator({ currentTab }) {
+  const [excelSheet, setExcelSheet] = useState(null);
+  const { id } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const applyOn = searchParams.get("applyOn");
+  const queryClient = useQueryClient();
+  async function uploadFileExcel() {
+    const formData = new FormData();
+    formData.append("category", currentTab);
+    formData.append("applyOn", applyOn);
+    formData.append("file", excelSheet);
+    try {
+      const response = await axiosInstance.post(
+        `/api/materials/${id}`,
+        formData
+      );
 
-//   const [rows, setRows] = useState({
-//     Material: [],
-//     Labor: [],
-//     Equipment: [],
-//     "Other Costs": [],
-//   });
-  const handlePrint = () => {
-    window.print();
-  };
-  // const showSnackbar = (message, severity) => {
-  //   setSnackbar({ open: true, message, severity });
-  // };
-
-//   const handleFileUpload = (event) => {
-//     const file = event.target.files[0];
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onload = () => {
-//         try {
-//           const uploadedData = JSON.parse(reader.result);
-//           setRows(uploadedData);
-//           showSnackbar("Bulk upload successful", "success");
-//         } catch {
-//           showSnackbar("Invalid file format", "error");
-//         }
-//       };
-//       reader.readAsText(file);
-//     }
-//   };
+      if (response.status === 201) {
+        toast.success("add excel sheet successfully");
+        setExcelSheet(null);
+        queryClient.invalidateQueries([
+          "fetchEstimationFourTabs",
+          currentTab,
+          id,
+        ]);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
   return (
     <div>
       <Box sx={{ marginBottom: 2 }}>
@@ -73,8 +68,21 @@ export default function HeaderEstimator() {
             accept=".json"
             id="file-upload"
             style={{ display: "none" }}
-            // onChange={handleFileUpload}
+            onChange={(e) => setExcelSheet(e.target.files[0])}
           />
+          {excelSheet && (
+            <Button
+              variant="outlined"
+              component="span"
+              sx={{
+                textTransform: "none",
+                marginRight: 2, // Add spacing if needed
+              }}
+              onClick={uploadFileExcel}
+            >
+              Add
+            </Button>
+          )}
           <label htmlFor="file-upload">
             <Button
               variant="outlined"
@@ -88,10 +96,10 @@ export default function HeaderEstimator() {
               Bulk Upload
             </Button>
           </label>
+
           <Button
             variant="contained"
             startIcon={<PrintIcon />}
-            onClick={handlePrint}
             sx={{
               backgroundColor: "#1976d2",
               "&:hover": { backgroundColor: "#1565c0" },
@@ -106,3 +114,6 @@ export default function HeaderEstimator() {
     </div>
   );
 }
+HeaderEstimator.propTypes = {
+  currentTab: PropTypes.any,
+};

@@ -13,6 +13,8 @@ import PropTypes from "prop-types";
 import { logout } from "../../utils/logout";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegWindowRestore } from "react-icons/fa";
+import { GiExplosiveMaterials } from "react-icons/gi";
+import { FaProductHunt } from "react-icons/fa6";
 export default function Sidebar({ setOpenSidebar, openSidebar }) {
   const { pathname } = useLocation();
   const user = useSelector((state) => state?.user);
@@ -88,6 +90,26 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
         >
           <TiGroup size={20} />
           {openSidebar && <h1>Partenrs</h1>}
+        </Link>
+        {/* // */}
+        <Link
+          to={`/${user?.companyName}/materials`}
+          className={`flex items-center gap-2 text-grayColor p-3 ${
+            pathname.includes("materials") && "activeSidebar"
+          }`}
+        >
+          <GiExplosiveMaterials size={20} />
+          {openSidebar && <h1>Material Request</h1>}
+        </Link>
+        {/* // */}
+        <Link
+          to={`/${user?.companyName}/productsManagemet`}
+          className={`flex items-center gap-2 text-grayColor p-3 ${
+            pathname.includes("productsManagemet") && "activeSidebar"
+          }`}
+        >
+          <FaProductHunt size={20} />
+          {openSidebar && <h1>Product</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/setting`}
