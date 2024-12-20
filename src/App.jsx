@@ -37,6 +37,10 @@ import AdditionConfirmation from "./pages/WorkConfirmation/AdditionConfirmation/
 import SummaryWorkConfirmation from "./pages/WorkConfirmation/Summary/SummaryWorkConfirmation";
 import BoqTemplate from "./pages/contracts/BoqTemplate/BoqTemplate";
 import BoqItem from "./pages/contracts/BoqTemplate/BoqItem";
+import EstimatorPage from "./pages/estimator/EstimatorPage";
+import TableEstimator from "./pages/estimator/TableEstimator";
+import MaterialRequest from "./pages/elements/materialrequest/MaterialRequest";
+import ProductsManagement from "./pages/elements/products/ProductsManagement";
 
 function App() {
   const user = useSelector((state) => state?.user);
@@ -201,6 +205,22 @@ function App() {
               element: <SummaryWorkConfirmation />,
             },
           ],
+        },
+        {
+          path: `:companyName/estimation`,
+          element: <TableEstimator />,
+        },
+        {
+          path: `:companyName/estimation/:id`,
+          element: <EstimatorPage />,
+        },
+        {
+          path: ":companyName/materials",
+          element: <MaterialRequest />,
+        },
+        {
+          path: ":companyName/productsManagemet",
+          element: <ProductsManagement />,
         },
       ],
     },
