@@ -49,14 +49,19 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           <MdOutlineAppRegistration size={20} />
           {openSidebar && <h1>Estimator</h1>}
         </Link>
-        <Link to={"/"} className="flex items-center gap-2 text-grayColor p-3">
+        <Link
+          to={`/${user?.companyName}/boqTemplate`}
+          className={`flex items-center gap-2 text-grayColor p-3 ${
+            pathname.includes("boqTemplate") && "activeSidebar"
+          }`}
+        >
           <LuBookTemplate size={20} />
           {openSidebar && <h1>BOQ Templates</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/contracts`}
           className={`flex items-center gap-2 text-grayColor p-3 ${
-            pathname.includes("contract") && "activeSidebar"
+            pathname.includes("contracts") && "activeSidebar"
           }`}
         >
           <FaFileContract size={20} />
