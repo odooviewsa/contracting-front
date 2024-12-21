@@ -75,27 +75,31 @@ export default function FourTabsEstimator({ currentTab, setCurrentTab }) {
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
-  console.log(data);
+
   return (
     <>
       <ToastContainer />
       <Paper elevation={3} sx={{ padding: 2, borderRadius: 3 }}>
-        <Tabs
-          value={currentTab}
-          onChange={handleTabChange}
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="Category Tabs"
-        >
-          {categories.map((category) => (
-            <Tab
-              key={category}
-              label={category}
-              value={category}
-              style={{ color: categoryColors[category] }}
-            />
-          ))}
-        </Tabs>
+        <Box sx={{ overflowX: "auto" }}>
+          <Tabs
+            value={currentTab}
+            onChange={handleTabChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="Category Tabs"
+          >
+            {categories.map((category) => (
+              <Tab
+                key={category}
+                label={category}
+                value={category}
+                sx={{
+                  color: categoryColors[category],
+                }}
+              />
+            ))}
+          </Tabs>
+        </Box>
 
         {categories.map((category) => (
           <Collapse
@@ -111,99 +115,101 @@ export default function FourTabsEstimator({ currentTab, setCurrentTab }) {
               >
                 {`${category} Costs`}
               </Typography>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Item</TableCell>
-                    <TableCell>Unit Of Measure</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Cost</TableCell>
-                    {applyOn === "BOQ Lines" && (
-                      <TableCell>BOQ Item</TableCell>
-                    )}{" "}
-                    {/* Dynamically show BOQ column */}
-                    {data?.data[0]?.showSales && (
-                      <TableCell>profitMargin</TableCell>
-                    )}
-                    {data?.data[0]?.includeTax && (
-                      <TableCell>includeTax</TableCell>
-                    )}
-                    <TableCell>Total Cost</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data?.data?.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <TextField
-                          value={row?.materialName?.name || row?.materialName}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField value={row?.unitOfMeasure} size="small" />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          type="number"
-                          value={row?.quantity}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          type="number"
-                          size="small"
-                          value={row?.cost}
-                        />
-                      </TableCell>
+              <Box sx={{ overflowX: "auto" }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Item</TableCell>
+                      <TableCell>Unit Of Measure</TableCell>
+                      <TableCell>Quantity</TableCell>
+                      <TableCell>Cost</TableCell>
                       {applyOn === "BOQ Lines" && (
+                        <TableCell>BOQ Item</TableCell>
+                      )}{" "}
+                      {/* Dynamically show BOQ column */}
+                      {data?.data[0]?.showSales && (
+                        <TableCell>profitMargin</TableCell>
+                      )}
+                      {data?.data[0]?.includeTax && (
+                        <TableCell>includeTax</TableCell>
+                      )}
+                      <TableCell>Total Cost</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data?.data?.map((row, index) => (
+                      <TableRow key={index}>
                         <TableCell>
                           <TextField
-                            type="text"
-                            value={row?.boqLineItem?.workItemName || ""}
+                            value={row?.materialName?.name || row?.materialName}
                             size="small"
                           />
                         </TableCell>
-                      )}
-                      {row?.showSales && (
-                        <TableCell>{row?.profitValue}</TableCell>
-                      )}
-                      {row?.includeTax && (
-                        <TableCell>{row?.taxDeductedValue}</TableCell>
-                      )}
-                      <TableCell>{row?.total.toFixed(2)}</TableCell>
+                        <TableCell>
+                          <TextField value={row?.unitOfMeasure} size="small" />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            type="number"
+                            value={row?.quantity}
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <TextField
+                            type="number"
+                            size="small"
+                            value={row?.cost}
+                          />
+                        </TableCell>
+                        {applyOn === "BOQ Lines" && (
+                          <TableCell>
+                            <TextField
+                              type="text"
+                              value={row?.boqLineItem?.workItemName || ""}
+                              size="small"
+                            />
+                          </TableCell>
+                        )}
+                        {row?.showSales && (
+                          <TableCell>{row?.profitValue}</TableCell>
+                        )}
+                        {row?.includeTax && (
+                          <TableCell>{row?.taxDeductedValue}</TableCell>
+                        )}
+                        <TableCell>{row?.total.toFixed(2)}</TableCell>
 
-                      <TableCell>
-                        <Tooltip
-                          title="Delete Row"
-                          onClick={() => setSureDeleteRow(row?._id)}
-                        >
-                          <IconButton color="error">
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {Array.from({
-                    length:
-                      numberNewAddTab?.find(
-                        (item) => item?.category === currentTab
-                      )?.number || 0,
-                  }).map((_, index) => (
-                    <AddTabFourEstimation
-                      key={index}
-                      currentTab={currentTab}
-                      refetch={refetch}
-                      setNumberNewAddTab={setNumberNewAddTab}
-                      showTaxFromDatabase={data?.data[0]?.includeTax}
-                      showProfitFromDatabase={data?.data[0]?.showSales}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
+                        <TableCell>
+                          <Tooltip
+                            title="Delete Row"
+                            onClick={() => setSureDeleteRow(row?._id)}
+                          >
+                            <IconButton color="error">
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {Array.from({
+                      length:
+                        numberNewAddTab?.find(
+                          (item) => item?.category === currentTab
+                        )?.number || 0,
+                    }).map((_, index) => (
+                      <AddTabFourEstimation
+                        key={index}
+                        currentTab={currentTab}
+                        refetch={refetch}
+                        setNumberNewAddTab={setNumberNewAddTab}
+                        showTaxFromDatabase={data?.data[0]?.includeTax}
+                        showProfitFromDatabase={data?.data[0]?.showSales}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
               <Button
                 startIcon={<AddCircleIcon />}
                 variant="outlined"

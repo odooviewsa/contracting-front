@@ -122,7 +122,7 @@ export default function ExtraFactors({
       </Box>
       <Collapse in={factorsExpanded} timeout="auto" unmountOnExit>
         <Box sx={{ padding: 2 }}>
-          <div className="flex gap-5">
+          <div className="flex gap-5 md:flex-row flex-col" >
             <Grid item xs={12} sm={6} md={3}>
               <Tooltip title="Percentage to account for risk in cost calculations">
                 <TextField

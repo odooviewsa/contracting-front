@@ -50,15 +50,15 @@ export default function HeaderEstimator({ currentTab }) {
           &larr; Back to Main Menu
         </Link>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 4,
-        }}
-      >
-        <Typography variant="h4" sx={{ fontWeight: "bold", color: "#333" }}>
+      <div className="flex justify-between md:items-center md:flex-row flex-col gap-3 mb-3">
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: "bold",
+            color: "#333",
+            fontSize: { xs: "1.5rem", sm: "2.125rem" },
+          }}
+        >
           BOQ Item Cost Estimator
         </Typography>
         <Box>
@@ -110,7 +110,7 @@ export default function HeaderEstimator({ currentTab }) {
             Print
           </Button>
         </Box>
-      </Box>
+      </div>
     </div>
   );
 }

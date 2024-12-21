@@ -11,7 +11,7 @@ const EstimatorPage = () => {
   const [riskFactory, setRiskFactory] = useState(0);
   const [currentTab, setCurrentTab] = useState("Material");
   return (
-    <Box sx={{ padding: 4, backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
+    <Box sx={{ padding: 1, backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
       <HeaderEstimator currentTab={currentTab} />
       {/* Project Details */}
       <ProjectDetailsEstimator />
