@@ -12,6 +12,9 @@ import { ContextBOQ } from "../../../context/BOQContext";
 import { ToastContainer } from "react-toastify";
 
 export default function BOQ() {
+  const [idTemplate, setIdTemplate] = useState(null);
+  const [fetchedSingleTemplate, setFetchedSingleTemplate] = useState([]);
+  const [checkFetchData, setCheckFetchData] = useState(true);
   const [openFormBOQ, setOpenFormBOQ] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
   const { id } = useParams();
@@ -44,14 +47,40 @@ export default function BOQ() {
         ...subItemId,
         ...workItemId,
       ]);
+      if (data.data.data.mainId.length > 0) {
+        setCheckFetchData(false);
+      }
     }
   }, [data, setAllIdMainItemAndSubItemAndWorkItem]);
+
+  console.log(data);
+
+  useEffect(() => {
+    if (idTemplate != null) {
+      const getSingleTemplate = async () => {
+        try {
+          const fetchTemplate = await axiosInstance.get(
+            `/api/templates/${idTemplate}`
+          );
+          console.log(fetchTemplate);
+          setFetchedSingleTemplate(fetchTemplate);
+        } catch (error) {
+          console.error("Error fetching template:", error);
+        }
+      };
+      getSingleTemplate();
+    }
+  }, [idTemplate]);
 
   return (
     <>
       <ToastContainer />
       <div className="flex flex-col gap-3 w-full">
-        <ImportExcelAndGetTemplete refetch={refetch} />
+        <ImportExcelAndGetTemplete
+          refetch={refetch}
+          setIdTemplate={setIdTemplate}
+          checkFetchData={checkFetchData}
+        />
         <PartFilterColumAndExpand
           includeTax={data?.data?.data?.taxRate}
           DownPayment={data?.data?.data?.downPaymentRate}
@@ -59,7 +88,7 @@ export default function BOQ() {
 
         <TableBOQ
           setOpenFormBOQ={setOpenFormBOQ}
-          data={data}
+          data={idTemplate ? fetchedSingleTemplate : data}
           setPage={setPage}
           page={page}
           totalItems={data?.data?.totalMainItems}

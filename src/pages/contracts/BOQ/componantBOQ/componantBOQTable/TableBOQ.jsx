@@ -9,8 +9,8 @@ export default function TableBOQ({
   setValueSearch,
   valueSearch,
 }) {
-  const [numberSlice , setNumberSlice] = useState(5);
-  const [numberSliceFirst , setNumberSliceFirst] = useState(0);
+  const [numberSlice, setNumberSlice] = useState(5);
+  const [numberSliceFirst, setNumberSliceFirst] = useState(0);
   return (
     <div className="w-full rounded-md border border-gray-300 shadow-md">
       <PartFilterAndNewItemInTableBOQ
@@ -20,7 +20,6 @@ export default function TableBOQ({
       {data?.data?.data?.mainId?.length > 0 ? (
         <>
           <PartAllItemTable
-        
             data={data}
             valueSearch={valueSearch}
             numberSlice={numberSlice}
@@ -33,7 +32,7 @@ export default function TableBOQ({
             setNumberSlice={setNumberSlice}
             numberSlice={numberSlice}
             numberSliceFirst={numberSliceFirst}
-            lengthArray = {data?.data?.data?.mainId?.length}
+            lengthArray={data?.data?.data?.mainId?.length}
           />
         </>
       ) : (

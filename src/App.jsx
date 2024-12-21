@@ -35,6 +35,8 @@ import DetailsConfirmation from "./pages/WorkConfirmation/DetailsConfirmation/De
 import DeductionConfirmation from "./pages/WorkConfirmation/DeductionConfirmation/DeductionConfirmation";
 import AdditionConfirmation from "./pages/WorkConfirmation/AdditionConfirmation/AdditionConfirmation";
 import SummaryWorkConfirmation from "./pages/WorkConfirmation/Summary/SummaryWorkConfirmation";
+import BoqTemplate from "./pages/contracts/BoqTemplate/BoqTemplate";
+import BoqItem from "./pages/contracts/BoqTemplate/BoqItem";
 import EstimatorPage from "./pages/estimator/EstimatorPage";
 import TableEstimator from "./pages/estimator/TableEstimator";
 import MaterialRequest from "./pages/elements/materialrequest/MaterialRequest";
@@ -117,6 +119,14 @@ function App() {
         {
           path: `:companyName/contracts`,
           element: <Contracts />,
+        },
+        {
+          path: `:companyName/boqTemplate`,
+          element: <BoqTemplate />,
+        },
+        {
+          path: `:companyName/boqTemplate/:id`,
+          element: <BoqItem />,
         },
         {
           path: `:companyName/contracts/:contractId/edit`,

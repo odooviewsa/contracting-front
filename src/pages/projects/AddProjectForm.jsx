@@ -133,16 +133,19 @@ const AddProjectForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const projectResponse = await axiosInstance.get("/api/projects/names");
+        const projectResponse = await axiosInstance.get(
+          "/api/projects/groups/names"
+        );
         setManagers(projectResponse.data.groups);
-        console.log(projectResponse.data);
+        console.log(projectResponse);
         setTeamMembers(
-          projectResponse.data.groups.map((group) => ({
+          projectResponse?.data?.groups?.map((group) => ({
             label: group,
             value: group,
           }))
         );
         const clientResponse = await axiosInstance.get("/api/partners");
+        console.log(clientResponse.data.partners);
         setClients(clientResponse.data.partners);
       } catch (error) {
         console.error("Error fetching data", error);

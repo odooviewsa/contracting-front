@@ -8,6 +8,10 @@ function ContextProviderBOQ({ children }) {
     allIdMainItemAndSubItemAndWorkItem,
     setAllIdMainItemAndSubItemAndWorkItem,
   ] = useState([]);
+  const [
+    allIdMainItemAndSubItemAndWorkItemTemplate,
+    setAllIdMainItemAndSubItemAndWorkItemTemplate,
+  ] = useState([]);
   const [idOnlyOpen, setIdOnlyOpen] = useState([]);
   const [currentValueColum, setCurrentValueColum] = useState({
     "Unit Of Measure": true,
@@ -33,6 +37,8 @@ function ContextProviderBOQ({ children }) {
         setIdOnlyOpen,
         currentValueColumWorkConfirmation,
         setCurrentValueColumWorkConfirmation,
+        allIdMainItemAndSubItemAndWorkItemTemplate,
+        setAllIdMainItemAndSubItemAndWorkItemTemplate,
       }}
     >
       {children}
