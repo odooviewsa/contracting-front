@@ -162,7 +162,6 @@ const AddProjectForm = () => {
     }
     const teamValues = selectedTeamMembers.map((member) => member.value);
 
-    console.log(teamValues);
     formDataToSend.append("teamMember", teamValues);
 
     // Append each selected document to formData
