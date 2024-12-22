@@ -42,6 +42,7 @@ const ProductsManagement = () => {
     };
     fetchData();
   }, [page]);
+
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       return (
@@ -68,6 +69,7 @@ const ProductsManagement = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
     if (res.ok) {
       // eslint-disable-next-line no-restricted-globals
@@ -84,6 +86,7 @@ const ProductsManagement = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       if (res.ok) {
         setIsFormVisible(false);

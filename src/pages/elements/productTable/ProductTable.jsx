@@ -33,9 +33,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
               <tr key={product._id}>
                 {fields.map((field) => (
                   <td key={field}>
-                    {field === "category"
-                      ? product[field]?.name || "-" // Display category name
-                      : field === "price"
+                    {field === "price"
                       ? `$${product[field]?.toFixed(2) || "0.00"}`
                       : product[field] || "-"}
                   </td>
