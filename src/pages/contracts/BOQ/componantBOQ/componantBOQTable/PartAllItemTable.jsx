@@ -4,19 +4,12 @@ import BlockMainItem from "./BlockMainItem";
 import BlockSearch from "./BlockSearch";
 
 export default function PartAllItemTable({
-  
   data,
   valueSearch,
   numberSlice,
-  numberSliceFirst
+  numberSliceFirst,
 }) {
-  if (valueSearch)
-    return (
-      <BlockSearch
-        valueSearch={valueSearch}
-     
-      />
-    );
+  if (valueSearch) return <BlockSearch valueSearch={valueSearch} />;
   return (
     <div className="flex flex-col">
       <div className="p-3 flex items-center justify-between bg-bgWhite">
@@ -27,21 +20,17 @@ export default function PartAllItemTable({
           <BsThreeDotsVertical />
         </div>
       </div>
-      {data?.data?.data?.mainId?.slice(numberSliceFirst , numberSlice).map((mainItem, i) => (
-        <BlockMainItem
-          key={i}
-       
-          indexMainItem={i}
-          mainItem={mainItem}
-        />
-      ))}
+      {data?.data?.data?.mainId
+        ?.slice(numberSliceFirst, numberSlice)
+        .map((mainItem, i) => (
+          <BlockMainItem key={i} indexMainItem={i} mainItem={mainItem} />
+        ))}
     </div>
   );
 }
 PartAllItemTable.propTypes = {
-
   data: PropTypes.any,
   valueSearch: PropTypes.string,
   numberSlice: PropTypes.number,
-  numberSliceFirst: PropTypes.number
+  numberSliceFirst: PropTypes.number,
 };

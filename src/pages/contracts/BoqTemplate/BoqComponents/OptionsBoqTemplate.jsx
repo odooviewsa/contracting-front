@@ -2,7 +2,11 @@ import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import PropTypes from "prop-types";
 
-function OptionsBoqTemplate({ setShowOptions, setSureDelete, setShowPopup }) {
+function OptionsBoqTemplate({
+  setShowOptions,
+  setSureDelete,
+  handleSaveClick,
+}) {
   //   const navigate = useNavigate();
   //   const user = useSelector((state) => state?.user);
 
@@ -13,7 +17,7 @@ function OptionsBoqTemplate({ setShowOptions, setSureDelete, setShowPopup }) {
         onClick={(e) => {
           e.stopPropagation();
           setShowOptions(false);
-          setShowPopup(true);
+          handleSaveClick();
         }}
       >
         <FaEdit size={18} />
@@ -43,4 +47,6 @@ OptionsBoqTemplate.propTypes = {
   setSureDelete: PropTypes.func,
 
   item: PropTypes.object,
+  handleSaveClick: PropTypes.func,
+  setTemplateId: PropTypes.func,
 };

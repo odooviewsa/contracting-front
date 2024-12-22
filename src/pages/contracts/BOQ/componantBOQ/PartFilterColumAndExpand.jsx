@@ -70,10 +70,12 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
         contractId: id,
       });
 
+      console.log("Template saved:", response.data);
+
       setMessage("Template saved successfully!");
       setShowPopup(false);
       setFormData({ name: "", description: "", category: "", tags: [] });
-      toast.success("Template saved successfully!"); // إظهار رسالة Toast عند الحفظ بنجاح
+      toast.success("Template saved successfully!");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setMessage("Template with the same name already exists!");
