@@ -102,31 +102,6 @@ function BoqTemplateTable() {
 
   console.log(templates);
 
-  // const handleFormUpdated = async (e) => {
-  //   e.preventDefault();
-  //   // setLoading(true);
-  //   // setMessage("");
-  //   try {
-  //     const response = await axiosInstance.put(`/api/templates/${templateId}`, {
-  //       ...formData,
-  //     });
-
-  //     setMessage("Template Updated Successfully!");
-  //     setShowPopup(false);
-  //     setFormData({ name: "", description: "", category: "", tags: [] });
-  //     toast.success("Template Updated Successfully!");
-  //   } catch (error) {
-  //     // if (error.response && error.response.status === 400) {
-  //     //   setMessage("Template with the same name already exists!");
-  //     // } else {
-  //     console.error("Failed to Updated template:", error);
-  //     setMessage("Failed to Updated template. Please try again.");
-  //     // }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleTagAdd = () => {
     if (tagInput.trim()) {
       setFormData((prev) => ({
