@@ -100,8 +100,8 @@ td {
 .shadowPartner {
   box-shadow: -2px 4px 17px -5px rgba(168, 166, 163, 0.29);
 }
-.shadowWork{
--webkit-box-shadow: 0px 1px 15px -6px rgba(0,0,0,0.75);
--moz-box-shadow: 0px 1px 15px -6px rgba(0,0,0,0.75);
-box-shadow: 0px 1px 15px -6px rgba(0,0,0,0.75);
+.shadowWork {
+  -webkit-box-shadow: 0px 1px 15px -6px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 1px 15px -6px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 1px 15px -6px rgba(0, 0, 0, 0.75);
 }
