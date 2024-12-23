@@ -112,7 +112,10 @@ export default function TableWorkConfirmation() {
                       {work.dueAmount}
                     </td>
                     <td
-                      className={`flex justify-center items-center thContract h-[${heigthTR}px]`}
+                      className={`flex justify-center items-center thContract`}
+                      style={{
+                        height: heigthTR,
+                      }}
                     >
                       <div
                         className={`flex items-center gap-2 bg-green-200 h-fit text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}
