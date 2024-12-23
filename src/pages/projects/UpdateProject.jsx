@@ -39,10 +39,10 @@ const InputField = ({
       >
         {options?.map((option) => (
           <option
-            key={option._id || option}
-            value={option.partnerName || option}
+            key={option?._id || option}
+            value={option?.partnerName || option}
           >
-            {isClient ? option.partnerName : option}
+            {isClient ? option?.partnerName : option}
           </option>
         ))}
       </select>
@@ -130,81 +130,83 @@ const UpdateProjectForm = () => {
   const user = useSelector((state) => state?.user);
 
   useEffect(() => {
+    // Fetch other necessary data
+    async function getManagers() {
+      const namesResponse = await axiosInstance.get(
+        "/api/projects/groups/names"
+      );
+
+      setManagers(namesResponse?.data?.groups);
+      setTeamMembers(
+        namesResponse?.data?.groups?.map((group) => ({
+          label: group,
+          value: group,
+        }))
+      );
+    }
+    getManagers();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch project data
         const projectResponse = await axiosInstance.get(`/api/projects/${id}`);
-        const project = projectResponse.data.project;
+        const project = projectResponse?.data?.project;
         setProjectData(project);
-        console.log(projectResponse);
-
-        if (projectData.teamMember) {
-          setSelectedTeamMembers(
-            projectData.teamMember.map((name) => ({ label: name, value: name }))
-          );
-        }
-        // Set form values with existing project data
-        setValue("projectName", project.projectName);
-        const formattedStartDate = new Date(project.startDate)
-          .toISOString()
-          .split("T")[0];
-        setValue("startDate", formattedStartDate);
-        setValue("projectLocation", project.projectLocation);
-        setValue("projectManger", project.projectManger);
-        setValue("status", project.status);
-        setValue("scopeOfWork", project.scopeOfWork);
-        setValue("clientName", project.clientName);
-        const formattedEndDate = new Date(project.endDate)
-          .toISOString()
-          .split("T")[0];
-        setValue("endDate", formattedEndDate);
-        setValue("budget", project.budget);
-        setValue("description", project.description);
-
-        // Fetch other necessary data
-        const namesResponse = await axiosInstance.get(
-          "/api/projects/groups/names"
-        );
-        console.log(namesResponse.data.groups);
-        setManagers(namesResponse.data.groups);
-        setTeamMembers(
-          namesResponse.data.groups.map((group) => ({
-            label: group,
-            value: group,
+        setSelectedTeamMembers(
+          projectData?.teamMember?.map((name) => ({
+            label: name,
+            value: name,
           }))
         );
 
+        // Set form values with existing project data
+        setValue("projectName", project?.projectName);
+        const formattedStartDate = new Date(project?.startDate)
+          .toISOString()
+          .split("T")[0];
+        setValue("startDate", formattedStartDate);
+        setValue("projectLocation", project?.projectLocation);
+        setValue("projectManger", project?.projectManger);
+        setValue("status", project?.status);
+        setValue("scopeOfWork", project?.scopeOfWork);
+        setValue("clientName", project?.clientName);
+        const formattedEndDate = new Date(project?.endDate)
+          .toISOString()
+          .split("T")[0];
+        setValue("endDate", formattedEndDate);
+        setValue("budget", project?.budget);
+        setValue("description", project?.description);
+
         const clientsResponse = await axiosInstance.get("/api/partners");
-        console.log(clientsResponse);
-        setClients(clientsResponse.data.partners);
+
+        setClients(clientsResponse?.data?.partners);
       } catch (error) {
         console.error("Error fetching data", error);
       }
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   const onSubmit = async (data) => {
     const formDataToSend = new FormData();
     for (let key in data) {
       formDataToSend.append(key, data[key]);
     }
-    const teamValues = selectedTeamMembers.map((member) => member.value);
+    const teamValues = selectedTeamMembers?.map((member) => member.value);
     formDataToSend.append("teamMember", teamValues);
 
-    selectedDocuments.forEach((file) => {
+    selectedDocuments?.forEach((file) => {
       formDataToSend.append("documents", file);
     });
 
     try {
       await axiosInstance.put(`/api/projects/${id}`, formDataToSend);
-      toast.success("Project updated successfully!", {
-        onClose: () =>
-          navigate(`/${user?.companyName}/projects/projectdetails/${id}`),
-      });
+      toast.success("Project updated successfully!");
+      navigate(`/${user?.companyName}/projects`);
     } catch (error) {
-      console.error(error);
-      toast.error("Error updating project");
+      toast.error(error.message);
     }
   };
 
@@ -226,7 +228,7 @@ const UpdateProjectForm = () => {
                 name="projectName"
                 register={register}
                 required={true}
-                errorMessage={errors.projectName && "Project Name is required"}
+                errorMessage={errors?.projectName && "Project Name is required"}
               />
               <InputField
                 label="Start Date"
@@ -235,7 +237,7 @@ const UpdateProjectForm = () => {
                 name="startDate"
                 register={register}
                 required={true}
-                errorMessage={errors.startDate && "Start Date is required"}
+                errorMessage={errors?.startDate && "Start Date is required"}
               />
               <InputField
                 label="Project Location"
@@ -244,7 +246,7 @@ const UpdateProjectForm = () => {
                 register={register}
                 required={true}
                 errorMessage={
-                  errors.projectLocation && "Project Location is required"
+                  errors?.projectLocation && "Project Location is required"
                 }
               />
               <InputField
@@ -254,11 +256,11 @@ const UpdateProjectForm = () => {
                 register={register}
                 required={true}
                 errorMessage={
-                  errors.projectManager && "Project Manager is required"
+                  errors?.projectManager && "Project Manager is required"
                 }
                 type="select"
                 options={managers}
-                defaultValue={projectData.projectManger}
+                defaultValue={projectData?.projectManger}
               />
               <InputField
                 label="Status"
@@ -266,7 +268,7 @@ const UpdateProjectForm = () => {
                 name="status"
                 register={register}
                 required={true}
-                errorMessage={errors.status && "Status is required"}
+                errorMessage={errors?.status && "Status is required"}
                 type="select"
                 options={["Completed", "Planning", "in Progress"]}
               />
@@ -289,7 +291,9 @@ const UpdateProjectForm = () => {
                 name="scopeOfWork"
                 register={register}
                 required={true}
-                errorMessage={errors.scopeOfWork && "Scope of Work is required"}
+                errorMessage={
+                  errors?.scopeOfWork && "Scope of Work is required"
+                }
               />
             </div>
             <div>
@@ -299,7 +303,7 @@ const UpdateProjectForm = () => {
                 name="clientName"
                 register={register}
                 required={true}
-                errorMessage={errors.clientName && "Client Name is required"}
+                errorMessage={errors?.clientName && "Client Name is required"}
                 type="select"
                 options={clients}
                 isClient={true}
@@ -311,7 +315,7 @@ const UpdateProjectForm = () => {
                 name="endDate"
                 register={register}
                 required={true}
-                errorMessage={errors.endDate && "End Date is required"}
+                errorMessage={errors?.endDate && "End Date is required"}
               />
               <InputField
                 label="Budget"
@@ -319,14 +323,14 @@ const UpdateProjectForm = () => {
                 name="budget"
                 register={register}
                 required={true}
-                errorMessage={errors.budget && "Budget is required"}
+                errorMessage={errors?.budget && "Budget is required"}
               />
               <TextAreaField
                 label="Description"
                 placeholder="Enter project description"
                 name="description"
                 register={register}
-                errorMessage={errors.description && "Description is required"}
+                errorMessage={errors?.description && "Description is required"}
               />
               <div>
                 <label className="block text-primaryColor font-semibold mb-2">

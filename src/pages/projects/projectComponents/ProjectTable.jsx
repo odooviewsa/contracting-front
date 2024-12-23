@@ -31,7 +31,7 @@ const ProjectTable = ({ projects, refreshProjects, isProjectLoading }) => {
       </div>
     );
   }
-
+  console.log(projects);
   return (
     <div className="scrollbar min-h-[60vh] overflow-x-auto shadow-md">
       <table className="min-w-full bg-white rounded-lg">
