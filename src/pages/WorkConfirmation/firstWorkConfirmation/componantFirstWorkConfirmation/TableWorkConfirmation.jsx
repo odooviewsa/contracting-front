@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaCircle } from "react-icons/fa6";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import ModalDetailsWork from "./ModalDetailsWork";
@@ -15,15 +15,8 @@ export default function TableWorkConfirmation() {
   const [page, setPage] = useState(1);
   const [openModalDetails, setOpenModalDetails] = useState(false);
   const [idContract, setIdContract] = useState(null);
-  const [heigthTR, setHeigthTR] = useState();
   const trRef = useRef();
-  useEffect(() => {
-    if (trRef.current) {
-      setHeigthTR(trRef.current.scrollHeight);
-    }
-  }, []);
   const user = useSelector((state) => state?.user);
-
   const fetchWorkConfirmations = async (page) => {
     const response = await axiosInstance.get(
       `/api/workConfirmation?page=${page}&limit=20`
@@ -111,12 +104,7 @@ export default function TableWorkConfirmation() {
                     <td className="text-blue-600 thContract">
                       {work.dueAmount}
                     </td>
-                    <td
-                      className={`flex justify-center items-center thContract`}
-                      style={{
-                        height: heigthTR,
-                      }}
-                    >
+                    <td className={` thContract`}>
                       <div
                         className={`flex items-center gap-2 bg-green-200 h-fit text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}
                       >
