@@ -3,7 +3,6 @@ import { FaCircle } from "react-icons/fa6";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import ModalDetailsWork from "./ModalDetailsWork";
 import { useSelector } from "react-redux";
-
 import PropTypes from "prop-types";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../../../axios/axios";
@@ -29,7 +28,7 @@ export default function TableWorkConfirmation() {
     queryFn: () => fetchWorkConfirmations(page),
     keepPreviousData: true,
   });
-
+  console.log(data);
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">

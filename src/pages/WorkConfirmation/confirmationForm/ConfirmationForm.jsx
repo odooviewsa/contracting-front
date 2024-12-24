@@ -24,7 +24,7 @@ const ConfirmationForm = () => {
     queryFn: getAllContractCodeForUser,
   });
 
-  console.log(data?.data?.contracts);
+
 
   useEffect(() => {
     setInformationContract(

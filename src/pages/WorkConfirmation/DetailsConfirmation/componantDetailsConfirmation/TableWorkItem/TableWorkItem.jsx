@@ -39,7 +39,7 @@ export default function TableWorkItem({ work, refetch }) {
       [Number(index)]: Number(value),
     }));
   };
-  
+
   // function calcute
   async function handleSubmitCalculate(id, assign, index) {
     if (valueInputCurrentQuantity[index] <= 0)
@@ -108,10 +108,14 @@ export default function TableWorkItem({ work, refetch }) {
                   {e?.workItemId?.workDetails?.unitOfMeasure}
                 </td>
                 <td className="border-none">
-                  {e?.workItemId?.workDetails?.assignedQuantity}
+                  {e?.workItemId?.workDetails?.assignedQuantity?.toLocaleString(
+                    "en-US"
+                  )}
                 </td>
                 {/* // previeous quantity */}
-                <td className="border-none">{e?.previousQuantity}</td>
+                <td className="border-none">
+                  {e?.previousQuantity?.toLocaleString("en-US")}
+                </td>
 
                 {/* // current quantity */}
                 <td className="border-none">
@@ -137,13 +141,17 @@ export default function TableWorkItem({ work, refetch }) {
                   <td>{e?.currentQuantity || 0}</td>
                 )}
                 {/* // total quantity  */}
-                <td className="border-none">{e?.totalQuantity}</td>
+                <td className="border-none">
+                  {e?.totalQuantity?.toLocaleString("en-US")}
+                </td>
                 {/* // price  */}
                 <td className="border-none">
-                  {e?.workItemId?.workDetails?.price}
+                  {e?.workItemId?.workDetails?.price?.toLocaleString("en-US")}
                 </td>
                 {/* /getTotalAmount/ */}
-                <td className="border-none">{e?.totalAmount}</td>
+                <td className="border-none">
+                  {e?.totalAmount?.toLocaleString("en-US")}
+                </td>
                 {/* /completionPercentage/ */}
                 {work?.data?.data?.completionPercentage && (
                   <td className="border-none">
@@ -178,9 +186,13 @@ export default function TableWorkItem({ work, refetch }) {
                   </td>
                 )}
                 {/* // Net Amount  */}
-                <td className="border-none">{e?.netAmount || 0}</td>
+                <td className="border-none">
+                  {e?.netAmount?.toLocaleString("en-US") || 0}
+                </td>
                 {/* // getDuoAmount */}
-                <td className="border-none">{e?.dueAmount || 0}</td>
+                <td className="border-none">
+                  {e?.dueAmount?.toLocaleString("en-US") || 0}
+                </td>
                 {/* // calculate  */}
                 <td>
                   <button
