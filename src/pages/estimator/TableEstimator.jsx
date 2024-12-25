@@ -87,7 +87,7 @@ export default function TableEstimator() {
                         </td>
                         <td className="text-blue-600 thContract">
                           {work?.projectName?.projectName}
-                        </td>{" "}
+                        </td>
                         <td className="text-blue-600 thContract">
                           {work?.contract?.code}
                         </td>

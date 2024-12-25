@@ -73,13 +73,13 @@ export default function CostSummary({ riskFactory }) {
                   <Typography variant="h4">
                     $
                     {category === "Material"
-                      ? data?.data?.totalMaterialCost
+                      ? data?.data?.totalMaterialCost?.toLocaleString("en-US")
                       : category === "Labor"
-                      ? data?.data?.totalLaborCost
+                      ? data?.data?.totalLaborCost?.toLocaleString("en-US")
                       : category === "Equipment"
-                      ? data?.data?.totalEquipmentCost
+                      ? data?.data?.totalEquipmentCost?.toLocaleString("en-US")
                       : category === "Other Costs"
-                      ? data?.data?.totalOtherCost
+                      ? data?.data?.totalOtherCost?.toLocaleString("en-US")
                       : ""}
                   </Typography>
                 </Paper>
@@ -87,7 +87,7 @@ export default function CostSummary({ riskFactory }) {
             ))}
           </Grid>
           <Typography variant="h5" sx={{ textAlign: "right", marginBottom: 2 }}>
-            Overall Total: ${data?.data?.overallTotal}
+            Overall Total: ${data?.data?.overallTotal?.toLocaleString("en-US")}
           </Typography>
         </Box>
       </Collapse>

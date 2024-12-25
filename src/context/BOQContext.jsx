@@ -15,6 +15,8 @@ function ContextProviderBOQ({ children }) {
   const [idOnlyOpen, setIdOnlyOpen] = useState([]);
   const [currentValueColum, setCurrentValueColum] = useState({
     "Unit Of Measure": true,
+    "Assigned Quantity": true,
+    "Price": true,
   });
   const [
     currentValueColumWorkConfirmation,
@@ -22,7 +24,7 @@ function ContextProviderBOQ({ children }) {
   ] = useState({
     "work item": true,
     "Unit Of Measure": true,
-    "	Contract Quantity": true,
+    "Contract Quantity": true,
   });
   return (
     <ContextBOQ.Provider

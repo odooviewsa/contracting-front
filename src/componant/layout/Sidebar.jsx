@@ -1,7 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaFileContract } from "react-icons/fa6";
-import { MdOutlineAppRegistration } from "react-icons/md";
 import { LuBookTemplate } from "react-icons/lu";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdPayment } from "react-icons/md";
@@ -47,10 +46,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           <FaProjectDiagram size={20} />
           <h1 className={`${openSidebar ? "block" : "hidden"}`}>Project</h1>
         </Link>
-        <Link to={"/"} className="flex items-center gap-2 text-grayColor p-3">
-          <MdOutlineAppRegistration size={20} />
-          {openSidebar && <h1>Estimator</h1>}
-        </Link>
+
         <Link
           to={`/${user?.companyName}/boqTemplate`}
           className={`flex items-center gap-2 text-grayColor p-3 ${

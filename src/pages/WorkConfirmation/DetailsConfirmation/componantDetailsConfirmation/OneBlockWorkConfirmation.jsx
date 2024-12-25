@@ -7,7 +7,7 @@ export default function OneBlockWorkConfirmation({ icon, label, value }) {
         {label}
       </div>
       <div className="text-lg mt-1 text-[#06385C] font-bold absolute bottom-5">
-        {value}
+        {value?.toLocaleString("en-US")}
       </div>
     </div>
   );

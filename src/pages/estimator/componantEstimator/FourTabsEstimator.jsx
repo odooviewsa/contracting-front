@@ -125,7 +125,7 @@ export default function FourTabsEstimator({ currentTab, setCurrentTab }) {
                       <TableCell>Cost</TableCell>
                       {applyOn === "BOQ Lines" && (
                         <TableCell>BOQ Item</TableCell>
-                      )}{" "}
+                      )}
                       {/* Dynamically show BOQ column */}
                       {data?.data[0]?.showSales && (
                         <TableCell>profitMargin</TableCell>

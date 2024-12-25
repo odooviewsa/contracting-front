@@ -33,7 +33,7 @@ export default function EditPartners({
     setValue,
     formState: { errors, isSubmitting },
   } = useForm();
-  console.log(openEditPartnerId);
+
   async function onSubmit(data) {
     const formDate = new FormData();
     formDate.append("partnerName", data.partnerName);

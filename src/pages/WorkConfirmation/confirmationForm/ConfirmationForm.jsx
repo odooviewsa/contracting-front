@@ -24,8 +24,6 @@ const ConfirmationForm = () => {
     queryFn: getAllContractCodeForUser,
   });
 
-
-
   useEffect(() => {
     setInformationContract(
       data?.data?.contracts?.filter((e) => e?._id === codeContract)
@@ -41,9 +39,9 @@ const ConfirmationForm = () => {
   async function onSubmit(data) {
     const formData = {
       ...data,
-      projectName: imformationContract[0]?.project?.projectName,
+      projectName: imformationContract[0]?.project?._id,
       contractType: imformationContract[0]?.contractType,
-      partner: imformationContract[0]?.partner?.partnerName,
+      partner: imformationContract[0]?.partner?._id,
       contractId: codeContract,
       activateInvoicingByPercentage: isInvoicingActive,
       completionPercentage: isCompletionActive,

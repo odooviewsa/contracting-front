@@ -28,7 +28,7 @@ export default function TableWorkConfirmation() {
     queryFn: () => fetchWorkConfirmations(page),
     keepPreviousData: true,
   });
-  console.log(data);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -53,7 +53,6 @@ export default function TableWorkConfirmation() {
             <table>
               <thead>
                 <tr className="bg-primaryColor text-white">
-                  <th className="thContract">Name</th>
                   <th className="thContract">Type</th>
                   <th className="thContract">Contract</th>
                   <th className="thContract">arrange for contract</th>
@@ -78,9 +77,6 @@ export default function TableWorkConfirmation() {
                     }
                     ref={trRef}
                   >
-                    <td className="text-blue-600 w-2 thContract">
-                      {work.projectName}
-                    </td>
                     <td className="text-blue-600 thContract">
                       {work.contractType}
                     </td>
@@ -94,21 +90,23 @@ export default function TableWorkConfirmation() {
                       {new Date(work.startDate).toLocaleDateString()}
                     </td>
                     <td className="text-blue-600 thContract">
-                      {work.projectName}
-                    </td>
-                    <td className="text-blue-600 thContract">{work.partner}</td>
-                    <td className="text-blue-600 thContract">
-                      {work.totalAmount}
+                      {work?.projectName?.projectName}
                     </td>
                     <td className="text-blue-600 thContract">
-                      {work.dueAmount}
+                      {work?.partner?.partnerName}
+                    </td>
+                    <td className="text-blue-600 thContract">
+                      {work?.totalAmount?.toLocaleString("en-US")}
+                    </td>
+                    <td className="text-blue-600 thContract">
+                      {work?.dueAmount?.toLocaleString("en-US")}
                     </td>
                     <td className={` thContract`}>
                       <div
                         className={`flex items-center gap-2 bg-green-200 h-fit text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}
                       >
                         <FaCircle />
-                        <p>{work.status}</p>
+                        <p>{work?.status}</p>
                       </div>
                     </td>
                     <td className="text-blue-800 thContract">

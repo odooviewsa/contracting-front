@@ -24,6 +24,9 @@ export default function AddTabFourEstimation({
 }) {
   const [valueFull, setValuFull] = useState({});
   const [workItems, setWorkItems] = useState([]);
+  const [unitOfMeasure, setUnitOfMeasure] = useState("");
+  const [cost, setCost] = useState("");
+
   // location params
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -37,6 +40,15 @@ export default function AddTabFourEstimation({
       [e.target.name]: e.target.value,
     }));
   }
+  useEffect(() => {
+    if (currentTab === "Material" && valueFull["materialName"]) {
+      setUnitOfMeasure(valueFull["materialName"]?.uom);
+      setCost(valueFull["materialName"]?.price);
+    } else {
+      setUnitOfMeasure("");
+      setCost("");
+    }
+  }, [currentTab, valueFull]);
   // useEffect
   useEffect(() => {
     async function getWorkItemsName() {
@@ -52,6 +64,9 @@ export default function AddTabFourEstimation({
   async function handleAddRow() {
     const formDate = {
       ...valueFull,
+      unitOfMeasure: unitOfMeasure,
+      cost: cost,
+      materialName: valueFull["materialName"]?.name,
       category: currentTab,
       applyOn: applyOn,
       contract: contractId,
@@ -61,8 +76,8 @@ export default function AddTabFourEstimation({
 
     if (
       !valueFull?.materialName ||
-      !valueFull?.unitOfMeasure ||
-      !valueFull?.cost ||
+      !unitOfMeasure ||
+      !cost ||
       !valueFull?.quantity
     )
       return toast.error("you must fill All Date");
@@ -129,14 +144,14 @@ export default function AddTabFourEstimation({
               Select Name
             </MenuItem>
             {dataNameMaterial?.data?.map((option) => (
-              <MenuItem key={option._id} value={option.name}>
+              <MenuItem key={option._id} value={option}>
                 {option.name}
               </MenuItem>
             ))}
           </TextField>
         </TableCell>
       ) : (
-        <TableCell>
+        <TableCell sx={{ position: "absolute" }}>
           <CreatableSelect
             options={
               dataPreviesName?.data?.map((option) => ({
@@ -156,8 +171,14 @@ export default function AddTabFourEstimation({
       )}
 
       <TableCell>
-        <TextField size="small" onChange={handlechange} name="unitOfMeasure" />
+        <TextField
+          size="small"
+          onChange={(e) => setUnitOfMeasure(e.target.value)}
+          name="unitOfMeasure"
+          value={unitOfMeasure}
+        />
       </TableCell>
+
       <TableCell>
         <TextField
           type="number"
@@ -170,8 +191,9 @@ export default function AddTabFourEstimation({
         <TextField
           type="number"
           size="small"
-          onChange={handlechange}
+          onChange={(e) => setCost(e.target.value)}
           name="cost"
+          value={cost}
         />
       </TableCell>
       {applyOn === "BOQ Lines" && (
@@ -205,7 +227,7 @@ export default function AddTabFourEstimation({
       {showProfitFromDatabase && <TableCell></TableCell>}
       {showTaxFromDatabase && <TableCell></TableCell>}
 
-      <TableCell>{valueFull?.quantity * valueFull?.cost || 0}</TableCell>
+      <TableCell>{valueFull?.quantity * cost || 0}</TableCell>
       <TableCell>
         <Tooltip title="Add Row" onClick={handleAddRow}>
           <IconButton color="error">
