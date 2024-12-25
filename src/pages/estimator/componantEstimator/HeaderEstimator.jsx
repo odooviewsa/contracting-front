@@ -68,7 +68,13 @@ export default function HeaderEstimator({ currentTab }) {
             accept=".json"
             id="file-upload"
             style={{ display: "none" }}
-            onChange={(e) => setExcelSheet(e.target.files[0])}
+            onChange={(e) => {
+              if (applyOn !== "Whole BOQ") {
+                return toast.error("you must apply on Whole BOQ");
+              } else {
+                setExcelSheet(e.target.files[0]);
+              }
+            }}
           />
           {excelSheet && (
             <Button
