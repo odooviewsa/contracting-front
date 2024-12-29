@@ -10,6 +10,9 @@ import { useQuery } from "@tanstack/react-query";
 import ModalUpdateWorkItem from "./componantBOQ/componantBOQTable/ModalWorkItem/ModalUpdateWorkItem";
 import { ContextBOQ } from "../../../context/BOQContext";
 import { ToastContainer } from "react-toastify";
+import SureDeleteWorkItem from "./componantBOQ/componantBOQTable/ModalWorkItem/SureDeleteWorkItem";
+import SureDeleteSubItem from "./componantBOQ/componantBOQTable/ModalSubItem/SureDeleteSubItem";
+import SureDeleteMainItem from "./componantBOQ/componantBOQTable/ModalMainItem/SureDeleteMainItem";
 
 export default function BOQ() {
   const [idTemplate, setIdTemplate] = useState(null);
@@ -18,20 +21,23 @@ export default function BOQ() {
   const [openFormBOQ, setOpenFormBOQ] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
   const { id } = useParams();
-  const [page, setPage] = useState(1);
-  const { openModalUpdateWorkItemId, setAllIdMainItemAndSubItemAndWorkItem } =
-    useContext(ContextBOQ);
+  const {
+    openModalUpdateWorkItemId,
+    setAllIdMainItemAndSubItemAndWorkItem,
+    openModalDeleteWorkItemId,
+    openModalDeleteSubItemId,
+    openModalDeleteMainItemId,
+  } = useContext(ContextBOQ);
+
   // getAllMainItemForContractSpecific
   function getAllMainItemForContractSpecific() {
     return axiosInstance.get(`/api/contracts/${id}`);
   }
   const { data, refetch } = useQuery({
-    queryKey: ["getAllMainItemForContractSpecific", page, id],
+    queryKey: ["getAllMainItemForContractSpecific", id],
     queryFn: getAllMainItemForContractSpecific,
     keepPreviousData: true,
   });
-
-  // get All Ids
   useEffect(() => {
     if (data) {
       const mainItemId = data.data.data.mainId.map((e) => e._id);
@@ -53,8 +59,6 @@ export default function BOQ() {
     }
   }, [data, setAllIdMainItemAndSubItemAndWorkItem]);
 
-  console.log(data);
-
   useEffect(() => {
     if (idTemplate != null) {
       const getSingleTemplate = async () => {
@@ -62,7 +66,7 @@ export default function BOQ() {
           const fetchTemplate = await axiosInstance.get(
             `/api/templates/${idTemplate}`
           );
-          console.log(fetchTemplate);
+
           setFetchedSingleTemplate(fetchTemplate);
         } catch (error) {
           console.error("Error fetching template:", error);
@@ -89,8 +93,6 @@ export default function BOQ() {
         <TableBOQ
           setOpenFormBOQ={setOpenFormBOQ}
           data={idTemplate ? fetchedSingleTemplate : data}
-          setPage={setPage}
-          page={page}
           totalItems={data?.data?.totalMainItems}
           setValueSearch={setValueSearch}
           valueSearch={valueSearch}
@@ -101,6 +103,9 @@ export default function BOQ() {
           <FormBOQNew setOpenFormBOQ={setOpenFormBOQ} refetch={refetch} />
         )}
         {openModalUpdateWorkItemId && <ModalUpdateWorkItem refetch={refetch} />}
+        {openModalDeleteWorkItemId && <SureDeleteWorkItem refetch={refetch} />}
+        {openModalDeleteSubItemId && <SureDeleteSubItem refetch={refetch} />}
+        {openModalDeleteMainItemId && <SureDeleteMainItem refetch={refetch} />}
       </div>
     </>
   );

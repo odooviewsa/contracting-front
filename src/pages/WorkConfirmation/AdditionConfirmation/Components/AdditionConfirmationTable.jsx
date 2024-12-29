@@ -71,98 +71,96 @@ function AdditionConfirmationTable() {
       </div>
     );
   }
-
+  if (additions.length === 0 && additionsConfirmations.length === 0) {
+    return <EmptyTable />;
+  }
   return (
     <div className="mx-auto mt-10">
       <div className="overflow-x-auto">
-        {additions.length > 0 ? (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr>
-                <th className="border p-2 bg-gray-100 text-center">Code</th>
-                <th className="border p-2 bg-gray-100 text-center">
-                  Name of Addition
-                </th>
-                <th className="border p-2 bg-gray-100 text-center ">Type</th>
-                <th className="border p-2 bg-gray-100 text-center">Amount</th>
-                <th className="border p-2 bg-gray-100 text-center"></th>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              <th className="border p-2 bg-gray-100 text-center">Code</th>
+              <th className="border p-2 bg-gray-100 text-center">
+                Name of Addition
+              </th>
+              <th className="border p-2 bg-gray-100 text-center ">Type</th>
+              <th className="border p-2 bg-gray-100 text-center">Amount</th>
+              <th className="border p-2 bg-gray-100 text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {additions.map((addition, index) => (
+              <tr key={addition._id}>
+                <td className="border p-2 text-center">{index + 1}</td>
+                <td className="border p-2 text-center">
+                  {addition.additionName}
+                </td>
+                <td className="border p-2 text-center">{addition.type}</td>
+                <td className="border p-2 text-center">{addition.amount}</td>
+                <td className="border p-2 text-center"></td>
               </tr>
-            </thead>
-            <tbody>
-              {additions.map((addition, index) => (
-                <tr key={addition._id}>
-                  <td className="border p-2 text-center">{index + 1}</td>
-                  <td className="border p-2 text-center">
-                    {addition.additionName}
-                  </td>
-                  <td className="border p-2 text-center">{addition.type}</td>
-                  <td className="border p-2 text-center">{addition.amount}</td>
-                  <td className="border p-2 text-center"></td>
-                </tr>
-              ))}
+            ))}
 
-              {additionsConfirmations.map((additionsConfirmation, index) => (
-                <tr key={additionsConfirmation._id}>
-                  <td className="border p-2 text-center">
-                    {index + additions.length + 1}
-                  </td>
-                  <td className="border p-2 text-center">
-                    {additionsConfirmation.additionName}
-                  </td>
-                  <td className="border p-2 text-center">
-                    {additionsConfirmation.type}
-                  </td>
-                  <td className="border p-2 text-center">
-                    {additionsConfirmation.amount}
-                  </td>
-                  <td className="border p-2 text-center">
-                    <button
-                      onClick={() => setSureDeleteModel(true)}
-                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                    {sureDeleteModel && (
-                      <DeductionSureDelete
-                        setSureDeleteModel={setSureDeleteModel}
-                        handleDeleteDeduction={handleDeleteAdditton}
-                        loading={loading}
-                        deductionId={additionsConfirmation._id}
-                      />
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr className="bg-gray-50 font-semibold">
-                <td colSpan="4" className="border p-2 text-center font-bold">
-                  Total Additions
+            {additionsConfirmations.map((additionsConfirmation, index) => (
+              <tr key={additionsConfirmation._id}>
+                <td className="border p-2 text-center">
+                  {index + additions.length + 1}
                 </td>
-                <td colSpan="1" className="border p-2 text-center">
-                  {additions.reduce(
-                    (total, addition) => total + addition.amount,
-                    0
+                <td className="border p-2 text-center">
+                  {additionsConfirmation.additionName}
+                </td>
+                <td className="border p-2 text-center">
+                  {additionsConfirmation.type}
+                </td>
+                <td className="border p-2 text-center">
+                  {additionsConfirmation.amount}
+                </td>
+                <td className="border p-2 text-center">
+                  <button
+                    onClick={() => setSureDeleteModel(true)}
+                    className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                  {sureDeleteModel && (
+                    <DeductionSureDelete
+                      setSureDeleteModel={setSureDeleteModel}
+                      handleDeleteDeduction={handleDeleteAdditton}
+                      loading={loading}
+                      deductionId={additionsConfirmation._id}
+                    />
                   )}
                 </td>
               </tr>
-              <tr className="bg-gray-50 font-semibold">
-                <td colSpan="4" className="border p-2 text-center font-bold">
-                  Total Confirmations Additions
-                </td>
-                <td colSpan="1" className="border p-2 text-center">
-                  {additionsConfirmations.reduce(
-                    (total, deductionsConfirmation) =>
-                      total + deductionsConfirmation.amount,
-                    0
-                  )}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        ) : (
-          <EmptyTable />
-        )}
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="bg-gray-50 font-semibold">
+              <td colSpan="4" className="border p-2 text-center font-bold">
+                Total Additions
+              </td>
+              <td colSpan="1" className="border p-2 text-center">
+                {additions.reduce(
+                  (total, addition) => total + addition.amount,
+                  0
+                )}
+              </td>
+            </tr>
+            <tr className="bg-gray-50 font-semibold">
+              <td colSpan="4" className="border p-2 text-center font-bold">
+                Total Confirmations Additions
+              </td>
+              <td colSpan="1" className="border p-2 text-center">
+                {additionsConfirmations.reduce(
+                  (total, deductionsConfirmation) =>
+                    total + deductionsConfirmation.amount,
+                  0
+                )}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
 
       <button

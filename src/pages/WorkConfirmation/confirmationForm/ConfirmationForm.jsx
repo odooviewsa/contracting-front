@@ -51,7 +51,7 @@ const ConfirmationForm = () => {
     await axiosInstance
       .post("/api/workConfirmation/create", formData)
       .then((result) => {
-        console.log(result);
+     
         if (result.status === 201) {
           nav(
             `/${user?.companyName}/workconfirm/addConfirmation/Details/${result?.data?.data?._id}/${formData?.contractId}`

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import BlockContantWorkItem from "./BlockContantWorkItem";
 import Menu from "./ModalWorkItem/Menu";
 import { ContextBOQ } from "../../../../../context/BOQContext";
-
 export default function BlockWorkItem({ workItem }) {
   const [openMore, setOpenMore] = useState(false);
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
@@ -20,7 +19,7 @@ export default function BlockWorkItem({ workItem }) {
   return (
     <div className="flex flex-col mb-1 w-full">
       <div
-        className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform translate-x-20 w-[82%]`}
+        className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform translate-x-14 w-[82%]`}
         onClick={toggleItem}
       >
         <div className="flex items-center gap-4 text-colorTextValueItem ">

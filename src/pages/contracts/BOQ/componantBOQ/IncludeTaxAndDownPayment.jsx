@@ -17,7 +17,7 @@ export default function IncludeTaxAndDownPayment({ includeTax, DownPayment }) {
   }, [DownPayment, includeTax]);
 
   const [loading, setLoading] = useState(false);
-  console.log(checkIncludeTax);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);

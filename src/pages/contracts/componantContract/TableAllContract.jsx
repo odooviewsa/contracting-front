@@ -4,6 +4,10 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import ModalDetails from "./ModalDetails";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import NotFoundContract from "./NotFoundContract";
+import Loading from "../../../componant/Loading";
+import SureDeleteContract from "./SureDeleteContract";
+import { useState } from "react";
 
 export default function TableAllContract({
   contracts,
@@ -16,16 +20,29 @@ export default function TableAllContract({
   idContract,
   contractsPerPage,
   refetch,
+  searchLoading,
+  isLoading,
 }) {
   const navigate = useNavigate();
+  const [openDeletePopup, setOpenDeletePopup] = useState(null);
   const user = useSelector((state) => state?.user);
   const start = (page - 1) * contractsPerPage + 1;
   const end = start + contracts.length - 1;
+  if (!isLoading && !searchLoading && contracts?.length === 0) {
+    return <NotFoundContract />;
+  }
+  if (isLoading || searchLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[70vh]">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="">
-      <div className="scrollbar min-h-auto  shadow-md overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg overflow-y-visible ">
+      <div className="scrollbar shadow-md min-h-[80vh]  overflow-x-auto ">
+        <table className="min-w-full bg-white rounded-lg ">
           <thead>
             <tr className="bg-primaryColor text-white">
               <th className="thContract">Code</th>
@@ -37,7 +54,7 @@ export default function TableAllContract({
             </tr>
           </thead>
           <tbody>
-            {contracts.map((contract, i) => (
+            {contracts?.map((contract, i) => (
               <tr
                 onClick={() =>
                   navigate(
@@ -45,7 +62,7 @@ export default function TableAllContract({
                   )
                 }
                 key={contract._id}
-                className="text-center border-b cursor-pointer"
+                className="text-center border-b cursor-pointer relative"
               >
                 <td className="text-blue-600 w-2 thContract p-4">
                   {contract.code}
@@ -59,9 +76,9 @@ export default function TableAllContract({
                 <td className="text-blue-600 thContract p-4">
                   {contract?.contractType}
                 </td>
-                <td className="flex justify-center thContract p-4">
+                <td className=" thContract p-4 text-center">
                   <div
-                    className={`flex items-center gap-2 ${
+                    className={`flex items-center  gap-2 ${
                       contract.status === "Estimation"
                         ? "bg-red-200 text-red-600"
                         : "bg-green-200 text-green-800"
@@ -71,22 +88,24 @@ export default function TableAllContract({
                     <p>{contract.status}</p>
                   </div>
                 </td>
-                <td className=" thContract p-4">
+                <td
+                  className=" thContract p-4"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIdContract(i);
+                    setOpenModalDetails((prev) => !prev);
+                  }}
+                >
                   <div className="flex justify-center relative">
                     {openModalDetails && i === idContract && (
                       <ModalDetails
-                        contractId={contract._id}
+                        contract={contract}
                         setOpenModalDetails={setOpenModalDetails}
                         refetch={refetch}
+                        setOpenDeletePopup={setOpenDeletePopup}
                       />
                     )}
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIdContract(i);
-                        setOpenModalDetails((prev) => !prev);
-                      }}
-                    >
+                    <div>
                       <HiOutlineDotsVertical />
                     </div>
                   </div>
@@ -122,6 +141,13 @@ export default function TableAllContract({
           </button>
         </div>
       </div>
+      {openDeletePopup && (
+        <SureDeleteContract
+          setOpenDeletePopup={setOpenDeletePopup}
+          openDeletePopup={openDeletePopup}
+          refetch={refetch}
+        />
+      )}
     </div>
   );
 }
@@ -139,4 +165,6 @@ TableAllContract.propTypes = {
   contractsPerPage: PropTypes.number,
   totalPages: PropTypes.number,
   refetch: PropTypes.func,
+  isLoading: PropTypes.any,
+  searchLoading: PropTypes.any,
 };

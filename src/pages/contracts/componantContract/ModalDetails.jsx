@@ -8,27 +8,26 @@ import { FaEdit, FaUserFriends } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import SureDeleteContract from "./SureDeleteContract";
-import { useState } from "react";
-export default function ModalDetails({
-  contractId,
-  setOpenModalDetails,
-  refetch,
-}) {
+
+export default function ModalDetails({ contract, setOpenDeletePopup }) {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
-  const [openDeletePopup, setOpenDeletePopup] = useState(false);
 
   return (
     <div className="absolute top-5 -left-12 flex flex-col bg-white w-44 z-50 rounded-lg border border-gray-300">
-      <div className="flex gap-1 items-center hover:bg-blue-300 p-2 text-[0.8rem] border-b border-gray-300 hover:text-blue-700">
+      <div
+        className="flex gap-1 items-center hover:bg-blue-300 p-2 text-[0.8rem] border-b border-gray-300 hover:text-blue-700"
+        onClick={() => navigate(`/${user?.companyName}/estimation`)}
+      >
         <MdOutlineAppRegistration size={18} />
         <p>Open Estimator</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700"
         onClick={(e) => {
-          navigate(`/${user?.companyName}/contracts/${contractId}/edit`);
+          navigate(`/${user?.companyName}/contracts/${contract._id}/edit`, {
+            state: contract,
+          });
           e.stopPropagation();
         }}
       >
@@ -51,26 +50,18 @@ export default function ModalDetails({
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 text-red-700 cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
-          setOpenDeletePopup(true);
+          setOpenDeletePopup(contract._id);
         }}
       >
         <MdDelete size={18} />
         <p>Delete</p>
-        {openDeletePopup && (
-          <SureDeleteContract
-            setOpenDeleteContract={setOpenDeletePopup}
-            setOpenModalDetails={setOpenModalDetails}
-            refetchData={refetch}
-            contractId={contractId}
-          />
-        )}
       </div>
     </div>
   );
 }
 
 ModalDetails.propTypes = {
-  setOpenModalDetails: PropTypes.func.isRequired,
-  contractId: PropTypes.string,
+  setOpenDeletePopup: PropTypes.func.isRequired,
+  contract: PropTypes.any,
   refetch: PropTypes.func.isRequired,
 };

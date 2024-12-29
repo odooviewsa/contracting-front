@@ -1,5 +1,4 @@
-import { useState } from "react";
-import BlockPagination from "./BlockPagination";
+
 import PartAllItemTable from "./PartAllItemTable";
 import PartFilterAndNewItemInTableBOQ from "./PartFilterAndNewItemInTableBOQ";
 import PropTypes from "prop-types";
@@ -9,8 +8,7 @@ export default function TableBOQ({
   setValueSearch,
   valueSearch,
 }) {
-  const [numberSlice, setNumberSlice] = useState(5);
-  const [numberSliceFirst, setNumberSliceFirst] = useState(0);
+
   return (
     <div className="w-full rounded-md border border-gray-300 shadow-md">
       <PartFilterAndNewItemInTableBOQ
@@ -22,18 +20,8 @@ export default function TableBOQ({
           <PartAllItemTable
             data={data}
             valueSearch={valueSearch}
-            numberSlice={numberSlice}
-            numberSliceFirst={numberSliceFirst}
           />
-
-          <BlockPagination
-            valueSearch={valueSearch}
-            setNumberSliceFirst={setNumberSliceFirst}
-            setNumberSlice={setNumberSlice}
-            numberSlice={numberSlice}
-            numberSliceFirst={numberSliceFirst}
-            lengthArray={data?.data?.data?.mainId?.length}
-          />
+ 
         </>
       ) : (
         <p className="flex justify-center p-5">Not item yet, Add First Item</p>

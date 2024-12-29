@@ -7,22 +7,28 @@ export default function BlockContantWorkItem({ workItemDetails }) {
     { header: "Unit Of Measure", value: `${workItemDetails?.unitOfMeasure}` },
     {
       header: "Assigned Quantity",
-      value: `${workItemDetails?.assignedQuantity}`,
+      value: `${workItemDetails?.assignedQuantity?.toLocaleString("en-US")}`,
     },
     {
       header: "Previous Quantity",
-      value: `${workItemDetails?.previousQuantity}`,
+      value: `${workItemDetails?.previousQuantity?.toLocaleString("en-US")}`,
     },
     {
       header: "Remaining Quantity",
-      value: `${workItemDetails?.remainingQuantity}`,
+      value: `${workItemDetails?.remainingQuantity?.toLocaleString("en-US")}`,
     },
     {
       header: "Financial Category",
-      value: `${workItemDetails?.financialCategory}`,
+      value: `${workItemDetails?.financialCategory?.toLocaleString("en-US")}`,
     },
-    { header: "Price", value: `${workItemDetails?.price}` },
-    { header: "Total", value: `${workItemDetails?.total}` },
+    {
+      header: "Price",
+      value: `${workItemDetails?.price?.toLocaleString("en-US")}`,
+    },
+    {
+      header: "Total",
+      value: `${workItemDetails?.total?.toLocaleString("en-US")}`,
+    },
   ];
   return (
     <div

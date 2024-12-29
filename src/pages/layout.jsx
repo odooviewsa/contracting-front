@@ -25,7 +25,7 @@ export default function Layout() {
         }`}
       >
         <Navbar setOpenSidebar={setOpenSidebar} openSidebar={openSidebar} />
-        <div className="p-5">
+        <div className="md:p-5 p-1">
           <Outlet />
         </div>
       </div>

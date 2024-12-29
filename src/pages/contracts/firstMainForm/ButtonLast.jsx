@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import Loading from "../../../componant/Loading";
 
 export default function ButtonLast({ onSubmit, isSubmitting }) {
   const navigate = useNavigate();
 
   const handleNextClick = async () => {
-    await onSubmit(); 
+    await onSubmit();
   };
 
   return (
@@ -20,11 +19,13 @@ export default function ButtonLast({ onSubmit, isSubmitting }) {
       </button>
       <button
         onClick={handleNextClick}
-        type="button" 
-        className={`text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-primaryColor"}`} 
+        type="button"
+        className={`text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md ${
+          isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-primaryColor"
+        }`}
         disabled={isSubmitting}
       >
-        {isSubmitting ? <Loading/> : "Next"} 
+        {isSubmitting ? "Loading..." : "Next"}
       </button>
     </div>
   );

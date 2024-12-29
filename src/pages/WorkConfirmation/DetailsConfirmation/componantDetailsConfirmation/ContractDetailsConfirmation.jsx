@@ -5,7 +5,7 @@ import { MdRequestPage, MdStickyNote2 } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-export default function ContractDetailsConfirmation({ data }) {
+export default function ContractDetailsConfirmation({ data, totalAmount }) {
   const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const ref = useRef();
@@ -53,12 +53,12 @@ export default function ContractDetailsConfirmation({ data }) {
         {[
           {
             label: "Total Contract Value",
-            value: "$0.00",
+            value: data?.contractId?.totalContractValue,
             icon: <MdRequestPage className="text-[#AF52DE]" size={50} />,
           },
           {
             label: "Total Work Confirmation Issued As of now",
-            value: "$0.00",
+            value: totalAmount,
             icon: <MdStickyNote2 className="text-[#F44771]" size={50} />,
           },
           {
@@ -73,7 +73,7 @@ export default function ContractDetailsConfirmation({ data }) {
           },
           {
             label: "Total Additions",
-            value: data?.totalAddition ,
+            value: data?.totalAddition,
             icon: <FaTags className="text-[#AF52DE]" size={50} />,
           },
           {
@@ -95,4 +95,5 @@ export default function ContractDetailsConfirmation({ data }) {
 }
 ContractDetailsConfirmation.propTypes = {
   data: PropTypes.any,
+  totalAmount: PropTypes.any,
 };

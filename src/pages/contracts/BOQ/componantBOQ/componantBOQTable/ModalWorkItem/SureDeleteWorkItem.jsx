@@ -1,31 +1,27 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
-import { axiosInstance } from "../../../axios/axios";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
-
-function SureDeleteContract({
-  refetch,
-  setOpenDeletePopup,
-  openDeletePopup,
-}) {
+import { ContextBOQ } from "../../../../../../context/BOQContext";
+import { axiosInstance } from "../../../../../../axios/axios";
+import PropTypes from "prop-types";
+function SureDeleteWorkItem({ refetch }) {
   const [isLoading, setIsLoading] = useState(false);
-  const handleDeleteContract = async () => {
+  const { openModalDeleteWorkItemId, setOpenModalDeleteWorkItemId } =
+    useContext(ContextBOQ);
+  const handleDeleteWorkItem = async () => {
     try {
       setIsLoading(true);
       const response = await axiosInstance.delete(
-        `/api/contracts/${openDeletePopup}`
+        `/api/work/${openModalDeleteWorkItemId}`
       );
       if (response.status === 200) {
+        toast.success("Work Item deleted successfully");
         refetch();
-        toast.success("Contract deleted successfully");
-        setOpenDeletePopup(null);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Error deleting contract");
-      setOpenDeletePopup(null);
     } finally {
       setIsLoading(false);
-      setOpenDeletePopup(null);
+      setOpenModalDeleteWorkItemId(null);
     }
   };
   return (
@@ -34,7 +30,7 @@ function SureDeleteContract({
         <h1 className="font-bold text-[2rem]">Are You Sure!</h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
-            onClick={() => setOpenDeletePopup(null)}
+            onClick={() => setOpenModalDeleteWorkItemId(null)}
             className="border rounded-md py-2 px-5 font-semibold z-40"
           >
             Back
@@ -42,7 +38,7 @@ function SureDeleteContract({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleDeleteContract();
+              handleDeleteWorkItem();
             }}
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
           >
@@ -54,11 +50,7 @@ function SureDeleteContract({
   );
 }
 
-export default SureDeleteContract;
-
-SureDeleteContract.propTypes = {
-  setOpenDeletePopup: PropTypes.func,
-  contractId: PropTypes.string,
+export default SureDeleteWorkItem;
+SureDeleteWorkItem.propTypes = {
   refetch: PropTypes.func,
-  openDeletePopup: PropTypes.any,
 };

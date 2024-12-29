@@ -1,11 +1,12 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import BlockSubItem from "./BlockSubItem";
 import PropTypes from "prop-types";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
+import Menu from "./ModalMainItem/Menu";
 export default function BlockMainItem({ mainItem }) {
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
- 
+  const [openMore, setOpenMore] = useState(false);
   const toggleItem = () => {
     setIdOnlyOpen((prevIds) => {
       if (prevIds.includes(mainItem._id)) {
@@ -28,9 +29,16 @@ export default function BlockMainItem({ mainItem }) {
             <p className="text-[0.8rem]">{mainItem?.itemName}</p>
           </div>
         </div>
-        <div className="cursor-pointer flex items-center gap-2 text-colorTextValueItem text-[0.9rem]">
+        <div
+          className="cursor-pointer flex items-center gap-2 text-colorTextValueItem relative text-[0.9rem]"
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenMore((e) => !e);
+          }}
+        >
           <p> More</p>
           <BsThreeDotsVertical />
+          {openMore && <Menu mainItem={mainItem} />}
         </div>
       </div>
       {/* // sub item */}

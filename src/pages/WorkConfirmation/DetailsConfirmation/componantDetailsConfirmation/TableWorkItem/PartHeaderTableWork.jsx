@@ -1,8 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { FaBars, FaCaretDown, FaCaretUp } from "react-icons/fa6";
+import PropTypes from "prop-types";
 
-export default function PartHeaderTableWork() {
+export default function PartHeaderTableWork({ setSearchWorkConfirmation }) {
   const [openColumValue, setOpenColumValue] = useState(false);
   const {
     currentValueColumWorkConfirmation,
@@ -13,16 +14,17 @@ export default function PartHeaderTableWork() {
     "Unit Of Measure",
     "Contract Quantity",
     "Previous Quantity",
+    "Current Work",
     "Current Work QTY",
     "Current Work %",
     "Total Quantity",
-    "Remaining Quantity",
-    "Category",
+    "Price",
     "Total Amount",
     "Completion %",
     "Invoicing %",
     "Net Amount",
     "Duo Amount",
+    "Calculate",
   ];
 
   const toggleSelect = (name) => {
@@ -46,7 +48,13 @@ export default function PartHeaderTableWork() {
     };
   }, []);
   return (
-    <div className="flex items-center gap-7 justify-between text-[0.9rem] flex-wrap">
+    <div className="flex items-center gap-7  text-[0.9rem] flex-wrap">
+      <input
+        type="text"
+        placeholder="Search work confirmation..."
+        className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
+        onChange={(e) => setSearchWorkConfirmation(e.target.value)}
+      />
       <div className="relative z-40">
         <div
           className="flex items-center gap-1 cursor-pointer "
@@ -80,11 +88,9 @@ export default function PartHeaderTableWork() {
           </div>
         )}
       </div>
-      <input
-        type="text"
-        placeholder="Search work confirmation..."
-        className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
-      />
     </div>
   );
 }
+PartHeaderTableWork.propTypes = {
+  setSearchWorkConfirmation: PropTypes.any,
+};

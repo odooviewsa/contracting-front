@@ -4,6 +4,12 @@ const ContextBOQ = createContext();
 function ContextProviderBOQ({ children }) {
   const [openModalUpdateWorkItemId, setOpenModalUpdateWorkItemId] =
     useState(null);
+  const [openModalDeleteWorkItemId, setOpenModalDeleteWorkItemId] =
+    useState(null);
+  const [openModalDeleteSubItemId, setOpenModalDeleteSubItemId] =
+    useState(null);
+  const [openModalDeleteMainItemId, setOpenModalDeleteMainItemId] =
+    useState(null);
   const [
     allIdMainItemAndSubItemAndWorkItem,
     setAllIdMainItemAndSubItemAndWorkItem,
@@ -16,15 +22,18 @@ function ContextProviderBOQ({ children }) {
   const [currentValueColum, setCurrentValueColum] = useState({
     "Unit Of Measure": true,
     "Assigned Quantity": true,
-    "Price": true,
+    Price: true,
   });
   const [
     currentValueColumWorkConfirmation,
     setCurrentValueColumWorkConfirmation,
   ] = useState({
     "work item": true,
-    "Unit Of Measure": true,
+    "Current Work": true,
+    "Current Work QTY": true,
+    "Current Work %": true,
     "Contract Quantity": true,
+    Calculate: true,
   });
   return (
     <ContextBOQ.Provider
@@ -33,6 +42,12 @@ function ContextProviderBOQ({ children }) {
         setCurrentValueColum,
         openModalUpdateWorkItemId,
         setOpenModalUpdateWorkItemId,
+        openModalDeleteWorkItemId,
+        setOpenModalDeleteWorkItemId,
+        openModalDeleteSubItemId,
+        setOpenModalDeleteSubItemId,
+        openModalDeleteMainItemId,
+        setOpenModalDeleteMainItemId,
         allIdMainItemAndSubItemAndWorkItem,
         setAllIdMainItemAndSubItemAndWorkItem,
         idOnlyOpen,

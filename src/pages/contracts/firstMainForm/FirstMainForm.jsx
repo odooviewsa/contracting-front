@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { axiosInstance } from "../../../axios/axios";
 import { useNavigate } from "react-router-dom";
 import ButtonLast from "./ButtonLast";
@@ -16,9 +16,8 @@ function ContractForm() {
   const {
     register,
     handleSubmit,
-    setValue,
-    trigger,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -57,7 +56,6 @@ function ContractForm() {
   const fetchPartners = async (contractType) => {
     try {
       const response = await axiosInstance.get("/api/partners");
-      console.log(response.data.partners);
 
       const filteredPartners = contractType
         ? response.data.partners.filter(
@@ -65,7 +63,6 @@ function ContractForm() {
           )
         : response.data.partners;
 
-      console.log(filteredPartners);
       setPartners(
         filteredPartners.map((partner) => ({
           value: partner._id,
@@ -84,55 +81,25 @@ function ContractForm() {
   }, [selectedContractType]);
 
   const onSubmit = async (data) => {
-    try {
-      const response = await axiosInstance.post(`/api/contracts`, data);
 
+    const formDate = {
+      ...data,
+      projectId: data.projectId.value,
+      partnerId: data.partnerId.value,
+      consultantId: data.consultantId.value,
+    };
+    try {
+      const response = await axiosInstance.post(`/api/contracts`, formDate);
       if (response.status === 201) {
-        toast.success("Data sent successfully!", {
-          onClose: () => {
-            navigate(
-              `/${user?.companyName}/contracts/addContract/BOQ/${response.data.data._id}`
-            );
-          },
-        });
+        toast.success("Data sent successfully!");
+        navigate(
+          `/${user?.companyName}/contracts/addContract/BOQ/${response.data.data._id}`
+        );
       }
     } catch (error) {
-      console.error(
-        "Error creating contract:",
-        error.response?.data?.message || error.message
-      );
+      toast.error(error?.message);
     }
   };
-
-  // const fetchPartners = async (contractType) => {
-  //   try {
-  //     const response = await axiosInstance.get("/api/partners");
-  //     console.log(response.data.partners);
-  //     const filteredPartners = response.data.partners.filter(
-  //       (partner) => partner.type === contractType
-  //     );
-  //     console.log(filteredPartners);
-  //     setPartners(
-  //       filteredPartners.map((partner) => ({
-  //         value: partner._id,
-  //         label: partner.partnerName,
-  //       }))
-  //     );
-  //   } catch (e) {
-  //     console.log(e.message);
-  //   }
-  // };
-
-  // const selectedContractType = watch("contractType");
-  // useEffect(() => {
-  //   if (selectedContractType) {
-  //     fetchPartners(selectedContractType);
-  //     console.log(selectedContractType);
-  //   } else {
-  //     setPartners([]);
-  //   }
-  // }, [selectedContractType]);
-
   return (
     <>
       <ToastContainer />
@@ -149,6 +116,7 @@ function ContractForm() {
               </label>
               <input
                 type="text"
+                placeholder="Enter code"
                 {...register("code", {
                   required: "Code is required",
                   maxLength: {
@@ -156,9 +124,9 @@ function ContractForm() {
                     message: "Code must be at most 10 characters long",
                   },
                 })}
-                className={`py-[5px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
-                  errors.code ? "border-red-500" : ""
-                }`}
+                className={`py-[6px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+              
+                `}
               />
               {errors.code && (
                 <p className="text-red-400 text-sm">{errors.code.message}</p>
@@ -174,12 +142,12 @@ function ContractForm() {
                 {...register("contractType", {
                   required: "Contract Type is required",
                 })}
-                className={`py-[5px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
-                  errors.contractType ? "border-red-500" : ""
-                }`}
+                className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+              
+                `}
               >
                 <option value="">choose</option>
-                <option value="Owner">Owner Contract</option>
+                <option value="Owner">Owner</option>
                 <option value="Sub-contractor">Sub-Contractor Contract</option>
               </select>
               {errors.contractType && (
@@ -194,23 +162,25 @@ function ContractForm() {
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Project <span className="text-red-500">*</span>
               </label>
-
-              <Select
-                options={projects}
-                onChange={(selectedOption) => {
-                  setValue("projectId", selectedOption.value);
-                }}
-                onBlur={() => {
-                  register("projectId", { required: "Project is required" });
-                  trigger("projectId");
-                }}
-                placeholder="Choose..."
-                className={`w-full ${
-                  errors.project ? "border border-red-500" : ""
-                }`}
+              <Controller
+                name="projectId"
+                control={control}
+                rules={{ required: "Project is required" }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={projects}
+                    placeholder="Choose..."
+                    className={`w-full 
+                   
+                    `}
+                  />
+                )}
               />
-              {errors.project && (
-                <p className="text-red-400 text-sm">{errors.project.message}</p>
+              {errors.projectId && (
+                <p className="text-red-400 text-sm ">
+                  {errors.projectId.message}
+                </p>
               )}
             </div>
 
@@ -219,22 +189,25 @@ function ContractForm() {
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Partner <span className="text-red-500">*</span>
               </label>
-              <Select
-                options={partners}
-                onChange={(selectedOption) => {
-                  setValue("partnerId", selectedOption.value);
-                  trigger("partnerId");
-                }}
-                onBlur={() =>
-                  register("partnerId", { required: "Partner is required" })
-                }
-                placeholder="Choose..."
-                className={`w-full ${
-                  errors.partner ? "border border-red-500" : ""
-                }`}
+              <Controller
+                name="partnerId"
+                control={control}
+                rules={{ required: "Partner is required" }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={partners}
+                    placeholder="Choose..."
+                    className={`w-full 
+                   
+                    `}
+                  />
+                )}
               />
-              {errors.partner && (
-                <p className="text-red-400 text-sm">{errors.partner.message}</p>
+              {errors.partnerId && (
+                <p className="text-red-400 text-sm ">
+                  {errors.partnerId.message}
+                </p>
               )}
             </div>
             {/* Start Date */}
@@ -247,9 +220,9 @@ function ContractForm() {
                 {...register("startDate", {
                   required: "Start date is required.",
                 })}
-                className={`py-[4px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
-                  errors.startDate ? "border-red-500" : ""
-                }`}
+                className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+                
+                `}
               />
               {errors.startDate && (
                 <p className="text-red-500 text-sm">
@@ -279,9 +252,9 @@ function ContractForm() {
                     return true;
                   },
                 })}
-                className={`py-[4px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
-                  errors.endDate ? "border-red-500" : ""
-                }`}
+                className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+                
+                `}
               />
               {errors.endDate && (
                 <p className="text-red-500 text-sm">{errors.endDate.message}</p>
@@ -292,29 +265,27 @@ function ContractForm() {
               <label className="block mb-2 text-sm font-medium text-gray-700">
                 Consultant <span className="text-red-500">*</span>
               </label>
-              <Select
-                options={consultants}
-                onChange={(selectedOption) => {
-                  setValue("consultantId", selectedOption.value);
-                  trigger("consultantId");
-                }}
-                onBlur={() =>
-                  register("consultantId", {
-                    required: "Consultant is required",
-                  })
-                }
-                placeholder="Choose..."
-                className={`w-full ${
-                  errors.consultant ? "border border-red-500" : ""
-                }`}
+              <Controller
+                name="consultantId"
+                control={control}
+                rules={{ required: "Consultant is required" }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={consultants}
+                    placeholder="Choose..."
+                    className={`w-full 
+                   
+                    `}
+                  />
+                )}
               />
-              {errors.consultant && (
-                <p className="text-red-400 text-sm">
-                  {errors.consultant.message}
+              {errors.consultantId && (
+                <p className="text-red-400 text-sm ">
+                  {errors.consultantId.message}
                 </p>
               )}
             </div>
-
             {/* Type of Progress */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -324,9 +295,9 @@ function ContractForm() {
                 {...register("typeOfProgress", {
                   required: "Type of Progress is required",
                 })}
-                className={`py-[5px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
-                  errors.typeOfProgress ? "border-red-500" : ""
-                }`}
+                className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+               
+                `}
               >
                 <option value="">choose</option>
                 <option value="In Progress">Quantity</option>
@@ -343,7 +314,6 @@ function ContractForm() {
                 </p>
               )}
             </div>
-
             {/* Description */}
             <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -353,9 +323,9 @@ function ContractForm() {
                 {...register("description", {
                   required: "Description is required.",
                 })}
-                className={`py-2 px-4 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full h-24 ${
-                  errors.description ? "border-red-500" : ""
-                }`}
+                className={`py-2 px-4 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full h-24 
+                  
+                `}
               />
               {errors.description && (
                 <p className="text-red-400 text-sm">
@@ -364,11 +334,10 @@ function ContractForm() {
               )}
             </div>
           </div>
-
           <div className="mt-6 flex justify-end">
             <ButtonLast
               title="Create Contract"
-              isLoading={isSubmitting}
+              isSubmitting={isSubmitting}
               onSubmit={handleSubmit(onSubmit)}
             />
           </div>

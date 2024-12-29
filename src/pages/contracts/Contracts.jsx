@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Header from "../../componant/layout/Header";
 import { useState } from "react";
-import NotFoundContract from "./componantContract/NotFoundContract";
 import TableAllContract from "./componantContract/TableAllContract";
 import { axiosInstance } from "../../axios/axios";
 import { useQuery } from "@tanstack/react-query";
@@ -30,7 +29,7 @@ export default function Contracts() {
     return response.data.contracts;
   };
 
-  const { data, isError, refetch } = useQuery({
+  const { data, isError, isLoading, refetch } = useQuery({
     queryKey: ["getAllContract", page],
     queryFn: getAllContract,
     keepPreviousData: true,
@@ -38,26 +37,21 @@ export default function Contracts() {
 
   const {
     data: searchedContractData,
-    // isLoading: isSearchLoading,
-    // error: searchError,
+
+    isLoading: searchLoading,
   } = useQuery({
     queryKey: ["searchedContracts", searchQuery],
     queryFn: () => fetchSearchedContracts(searchQuery),
     enabled: searchQuery.length > 0,
   });
-  console.log(data);
 
   if (isError) return <div>Error loading contracts</div>;
 
-  const contracts = data?.data?.contracts || [];
+  const contracts = data?.data?.contracts;
   const totalPages = data?.data?.totalPages;
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value || "");
-  };
-
-  const handleResetSearch = () => {
-    setSearchQuery("");
   };
 
   const displayProjects = searchQuery
@@ -65,13 +59,13 @@ export default function Contracts() {
       ? searchedContractData
       : []
     : contracts || [];
+
+
   return (
     <>
       <div className="p-2 pg:p-5 flex flex-col gap-5">
         <Header first="Home" second="Contract" />
-        <div className="flex flex-col-reverse  gap-2 md:flex-row justify-between items-center">
-          {/* Search Input */}
-
+        <div className="flex flex-col-reverse  gap-2 md:flex-row justify-between md:items-center">
           <div className="w-full md:w-fit">
             <input
               type="text"
@@ -90,24 +84,22 @@ export default function Contracts() {
           </Link>
         </div>
 
-        {contracts.length > 0 ? (
-          <>
-            <TableAllContract
-              contracts={displayProjects}
-              setPage={setPage}
-              page={page}
-              totalPages={totalPages}
-              openModalDetails={openModalDetails}
-              setOpenModalDetails={setOpenModalDetails}
-              setIdContract={setIdContract}
-              idContract={idContract}
-              contractsPerPage={contractsPerPage}
-              refetch={refetch}
-            />
-          </>
-        ) : (
-          <NotFoundContract />
-        )}
+        <>
+          <TableAllContract
+            contracts={displayProjects}
+            setPage={setPage}
+            page={page}
+            totalPages={totalPages}
+            openModalDetails={openModalDetails}
+            setOpenModalDetails={setOpenModalDetails}
+            setIdContract={setIdContract}
+            idContract={idContract}
+            contractsPerPage={contractsPerPage}
+            refetch={refetch}
+            isLoading={isLoading}
+            searchLoading={searchLoading}
+          />
+        </>
       </div>
     </>
   );

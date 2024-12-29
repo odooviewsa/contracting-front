@@ -1,14 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../../../axios/axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
-export default function TableWorkItem({ work, refetch }) {
+import { ContextBOQ } from "../../../../../context/BOQContext";
+export default function TableWorkItem({ dispalyDate, refetch }) {
   const nav = useNavigate();
+  const { currentValueColumWorkConfirmation } = useContext(ContextBOQ);
   const user = useSelector((state) => state?.user);
   const [loading, setLoading] = useState(null);
-
   const [valueInputCurrentQuantity, setValueInputCurrentQuantity] = useState(
     {}
   );
@@ -17,7 +18,6 @@ export default function TableWorkItem({ work, refetch }) {
   const [valueInputInvoicePercentage, setValueInputInvoicePercentage] =
     useState({});
   const { contractId, workId } = useParams();
-
   // handleChangeCurrentQuantity
   const handleChangeCurrentQuantity = (value, index) => {
     setValueInputCurrentQuantity((prev) => ({
@@ -48,24 +48,86 @@ export default function TableWorkItem({ work, refetch }) {
     await axiosInstance
       .put(`/api/workConfirmation/workConfirmation/${workId}/${id}`, {
         currentQuantity:
-          work?.data?.data?.typeOfProgress === "Percentage per Line"
+          dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line"
             ? (valueInputCurrentQuantity[index] / 100) * assign
             : valueInputCurrentQuantity[index],
         invoicing: valueInputInvoicePercentage[index] || 100,
         completion: valueInputCompletionPercentage[index] || 100,
       })
-      .then((result) => {
-        console.log(result);
+      .then(() => {
         toast.success("calculate successfully");
         refetch();
       })
       .catch((error) => {
-        console.log(error);
         toast.error(error?.response?.data?.message);
       })
       .finally(() => setLoading(null));
   }
-
+  const colums = [
+    {
+      header: "work item",
+      display: true,
+    },
+    {
+      header: "Unit Of Measure",
+      display: true,
+    },
+    {
+      header: "Contract Quantity",
+      display: true,
+    },
+    {
+      header: "Previous Quantity",
+      display: true,
+    },
+    {
+      header: "Current Work %",
+      display:
+        dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
+    },
+    {
+      header: "Current Work QTY",
+      display:
+        dispalyDate?.data?.data?.typeOfProgress !== "Percentage per Line",
+    },
+    {
+      header: "Current Work",
+      display:
+        dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
+    },
+    {
+      header: "Total Quantity",
+      display: true,
+    },
+    {
+      header: "Price",
+      display: true,
+    },
+    {
+      header: "Total Amount",
+      display: true,
+    },
+    {
+      header: "Completion %",
+      display: dispalyDate?.data?.data?.completionPercentage === true,
+    },
+    {
+      header: "Invoicing %",
+      display: dispalyDate?.data?.data?.activateInvoicingByPercentage === true,
+    },
+    {
+      header: "Net Amount",
+      display: true,
+    },
+    {
+      header: "Duo Amount",
+      display: true,
+    },
+    {
+      header: "Calculate",
+      display: true,
+    },
+  ];
   return (
     <div>
       <ToastContainer />
@@ -73,61 +135,81 @@ export default function TableWorkItem({ work, refetch }) {
         <table>
           <thead>
             <tr className=" bg-[#F5FAFE]  text-blue-950">
-              <th className="border-none">work item</th>
-              <th className="border-none">Unit Of Measure</th>
-              <th className="border-none">Contract Quantity</th>
-              <th className="border-none">Previous Quantity</th>
-              {work?.data?.data?.typeOfProgress === "Percentage per Line" ? (
-                <th className="border-none">Current Work %</th>
-              ) : (
-                <th className="border-none">Current Work QTY</th>
-              )}
-
-              {work?.data?.data?.typeOfProgress === "Percentage per Line" && (
-                <th className="border-none">Current Work </th>
-              )}
-              <th className="border-none">Total Quantity</th>
-              <th className="border-none">Price</th>
-              <th className="border-none">Total Amount</th>
-              {work?.data?.data?.completionPercentage && (
-                <th className="border-none">Completion %</th>
-              )}
-              {work?.data?.data?.activateInvoicingByPercentage && (
-                <th className="border-none">Invoicing %</th>
-              )}
-              <th className="border-none">Net Amount</th>
-              <th className="border-none">Duo Amount</th>
-              <th className="border-none">Calculate</th>
+              {colums
+                .filter(
+                  (e) =>
+                    currentValueColumWorkConfirmation[e?.header] && e?.display
+                )
+                .map((col, index) => (
+                  <th key={index} className="border-none">
+                    {col?.header}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
-            {work?.data?.data?.workItems?.map((e, i) => (
+            {dispalyDate?.data?.data?.workItems?.map((e, i) => (
               <tr className="cursor-pointer text-primaryColor" key={i}>
-                <td className="border-none">{e?.workItemId?.workItemName}</td>
-                <td className="border-none">
+                <td
+                  className={`border-none ${
+                    !currentValueColumWorkConfirmation["work item"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
+                  {e?.workItemId?.workItemName}
+                </td>
+                <td
+                  className={`border-none ${
+                    !currentValueColumWorkConfirmation["Unit Of Measure"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.workItemId?.workDetails?.unitOfMeasure}
                 </td>
-                <td className="border-none">
+                <td
+                  className={`border-none   ${
+                    !currentValueColumWorkConfirmation["Contract Quantity"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.workItemId?.workDetails?.assignedQuantity?.toLocaleString(
                     "en-US"
                   )}
                 </td>
                 {/* // previeous quantity */}
-                <td className="border-none">
+                <td
+                  className={`border-none    ${
+                    !currentValueColumWorkConfirmation["Previous Quantity"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.previousQuantity?.toLocaleString("en-US")}
                 </td>
-
                 {/* // current quantity */}
-                <td className="border-none">
+                <td
+                  className={`border-none ${
+                    !currentValueColumWorkConfirmation["Current Work %"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   <input
                     type="number"
-                    className="outline-none border px-1"
+                    className={`outline-none border px-1 ${
+                      !currentValueColumWorkConfirmation["Current Work QTY"]
+                        ? "hidden"
+                        : ""
+                    }`}
                     onChange={(e) =>
                       handleChangeCurrentQuantity(e.target.value, i)
                     }
                     value={
                       e?.currentQuantity
-                        ? work?.data?.data?.typeOfProgress ===
+                        ? dispalyDate?.data?.data?.typeOfProgress ===
                           "Percentage per Line"
                           ? (e?.currentQuantity * 100) /
                             e?.workItemId?.workDetails?.assignedQuantity
@@ -137,24 +219,56 @@ export default function TableWorkItem({ work, refetch }) {
                   />
                 </td>
                 {/* // special of percentage  */}
-                {work?.data?.data?.typeOfProgress === "Percentage per Line" && (
-                  <td>{e?.currentQuantity || 0}</td>
+                {dispalyDate?.data?.data?.typeOfProgress ===
+                  "Percentage per Line" && (
+                  <td
+                    className={`${
+                      !currentValueColumWorkConfirmation["Current Work"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.currentQuantity || 0}
+                  </td>
                 )}
                 {/* // total quantity  */}
-                <td className="border-none">
+                <td
+                  className={`border-none   ${
+                    !currentValueColumWorkConfirmation["Total Quantity"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.totalQuantity?.toLocaleString("en-US")}
                 </td>
                 {/* // price  */}
-                <td className="border-none">
+                <td
+                  className={`border-none   ${
+                    !currentValueColumWorkConfirmation["Price"] ? "hidden" : ""
+                  }`}
+                >
                   {e?.workItemId?.workDetails?.price?.toLocaleString("en-US")}
                 </td>
                 {/* /getTotalAmount/ */}
-                <td className="border-none">
+                <td
+                  className={`border-none   ${
+                    !currentValueColumWorkConfirmation["Total Amount"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.totalAmount?.toLocaleString("en-US")}
                 </td>
+
                 {/* /completionPercentage/ */}
-                {work?.data?.data?.completionPercentage && (
-                  <td className="border-none">
+                {dispalyDate?.data?.data?.completionPercentage && (
+                  <td
+                    className={`border-none   ${
+                      !currentValueColumWorkConfirmation["Completion %"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
                     <input
                       type="number"
                       className="outline-none border px-1"
@@ -169,10 +283,15 @@ export default function TableWorkItem({ work, refetch }) {
                     />
                   </td>
                 )}
-
                 {/* /activateInvoicingByPercentage/ */}
-                {work?.data?.data?.activateInvoicingByPercentage && (
-                  <td className="border-none">
+                {dispalyDate?.data?.data?.activateInvoicingByPercentage && (
+                  <td
+                    className={`border-none   ${
+                      !currentValueColumWorkConfirmation["Invoicing %"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
                     <input
                       type="number"
                       className="outline-none border px-1"
@@ -186,17 +305,33 @@ export default function TableWorkItem({ work, refetch }) {
                   </td>
                 )}
                 {/* // Net Amount  */}
-                <td className="border-none">
+                <td
+                  className={`border-none   ${
+                    !currentValueColumWorkConfirmation["Net Amount"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.netAmount?.toLocaleString("en-US") || 0}
                 </td>
                 {/* // getDuoAmount */}
-                <td className="border-none">
+                <td
+                  className={`border-none   ${
+                    !currentValueColumWorkConfirmation["Duo Amount"]
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {e?.dueAmount?.toLocaleString("en-US") || 0}
                 </td>
                 {/* // calculate  */}
                 <td>
                   <button
-                    className="text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor"
+                    className={`text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor ${
+                      !currentValueColumWorkConfirmation["Calculate"]
+                        ? "hidden"
+                        : ""
+                    }`}
                     onClick={() =>
                       handleSubmitCalculate(
                         e?.workItemId?._id,
@@ -249,6 +384,6 @@ export default function TableWorkItem({ work, refetch }) {
   );
 }
 TableWorkItem.propTypes = {
-  work: PropTypes.any,
+  dispalyDate: PropTypes.any,
   refetch: PropTypes.func,
 };

@@ -56,7 +56,7 @@ function DeductionsConfirmationTable() {
   });
 
   const {
-    data: deductionsConfirmations = [],
+    data: deductionsConfirmations,
     isLoading,
     refetch,
   } = useQuery({
@@ -64,7 +64,7 @@ function DeductionsConfirmationTable() {
     queryFn: getDeductionsConfirmation,
     keepPreviousData: true,
   });
-
+  console.log(deductionsConfirmations);
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
@@ -72,97 +72,95 @@ function DeductionsConfirmationTable() {
       </div>
     );
   }
-
+  if (deductionsConfirmations.length === 0 && deductions.length === 0) {
+    return <EmptyTable />;
+  }
   return (
     <div className="mx-auto mt-10">
       <div className="overflow-x-auto">
-        {deductions.length > 0 ? (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="">
-                <th className="text-center border p-2 bg-gray-100">Code</th>
-                <th className="text-center border p-2 bg-gray-100">
-                  Name of Addition
-                </th>
-                <th className="text-center border p-2 bg-gray-100">Type</th>
-                <th className=" text-center border p-2 bg-gray-100">Amount</th>
-                <th className="border p-2 bg-gray-100"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {deductions?.map((deduction, index) => (
-                <tr key={deduction._id}>
-                  <td className="border p-2 text-center">{index + 1}</td>
-                  <td className="border p-2 text-center">
-                    {deduction.deductionName}
-                  </td>
-                  <td className="border p-2 text-center">{deduction.type}</td>
-                  <td className="border p-2 text-center">{deduction.amount}</td>
-                  <td className="border p-2 text-center"></td>
-                </tr>
-              ))}
-              {deductionsConfirmations?.map((deductionsConfirmation, index) => (
-                <tr key={deductionsConfirmation._id}>
-                  <td className="border p-2 text-center">
-                    {index + deductions.length + 1}
-                  </td>
-                  <td className="border p-2 text-center">
-                    {deductionsConfirmation.deductionName}
-                  </td>
-                  <td className="border p-2 text-center">
-                    {deductionsConfirmation.type}
-                  </td>
-                  <td className="border p-2 text-center">
-                    {deductionsConfirmation.amount}
-                  </td>
-                  <td className="border p-1 text-center">
-                    <button
-                      onClick={() => setSureDeleteModel(true)}
-                      className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                    {sureDeleteModel && (
-                      <DeductionSureDelete
-                        setSureDeleteModel={setSureDeleteModel}
-                        handleDeleteDeduction={handleDeleteDeduction}
-                        loading={loading}
-                        deductionId={deductionsConfirmation._id}
-                      />
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr className="bg-gray-50 font-semibold">
-                <td colSpan="4" className="border p-2 text-center font-bold">
-                  Total Deductions
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="">
+              <th className="text-center border p-2 bg-gray-100">Code</th>
+              <th className="text-center border p-2 bg-gray-100">
+                Name of Addition
+              </th>
+              <th className="text-center border p-2 bg-gray-100">Type</th>
+              <th className=" text-center border p-2 bg-gray-100">Amount</th>
+              <th className="border p-2 bg-gray-100"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {deductions?.map((deduction, index) => (
+              <tr key={deduction._id}>
+                <td className="border p-2 text-center">{index + 1}</td>
+                <td className="border p-2 text-center">
+                  {deduction.deductionName}
                 </td>
-                <td colSpan="1" className="border p-2 text-center">
-                  {deductions.reduce(
-                    (total, deduction) => total + deduction.amount,
-                    0
+                <td className="border p-2 text-center">{deduction.type}</td>
+                <td className="border p-2 text-center">{deduction.amount}</td>
+                <td className="border p-2 text-center"></td>
+              </tr>
+            ))}
+            {deductionsConfirmations?.map((deductionsConfirmation, index) => (
+              <tr key={deductionsConfirmation._id}>
+                <td className="border p-2 text-center">
+                  {index + deductions.length + 1}
+                </td>
+                <td className="border p-2 text-center">
+                  {deductionsConfirmation.deductionName}
+                </td>
+                <td className="border p-2 text-center">
+                  {deductionsConfirmation.type}
+                </td>
+                <td className="border p-2 text-center">
+                  {deductionsConfirmation.amount}
+                </td>
+                <td className="border p-1 text-center">
+                  <button
+                    onClick={() => setSureDeleteModel(true)}
+                    className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                  {sureDeleteModel && (
+                    <DeductionSureDelete
+                      setSureDeleteModel={setSureDeleteModel}
+                      handleDeleteDeduction={handleDeleteDeduction}
+                      loading={loading}
+                      deductionId={deductionsConfirmation._id}
+                    />
                   )}
                 </td>
               </tr>
-              <tr className="bg-gray-50 font-semibold">
-                <td colSpan="4" className="border p-2 text-center font-bold">
-                  Total Confirmation Deductions
-                </td>
-                <td colSpan="1" className="border p-2 text-center">
-                  {deductionsConfirmations.reduce(
-                    (total, deductionsConfirmation) =>
-                      total + deductionsConfirmation.amount,
-                    0
-                  )}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        ) : (
-          <EmptyTable />
-        )}
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="bg-gray-50 font-semibold">
+              <td colSpan="4" className="border p-2 text-center font-bold">
+                Total Deductions
+              </td>
+              <td colSpan="1" className="border p-2 text-center">
+                {deductions.reduce(
+                  (total, deduction) => total + deduction.amount,
+                  0
+                )}
+              </td>
+            </tr>
+            <tr className="bg-gray-50 font-semibold">
+              <td colSpan="4" className="border p-2 text-center font-bold">
+                Total Confirmation Deductions
+              </td>
+              <td colSpan="1" className="border p-2 text-center">
+                {deductionsConfirmations.reduce(
+                  (total, deductionsConfirmation) =>
+                    total + deductionsConfirmation.amount,
+                  0
+                )}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
 
       <button

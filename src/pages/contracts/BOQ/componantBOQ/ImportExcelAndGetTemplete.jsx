@@ -25,7 +25,7 @@ export default function ImportExcelAndGetTemplete({
     await axiosInstance
       .post(`/api/work/sheet/${id}`, formDate)
       .then((result) => {
-        console.log(result);
+       
         if (result?.data?.message === "Success") {
           refetch();
           toast.success("add excel file successfully");
@@ -86,7 +86,7 @@ export default function ImportExcelAndGetTemplete({
               Template
             </option>
             {templateNames.map((name) => (
-              <option key={name} value={name._id}>
+              <option key={name._id} value={name._id}>
                 {name.name}
               </option>
             ))}
@@ -127,4 +127,5 @@ export default function ImportExcelAndGetTemplete({
 ImportExcelAndGetTemplete.propTypes = {
   refetch: PropTypes.func,
   setIdTemplate: PropTypes.func,
+  checkFetchData: PropTypes.any,
 };

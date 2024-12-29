@@ -49,7 +49,7 @@ export default function TableWorkConfirmation() {
         </div>
       ) : (
         <div>
-          <div className="scrollbar min-h-[60vh] overflow-auto shadow-md">
+          <div className="scrollbar min-h-[80vh] overflow-auto shadow-md">
             <table>
               <thead>
                 <tr className="bg-primaryColor text-white">

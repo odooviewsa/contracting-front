@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import TableBOQ from "./TableBOQ";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { axiosInstance } from "../../../../../axios/axios";
 import { useQuery } from "@tanstack/react-query";
-
+import PropTypes from "prop-types";
 function TableBoqTemplate({ idTemplate, setCheckFetchData, setOpenFormBOQ }) {
   const { setAllIdMainItemAndSubItemAndWorkItemTemplate } =
     useContext(ContextBOQ);
@@ -11,7 +11,7 @@ function TableBoqTemplate({ idTemplate, setCheckFetchData, setOpenFormBOQ }) {
     return axiosInstance.get(`/api/templates/${idTemplate}`);
   }
 
-  const { dataTemplate, refetchTemplate } = useQuery({
+  const { dataTemplate } = useQuery({
     queryKey: ["getSingleTemplate", idTemplate],
     queryFn: getSingleTemplate,
     keepPreviousData: true,
@@ -35,7 +35,6 @@ function TableBoqTemplate({ idTemplate, setCheckFetchData, setOpenFormBOQ }) {
       setCheckFetchData(false);
     }
   }
-  console.log(dataTemplate);
 
   return (
     <div>
@@ -49,3 +48,10 @@ function TableBoqTemplate({ idTemplate, setCheckFetchData, setOpenFormBOQ }) {
 }
 
 export default TableBoqTemplate;
+
+TableBoqTemplate.propTypes = {
+
+  setOpenFormBOQ: PropTypes.any,
+  setCheckFetchData: PropTypes.any,
+  idTemplate: PropTypes.any,
+};
