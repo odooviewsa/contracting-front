@@ -83,7 +83,6 @@ export default function Contracts() {
             + Add Contract
           </Link>
         </div>
-
         <>
           <TableAllContract
             contracts={displayProjects}

@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../axios/axios";
 // import Loading from '../../componant/Loading';
 import { ToastContainer } from "react-toastify";
-
+import ProjectBlockSureDelete from "./projectComponents/ProjectBlockSureDelete";
 const fetchProjects = async (page) => {
   const url = `/api/projects/all?page=${page}&limit=5`;
   const response = await axiosInstance.get(url);
@@ -32,6 +32,7 @@ export default function Projects() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
+  const [sureDelete, setSureDelete] = useState(null);
 
   const {
     data: projectData,
@@ -150,8 +151,15 @@ export default function Projects() {
         refreshProjects={refreshProjects}
         isStatusLoading={isStatusLoading}
         isProjectLoading={isProjectLoading}
+        setSureDelete={setSureDelete}
       />
-
+      {sureDelete && (
+        <ProjectBlockSureDelete
+          refreshProjects={refreshProjects}
+          setSureDelete={setSureDelete}
+          sureDelete={sureDelete}
+        />
+      )}
       <div className="flex justify-between items-center gap-4 mt-4 flex-col sm:flex-row">
         <span className="text-grayColor">
           Displaying {startProject} - {endProject} of{" "}

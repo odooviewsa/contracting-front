@@ -4,17 +4,16 @@ import { axiosInstance } from "../../../axios/axios";
 import PropTypes from "prop-types";
 
 function ProjectBlockSureDelete({
-  item,
-  setShowOptions,
   refreshProjects,
   setSureDelete,
+  sureDelete,
 }) {
   const [loading, setLoading] = useState(false);
 
   const handleDeleteProject = async () => {
     setLoading(true);
     try {
-      await axiosInstance.delete(`/api/projects/${item._id}`);
+      await axiosInstance.delete(`/api/projects/${sureDelete}`);
 
       refreshProjects();
       toast.success("Project deleted successfully!");
@@ -23,8 +22,7 @@ function ProjectBlockSureDelete({
       toast.error("Error deleting project");
     } finally {
       setLoading(false);
-      setSureDelete(false);
-      setShowOptions(null);
+      setSureDelete(null);
     }
   };
   return (
@@ -32,7 +30,10 @@ function ProjectBlockSureDelete({
       <div className="bg-white rounded-lg shadow p-5  w-[300px]  text-textLabalForm flex flex-col items-center gap-5">
         <h1 className="font-bold text-[2rem]">Are You Sure !</h1>
         <div className="flex items-center justify-between w-full gap-5">
-          <button className="border rounded-md py-2 px-5 font-semibold">
+          <button
+            className="border rounded-md py-2 px-5 font-semibold"
+            onClick={() => setSureDelete(null)}
+          >
             Back
           </button>
           <button
@@ -57,6 +58,5 @@ ProjectBlockSureDelete.propTypes = {
   setShowOptions: PropTypes.func,
   handleDeleteProject: PropTypes.func,
   setSureDelete: PropTypes.func,
-
-  item: PropTypes.object,
+  sureDelete: PropTypes.any,
 };

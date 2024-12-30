@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 function EditSingleContract() {
   const navigate = useNavigate();
   const { contractId } = useParams();
+  const [consultants, setConsultants] = useState([]);
   const [projects, setProjects] = useState([]);
   const [partners, setPartners] = useState([]);
   const user = useSelector((state) => state?.user);
@@ -19,16 +20,18 @@ function EditSingleContract() {
   // asiggn previeous data
   const location = useLocation();
   const previeousData = location.state || {};
-  console.log(previeousData);
+
   useEffect(() => {
     setValue("contractType", previeousData.contractType);
-    setValue("project", previeousData.project._id);
-    setValue("partner", previeousData.partner._id);
-    const formattedStartDate = new Date(previeousData.startDate)
+    setValue("project", previeousData?.project?._id);
+    setValue("partner", previeousData?.partner?._id);
+    setValue("consultant", previeousData?.consultant?._id);
+
+    const formattedStartDate = new Date(previeousData?.startDate)
       .toISOString()
       .split("T")[0];
     setValue("startDate", formattedStartDate);
-    const formattedEndDate = new Date(previeousData.endDate)
+    const formattedEndDate = new Date(previeousData?.endDate)
       .toISOString()
       .split("T")[0];
     setValue("endDate", formattedEndDate);
@@ -38,8 +41,9 @@ function EditSingleContract() {
     previeousData.contractType,
     previeousData.description,
     previeousData.endDate,
-    previeousData.partner._id,
-    previeousData.project._id,
+    previeousData?.partner?._id,
+    previeousData?.project?._id,
+    previeousData?.consultant?._id,
     previeousData.startDate,
     previeousData.typeOfProgress,
     setValue,
@@ -62,9 +66,18 @@ function EditSingleContract() {
         console.log("Error fetching partners:", error.message);
       }
     };
+    const fetchConsultants = async () => {
+      try {
+        const response = await axiosInstance.get("/api/partners/consultants");
+        setConsultants(response.data.consultants);
+      } catch (erorr) {
+        toast.error(erorr?.response?.data?.message);
+      }
+    };
+    fetchConsultants();
     fetchProjects();
     fetchPartners();
-  }, [contractId, setValue]);
+  }, [contractId]);
 
   const onUpdate = async (data) => {
     try {
@@ -190,13 +203,40 @@ function EditSingleContract() {
                 }`}
               >
                 <option value="">choose</option>
-                <option value="Progress">Progress</option>
-                <option value="Progress Payment">Progress Payment</option>
-                <option value="Invoice">Invoice</option>
+                <option value="In Progress">Quantity</option>
+                <option value="Completed">Percentage Per Line</option>
+                <option value="Suspended">
+                  Percentage Applied to Total of Line
+                </option>
+                <option value="Suspended">Financial Progress</option>
+                <option value="Suspended">Time-Based Progress</option>
               </select>
               {errors.typeOfProgress && (
                 <p className="text-red-400 text-sm">
                   {errors.typeOfProgress.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Consaltant <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                {...register("consultant", {
+                  required: "consultant is required",
+                })}
+                className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full `}
+              >
+                {consultants?.map((e) => (
+                  <option key={e?._id} value={e?._id}>
+                    {e?.partnerName}
+                  </option>
+                ))}
+              </select>
+              {errors.consultant && (
+                <p className="text-red-400 text-sm">
+                  {errors.consultant.message}
                 </p>
               )}
             </div>

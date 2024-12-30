@@ -177,12 +177,8 @@ const AddProjectForm = () => {
       const projectId = response.data.data._id;
       console.log(response.data.data._id);
       // Show toast and navigate after it closes
-      toast.success("Project created successfully!", {
-        onClose: () =>
-          navigate(
-            `/${user?.companyName}/projects/projectdetails/${projectId}`
-          ),
-      });
+      toast.success("Project created successfully!");
+      navigate(`/${user?.companyName}/projects/projectdetails/${projectId}`);
     } catch (error) {
       console.error(error);
       toast.error("Error creating project");

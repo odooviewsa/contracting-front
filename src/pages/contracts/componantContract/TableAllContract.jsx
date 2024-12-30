@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import NotFoundContract from "./NotFoundContract";
 import Loading from "../../../componant/Loading";
 import SureDeleteContract from "./SureDeleteContract";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TableAllContract({
   contracts,
@@ -28,9 +28,24 @@ export default function TableAllContract({
   const user = useSelector((state) => state?.user);
   const start = (page - 1) * contractsPerPage + 1;
   const end = start + contracts.length - 1;
+  // close menu
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenModalDetails(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setOpenModalDetails]);
   if (!isLoading && !searchLoading && contracts?.length === 0) {
     return <NotFoundContract />;
   }
+
   if (isLoading || searchLoading) {
     return (
       <div className="flex items-center justify-center min-h-[70vh]">
@@ -96,7 +111,7 @@ export default function TableAllContract({
                     setOpenModalDetails((prev) => !prev);
                   }}
                 >
-                  <div className="flex justify-center relative">
+                  <div className="flex justify-center relative" ref={menuRef}>
                     {openModalDetails && i === idContract && (
                       <ModalDetails
                         contract={contract}

@@ -2,15 +2,29 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import ModalDetailsPartners from "./ModalDetailsPartners";
 import Avatar from "../../../componant/Avatar";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { url } from "../../../axios/axios";
 export default function TablePartners({
   setOpenEfitPartnerId,
   setOpenDeletePartnerId,
   data,
 }) {
-  const [openModalDetails, setOpenModalDetails] = useState(false);
+  
   const [idPartner, setIdPartner] = useState(null);
+  // close menu
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIdPartner(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   if (data?.length === 0)
     return (
       <div className="min-h-[70vh] flex justify-center items-center">
@@ -54,22 +68,24 @@ export default function TablePartners({
               <td>{item?.taxNumber}</td>
               <td>{item?.commercialNumber}</td>
               <td>
-                <div className="relative">
-                  {openModalDetails && index === idPartner && (
+                <div
+                  className="relative"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIdPartner(index);
+                  }}
+                >
+                  {index === idPartner && (
                     <ModalDetailsPartners
                       setOpenEfitPartnerId={setOpenEfitPartnerId}
                       item={item}
-                      setOpenModalDetails={setOpenModalDetails}
+                      
                       setOpenDeletePartnerId={setOpenDeletePartnerId}
+                      menuRef={menuRef}
                     />
                   )}
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIdPartner(index);
-                      setOpenModalDetails((prev) => !prev);
-                    }}
-                  >
+
+                  <div>
                     <HiOutlineDotsHorizontal />
                   </div>
                 </div>

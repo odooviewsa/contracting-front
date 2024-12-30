@@ -26,8 +26,7 @@ function OptionsProject({ item, setShowOptions, setSureDelete }) {
         onClick={(e) => {
           e.stopPropagation();
           setShowOptions(false);
-          //   handleDeleteProject(item._id);
-          setSureDelete(true);
+          setSureDelete(item._id);
         }}
       >
         <MdDelete size={18} />

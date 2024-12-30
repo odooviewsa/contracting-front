@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCircle } from "react-icons/fa6";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import ModalDetailsWork from "./ModalDetailsWork";
@@ -16,6 +16,21 @@ export default function TableWorkConfirmation() {
   const [idContract, setIdContract] = useState(null);
   const trRef = useRef();
   const user = useSelector((state) => state?.user);
+  // close menu
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenModalDetails(false);
+        setIdContract(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setOpenModalDetails]);
   const fetchWorkConfirmations = async (page) => {
     const response = await axiosInstance.get(
       `/api/workConfirmation?page=${page}&limit=20`
@@ -109,7 +124,15 @@ export default function TableWorkConfirmation() {
                         <p>{work?.status}</p>
                       </div>
                     </td>
-                    <td className="text-blue-800 thContract">
+                    <td
+                      className="text-blue-800 thContract"
+                      ref={menuRef}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIdContract(work._id);
+                        setOpenModalDetails((prev) => !prev);
+                      }}
+                    >
                       <div className="flex justify-center relative">
                         {openModalDetails && work._id === idContract && (
                           <ModalDetailsWork
@@ -118,13 +141,7 @@ export default function TableWorkConfirmation() {
                             refetchData={refetch}
                           />
                         )}
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIdContract(work._id);
-                            setOpenModalDetails((prev) => !prev);
-                          }}
-                        >
+                        <div>
                           <HiOutlineDotsVertical />
                         </div>
                       </div>

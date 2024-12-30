@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -6,14 +6,34 @@ import Loading from "../../../componant/Loading";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import OptionsProject from "./OptionsProject";
-import ProjectBlockSureDelete from "./ProjectBlockSureDelete";
 
-const ProjectTable = ({ projects, refreshProjects, isProjectLoading }) => {
+const ProjectTable = ({ projects, isProjectLoading, setSureDelete }) => {
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(null);
-  const [sureDelete, setSureDelete] = useState(false);
-  const user = useSelector((state) => state?.user);
 
+  const [openMenu, setOpenMenu] = useState(false);
+  const user = useSelector((state) => state?.user);
+  // handleShowOptions
+  function handleShowOptions(index) {
+    setOpenMenu((e) => !e);
+    setShowOptions((prev) => (index === prev ? null : index));
+  }
+
+  // close menu
+  const menuRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenu(false);
+        setShowOptions(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setOpenMenu]);
   if (!projects || projects.length === 0) {
     return (
       <div className="flex items-center justify-center h-60">
@@ -76,28 +96,19 @@ const ProjectTable = ({ projects, refreshProjects, isProjectLoading }) => {
                 </td>
                 <td className="p-4">
                   <div className="relative">
-                    {OptionsProject && index === showOptions && (
-                      <OptionsProject
-                        item={project}
-                        setShowOptions={setShowOptions}
-                        setSureDelete={setSureDelete}
-                      />
-                    )}
-                    {sureDelete && (
-                      <ProjectBlockSureDelete
-                        item={project}
-                        setShowOptions={setShowOptions}
-                        refreshProjects={refreshProjects}
-                        setSureDelete={setSureDelete}
-                      />
-                    )}
-
+                    <div ref={menuRef}>
+                      {openMenu && index === showOptions && (
+                        <OptionsProject
+                          item={project}
+                          setShowOptions={setShowOptions}
+                          setSureDelete={setSureDelete}
+                        />
+                      )}
+                    </div>
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
-                        setShowOptions((prev) =>
-                          index === prev ? null : index
-                        );
+                        handleShowOptions(index);
                       }}
                     >
                       <HiOutlineDotsHorizontal />
@@ -114,17 +125,10 @@ const ProjectTable = ({ projects, refreshProjects, isProjectLoading }) => {
 };
 
 ProjectTable.propTypes = {
-  projects: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      projectName: PropTypes.string,
-      projectManger: PropTypes.string,
-      status: PropTypes.string,
-    })
-  ),
+  projects: PropTypes.any,
   isStatusLoading: PropTypes.bool,
   isProjectLoading: PropTypes.bool,
-  refreshProjects: PropTypes.func,
+  setSureDelete: PropTypes.any,
 };
 
 export default ProjectTable;

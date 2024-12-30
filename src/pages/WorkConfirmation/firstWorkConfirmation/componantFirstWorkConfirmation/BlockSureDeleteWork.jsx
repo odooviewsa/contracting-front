@@ -17,12 +17,9 @@ export default function BlockSureDeleteWork({
       await axiosInstance.delete(`/api/workConfirmation/${workConfirmationId}`);
       setOpenModalDetails(false);
       refetchData();
-      toast.success("Work confirmation deleted successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success("Work confirmation deleted successfully!");
     } catch (error) {
-      console.error("Error deleting work confirmation:", error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setIsLoading(false);
     }
