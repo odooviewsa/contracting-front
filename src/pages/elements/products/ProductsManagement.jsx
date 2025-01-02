@@ -29,7 +29,9 @@ const ProductsManagement = () => {
         if (page) {
           urlNew = `${url}/api/products?page=${page}`;
         }
-        const response = await fetch(urlNew);
+        const response = await fetch(urlNew, {
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
