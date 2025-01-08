@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-function OptionsProject({ item, setShowOptions, setSureDelete }) {
+function OptionsProject({content, item, setShowOptions, setSureDelete }) {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
 
@@ -19,7 +19,7 @@ function OptionsProject({ item, setShowOptions, setSureDelete }) {
         }}
       >
         <FaEdit size={18} />
-        <p>Edit</p>
+        <p>{content.edit}</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 text-red-700 cursor-pointer"
@@ -30,7 +30,7 @@ function OptionsProject({ item, setShowOptions, setSureDelete }) {
         }}
       >
         <MdDelete size={18} />
-        <p>Delete</p>
+        <p>{content.delete}</p>
       </div>
     </div>
   );

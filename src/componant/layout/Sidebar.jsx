@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaRegWindowRestore } from "react-icons/fa";
 import { GiExplosiveMaterials } from "react-icons/gi";
 import { FaProductHunt } from "react-icons/fa6";
+import { IoPeople } from "react-icons/io5";
 export default function Sidebar({ setOpenSidebar, openSidebar }) {
   const { pathname } = useLocation();
   const user = useSelector((state) => state?.user);
@@ -114,6 +115,13 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
         >
           <FaProductHunt size={20} />
           {openSidebar && <h1>Product</h1>}
+        </Link>
+        <Link
+          to={`/${user?.companyName}/users`}
+          className="flex items-center gap-2 text-grayColor p-3"
+        >
+          <IoPeople size={20} />
+          {openSidebar && <h1>Users</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/setting`}

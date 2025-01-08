@@ -7,7 +7,12 @@ import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import OptionsProject from "./OptionsProject";
 
-const ProjectTable = ({ projects, isProjectLoading, setSureDelete }) => {
+const ProjectTable = ({
+  content,
+  projects,
+  isProjectLoading,
+  setSureDelete,
+}) => {
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(null);
 
@@ -18,7 +23,6 @@ const ProjectTable = ({ projects, isProjectLoading, setSureDelete }) => {
     setOpenMenu((e) => !e);
     setShowOptions((prev) => (index === prev ? null : index));
   }
-
   // close menu
   const menuRef = useRef(null);
   useEffect(() => {
@@ -38,7 +42,7 @@ const ProjectTable = ({ projects, isProjectLoading, setSureDelete }) => {
     return (
       <div className="flex items-center justify-center h-60">
         <p className="text-primaryColor font-bold text-2xl">
-          No Projects Found
+          {content.noFoundMessage}
         </p>
       </div>
     );
@@ -56,11 +60,11 @@ const ProjectTable = ({ projects, isProjectLoading, setSureDelete }) => {
       <table className="min-w-full bg-white rounded-lg">
         <thead>
           <tr className="bg-primaryColor text-white">
-            <th className="p-4">Code</th>
-            <th className="p-4">Project Name</th>
-            <th className="p-4">Project Manager</th>
-            <th className="p-4">Status</th>
-            <th className="p-4">Details</th>
+            {content?.items?.map((item, key) => (
+              <th className="p-4" key={key}>
+                {item.text}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -99,6 +103,7 @@ const ProjectTable = ({ projects, isProjectLoading, setSureDelete }) => {
                     <div ref={menuRef}>
                       {openMenu && index === showOptions && (
                         <OptionsProject
+                          content={content.menu}
                           item={project}
                           setShowOptions={setShowOptions}
                           setSureDelete={setSureDelete}

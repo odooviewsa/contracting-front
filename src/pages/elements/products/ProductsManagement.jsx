@@ -7,7 +7,7 @@ import ProductForm from "../productForm/ProductForm";
 import { useEffect } from "react";
 import { Grid, Pagination } from "@mui/material";
 
-import { url } from "../../../axios/axios";
+import { axiosInstance, url } from "../../../axios/axios";
 
 const ProductsManagement = () => {
   const [data, setData] = useState(null);
@@ -25,17 +25,16 @@ const ProductsManagement = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let urlNew = `${url}/api/products`;
+        let urlNew = `/api/products`;
         if (page) {
-          urlNew = `${url}/api/products?page=${page}`;
+          urlNew = `/api/products?page=${page}`;
         }
-        const response = await fetch(urlNew);
-        if (!response.ok) {
+        const response = await axiosInstance.get(urlNew);
+        if (!response) {
           throw new Error("Failed to fetch products");
         }
-        const data = await response.json();
-        setData(data);
-        setProducts(data?.products);
+        setData(response.data);
+        setProducts(response.data.products);
       } catch (err) {
         console.error("Error fetching products:", err);
       }

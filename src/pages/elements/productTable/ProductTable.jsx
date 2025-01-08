@@ -13,7 +13,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
   ];
 
   return (
-    <div>
+    <div className="scrollbar overflow-x-auto">
       <table style={styles.table}>
         <thead style={styles.tableHeader}>
           <tr>

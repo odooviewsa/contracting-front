@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const AddProjectButton = () => {
+const AddProjectButton = ({children}) => {
   const navigate = useNavigate();
 
   return (
@@ -10,7 +10,7 @@ const AddProjectButton = () => {
         navigate('addproject'); 
       }}
     >
-      + Add Project
+      {children}
     </button>
   );
 };

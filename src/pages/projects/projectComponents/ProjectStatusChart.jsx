@@ -2,9 +2,9 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto';
 
-const ProjectStatusChart = ({ statusData }) => {
+const ProjectStatusChart = ({labels, statusData }) => {
   const data = {
-    labels: ['Completed', 'Planning', 'In Progress'],
+    labels: labels,
     datasets: [
       {
         data: statusData?.map(status => status.count),

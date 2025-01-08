@@ -28,29 +28,23 @@ SummaryCard.propTypes = {
   circleColor2: PropTypes.string,
 };
 
-const SummarySection = ({ totalProjects, totalRevenue, totalCost }) => (
+const SummarySection = ({
+  content,
+  totalProjects,
+  totalRevenue,
+  totalCost,
+}) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-    <SummaryCard
-      title="Projects"
-      value={totalProjects?.toLocaleString("en-US")}
-      bgColor="bg-pink-500"
-      circleColor1="bg-pink-300"
-      circleColor2="bg-pink-400"
-    />
-    <SummaryCard
-      title="Total Revenue"
-      value={totalRevenue?.toLocaleString("en-US")}
-      bgColor="bg-orange-400"
-      circleColor1="bg-orange-200"
-      circleColor2="bg-orange-300"
-    />
-    <SummaryCard
-      title="Total Cost"
-      value={totalCost?.toLocaleString("en-US")}
-      bgColor="bg-blue-500"
-      circleColor1="bg-blue-300"
-      circleColor2="bg-blue-400"
-    />
+    {content?.map((item, key) => (
+      <SummaryCard
+        key={key}
+        title={item.title}
+        value={totalProjects?.toLocaleString("en-US")}
+        bgColor={item.bgColor}
+        circleColor1={item.circleColor1}
+        circleColor2={item.circleColor2}
+      />
+    ))}
   </div>
 );
 

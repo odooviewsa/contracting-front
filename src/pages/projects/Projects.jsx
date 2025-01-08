@@ -10,6 +10,7 @@ import { axiosInstance } from "../../axios/axios";
 // import Loading from '../../componant/Loading';
 import { ToastContainer } from "react-toastify";
 import ProjectBlockSureDelete from "./projectComponents/ProjectBlockSureDelete";
+import { useTranslation } from "react-i18next";
 const fetchProjects = async (page) => {
   const url = `/api/projects/all?page=${page}&limit=5`;
   const response = await axiosInstance.get(url);
@@ -33,6 +34,8 @@ export default function Projects() {
   const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
   const [sureDelete, setSureDelete] = useState(null);
+  // Language
+  const { t } = useTranslation();
 
   const {
     data: projectData,
@@ -92,12 +95,11 @@ export default function Projects() {
   const refreshProjects = () => {
     queryClient.invalidateQueries(["projects", page]);
   };
-
   return (
     <div className="p-8">
       <ToastContainer />
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold mb-6">Overview</h1>
+        <h1 className="text-2xl font-bold mb-6">{t("ProjectsPage.title")}</h1>
         <TiArrowSortedDown
           size={25}
           cursor="pointer"
@@ -115,13 +117,19 @@ export default function Projects() {
       >
         <div className="sm:col-span-2 lg:col-span-3">
           <SummarySection
+            content={t("ProjectsPage.charts", { returnObjects: true })}
             totalProjects={statusData?.totalProjectsForUser}
             totalRevenue={statusData?.totalContractValueSum}
             totalCost={statusData?.totalContractValueSum}
           />
         </div>
         <div className="sm:col-span-2 lg:col-span-1">
-          <ProjectStatusChart statusData={statusData?.countStatus} />
+          <ProjectStatusChart
+            labels={t("ProjectsPage.statusChartLabels", {
+              returnObjects: true,
+            })}
+            statusData={statusData?.countStatus}
+          />
         </div>
       </div>
 
@@ -129,7 +137,7 @@ export default function Projects() {
         <div className="flex gap-4 w-full sm:w-auto">
           <input
             type="text"
-            placeholder="Search projects..."
+            placeholder={t("ProjectsPage.searchBarPlaceholder")}
             value={searchQuery}
             onChange={handleSearch}
             className="border px-3 py-2 rounded-md w-full sm:w-60"
@@ -143,10 +151,11 @@ export default function Projects() {
             />
           </div>
         </div>
-        <AddProjectButton />
+        <AddProjectButton>{t("ProjectsPage.addButton")}</AddProjectButton>
       </div>
 
       <ProjectTable
+        content={t("ProjectsPage.table", {returnObjects: true})}
         projects={displayProjects}
         refreshProjects={refreshProjects}
         isStatusLoading={isStatusLoading}
@@ -162,8 +171,7 @@ export default function Projects() {
       )}
       <div className="flex justify-between items-center gap-4 mt-4 flex-col sm:flex-row">
         <span className="text-grayColor">
-          Displaying {startProject} - {endProject} of{" "}
-          {displayProjects?.totalProjects} projects
+          {t("ProjectsPage.pagination.text").replace("{displaying}", `${startProject} - ${endProject}`).replace("{projects}", `${displayProjects?.totalProjects}`)}
         </span>
         <div className="flex gap-4">
           <button
@@ -172,10 +180,10 @@ export default function Projects() {
             onClick={handlePrevious}
             disabled={page === 1}
           >
-            Previous
+            {t("ProjectsPage.pagination.previousButton")}
           </button>
           <span className="flex items-center">
-            Page {page} of {displayProjects?.totalPages}
+            {t("ProjectsPage.pagination.page").replace("{page}", page).replace("{projects}", `${displayProjects?.totalPages}`)}
           </span>
           <button
             type="button"
@@ -183,7 +191,7 @@ export default function Projects() {
             onClick={handleNext}
             disabled={page === displayProjects?.totalPages}
           >
-            Next
+            {t("ProjectsPage.pagination.nextButton")}
           </button>
         </div>
       </div>

@@ -39,10 +39,31 @@ import BoqTemplate from "./pages/contracts/BoqTemplate/BoqTemplate";
 import BoqItem from "./pages/contracts/BoqTemplate/BoqItem";
 import EstimatorPage from "./pages/estimator/EstimatorPage";
 import TableEstimator from "./pages/estimator/TableEstimator";
-import MaterialRequest from "./pages/elements/materialrequest/MaterialRequest";
+import MaterialRequest from "./pages/materialrequest/MaterialRequest";
 import ProductsManagement from "./pages/elements/products/ProductsManagement";
+import UserTanetPage from "./pages/userTanet/UserTanetPage";
+import MaterialRequestLayout from "./pages/materialrequest/MaterialRequestLayout";
+import MaterialRequestList from "./pages/materialrequest/MaterialRequestList";
+import "./i18n.js";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  // Multi Language
+  const { i18n } = useTranslation();
+  
+  useEffect(() => {
+    window.document.dir = i18n.dir();
+    
+    const languageChangeHandler = () => {
+      window.document.dir = i18n.dir();
+    };
+
+    i18n.on('languageChanged', languageChangeHandler);
+
+    return () => {
+      i18n.off('languageChanged', languageChangeHandler);
+    };
+  }, [i18n, i18n.language]);
   const user = useSelector((state) => state?.user);
   const dispatch = useDispatch();
 
@@ -163,6 +184,10 @@ function App() {
           element: <Partners />,
         },
         {
+          path: `:companyName/users`,
+          element: <UserTanetPage />,
+        },
+        {
           path: `:companyName/setting`,
           element: <AddUsersTanet />,
         },
@@ -216,7 +241,17 @@ function App() {
         },
         {
           path: ":companyName/materials",
-          element: <MaterialRequest />,
+          element: <MaterialRequestLayout />,
+          children: [
+            {
+              index: true,
+              element: <MaterialRequestList />,
+            },
+            {
+              path: "create",
+              element: <MaterialRequest />,
+            },
+          ],
         },
         {
           path: ":companyName/productsManagemet",

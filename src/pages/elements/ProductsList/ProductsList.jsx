@@ -1,7 +1,7 @@
 import { Grid, Pagination, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { url } from "../../../axios/axios";
+import { axiosInstance, url } from "../../../axios/axios";
 
 const ProductsList = ({ onSelect }) => {
   const [data, setData] = useState(null);
@@ -17,17 +17,16 @@ const ProductsList = ({ onSelect }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let urlNew = `${url}/api/products`;
+        let urlNew = `/api/products`;
         if (page) {
-          urlNew = `${url}/api/products?page=${page}`;
+          urlNew = `/api/products?page=${page}`;
         }
-        const response = await fetch(urlNew);
-        if (!response.ok) {
+        const response = await axiosInstance.get(urlNew);
+        if (!response) {
           throw new Error("Failed to fetch products");
         }
-        const data = await response.json();
-        setData(data);
-        setProducts(data?.products);
+        setData(response.data);
+        setProducts(response.data.products);
       } catch (err) {
         console.error("Error fetching products:", err);
       }
@@ -54,7 +53,7 @@ const ProductsList = ({ onSelect }) => {
   const fields = ["sku", "name", "uom", "category", "price", "quantity"];
 
   return (
-    <div>
+    <div className="w-full">
       <Grid
         container
         alignItems="center"
@@ -73,55 +72,58 @@ const ProductsList = ({ onSelect }) => {
           }}
         />
       </Grid>
-      <table style={styles.table}>
-        <thead style={styles.tableHeader}>
-          <tr>
-            {fields.map((field) => (
-              <th key={field}>
-                {field.charAt(0).toUpperCase() + field.slice(1)}
-              </th>
-            ))}
-            <th>Supplier</th>
-            <th>Id</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <tr key={product._id}>
-                {fields.map((field) => (
-                  <td key={field}>
-                    {field === "category"
-                      ? product[field]?.name || "-" // Display category name
-                      : field === "price"
-                      ? `$${product[field]?.toFixed(2) || "0.00"}`
-                      : product[field] || "-"}
+      <div className="scrollbar overflow-x-auto">
+        <table style={styles.table}>
+          <thead style={styles.tableHeader}>
+            <tr>
+              {fields.map((field) => (
+                <th key={field}>
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </th>
+              ))}
+              <th>Supplier</th>
+              <th>Id</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <tr key={product._id}>
+                  {fields.map((field) => (
+                    <td key={field}>
+                      {field === "category"
+                        ? product[field]?.name || "-" // Display category name
+                        : field === "price"
+                        ? `$${product[field]?.toFixed(2) || "0.00"}`
+                        : product[field] || "-"}
+                    </td>
+                  ))}
+                  {/* Display supplier and id */}
+                  <td>{product.supplier || "-"}</td>
+                  <td>{product._id || "-"}</td>
+                  <td>
+                    <button
+                      onClick={() => onSelect(product)}
+                      style={styles.selectButton}
+                      aria-label={`Edit ${product.name || "product"}`}
+                    >
+                      Select
+                    </button>
                   </td>
-                ))}
-                {/* Display supplier and id */}
-                <td>{product.supplier || "-"}</td>
-                <td>{product._id || "-"}</td>
-                <td>
-                  <button
-                    onClick={() => onSelect(product)}
-                    style={styles.selectButton}
-                    aria-label={`Edit ${product.name || "product"}`}
-                  >
-                    Select
-                  </button>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={fields.length + 3} style={styles.noData}>
+                  No products available
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={fields.length + 3} style={styles.noData}>
-                No products available
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
+
       <Grid
         container
         alignItems="center"

@@ -9,6 +9,7 @@ import makeAnimated from "react-select/animated";
 import Header from "../../componant/layout/Header";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const animatedComponents = makeAnimated();
 
@@ -126,6 +127,7 @@ const AddProjectForm = () => {
   } = useForm();
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
+  const { t } = useTranslation();
 
   // State to hold selected documents
   const [selectedDocuments, setSelectedDocuments] = useState([]);
@@ -188,7 +190,6 @@ const AddProjectForm = () => {
   const handleDocumentChange = (e) => {
     setSelectedDocuments(Array.from(e.target.files));
   };
-
   return (
     <>
       <ToastContainer />
@@ -198,203 +199,193 @@ const AddProjectForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div>
-              <InputField
-                label="Project name"
-                placeholder="Enter project name"
-                name="projectName"
-                register={register}
-                required={true}
-                errorMessage={errors.projectName && "Project Name is required"}
-              />
-              <InputField
-                label="Start Date"
-                placeholder="10/10/2023"
-                type="date"
-                name="startDate"
-                register={register}
-                required={true}
-                errorMessage={errors.startDate && "Start Date is required"}
-              />
-              <InputField
-                label="Project Location"
-                placeholder="Select"
-                name="projectLocation"
-                register={register}
-                required={true}
-                errorMessage={
-                  errors.projectLocation && "Project Location is required"
-                }
-              />
-              <InputField
-                label="Project Manager"
-                placeholder="Select Project Manager"
-                name="projectManger"
-                register={register}
-                required={true}
-                errorMessage={
-                  errors.projectManager && "Project Manager is required"
-                }
-                type="select"
-                options={managers}
-              />
-              <InputField
-                label="Status"
-                placeholder="Select Status"
-                name="status"
-                register={register}
-                required={true}
-                errorMessage={errors.status && "Status is required"}
-                type="select"
-                options={["Completed", "Planning", "in Progress"]}
-              />
-              <div>
-                <label className="block text-gray-700 font-semibold mb-2">
-                  Team Members <span className="text-red-500">*</span>
-                </label>
-                <Select
-                  closeMenuOnSelect={false}
-                  components={animatedComponents}
-                  isMulti
-                  options={teamMembers}
-                  onChange={(e) => setSelectedTeamMembers(e)}
-                  className="border-primaryColor"
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      borderColor: state.isFocused ? "#06385c" : "#06385c",
-                      padding: "2px",
-                      "&:hover": {
-                        borderColor: "#06385c",
-                      },
-                    }),
-                  }}
-                />
-              </div>
-              <TextAreaField
-                label="Scope Of Work"
-                placeholder="Enter details"
-                name="scopeOfWork"
-                register={register}
-                required={true}
-                errorMessage={errors.scopeOfWork && "Scope of Work is required"}
-              />
+              {t("AddEditProjectPage.feilds1", { returnObjects: true }).map(
+                (feild, key) =>
+                  !feild.type && !feild.multiSelect ? (
+                    <InputField
+                      key={key}
+                      label={feild.label}
+                      placeholder={feild.placeholder}
+                      name={feild.name}
+                      register={register}
+                      required={feild.required || false}
+                      errorMessage={errors.projectName && feild.errorMessage}
+                    />
+                  ) : feild.type === "date" ? (
+                    <InputField
+                      key={key}
+                      label={feild.label}
+                      placeholder={feild.placeholder}
+                      name={feild.name}
+                      register={register}
+                      required={feild.required || false}
+                      errorMessage={errors.projectName && feild.errorMessage}
+                      type={feild.type}
+                    />
+                  ) : feild.type === "select" && !feild.multiSelect ? (
+                    <InputField
+                      key={key}
+                      label={feild.label}
+                      placeholder={feild.placeholder}
+                      name={feild.name}
+                      register={register}
+                      required={feild.required || false}
+                      errorMessage={errors.projectName && feild.errorMessage}
+                      type={feild.type}
+                      options={feild.options ? feild.options : managers}
+                    />
+                  ) : (
+                    <div className="mb-4">
+                      <label className="block text-gray-700 font-semibold mb-2">
+                        {feild.label} <span className="text-red-500">*</span>
+                      </label>
+                      <Select
+                        closeMenuOnSelect={false}
+                        components={animatedComponents}
+                        isMulti
+                        options={teamMembers}
+                        onChange={(e) => setSelectedTeamMembers(e)}
+                        className="border-primaryColor"
+                        styles={{
+                          control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            borderColor: state.isFocused
+                              ? "#06385c"
+                              : "#06385c",
+                            padding: "2px",
+                            "&:hover": {
+                              borderColor: "#06385c",
+                            },
+                          }),
+                        }}
+                      />
+                    </div>
+                  )
+              )}
               <p
                 className="text-primaryColor font-semibold cursor-pointer mb-4"
                 onClick={() => setShowRiskAssessment(!showRiskAssessment)}
               >
-                + Add Risk Assessment
+                {t("AddEditProjectPage.riskAssessment.text")}
               </p>
               {showRiskAssessment && (
                 <div className="pl-4">
-                  <InputField
-                    label="Mitigation Strategies"
-                    placeholder="Enter Mitigation Strategies"
-                    name="mitigationStrategies"
-                    register={register}
-                    errorMessage={
-                      errors.mitigationStrategies &&
-                      "Mitigation Strategies are required"
-                    }
-                  />
-                  <InputField
-                    label="Impact"
-                    placeholder="Enter impact"
-                    type="date"
-                    name="impact"
-                    register={register}
-                    errorMessage={errors.impact && "Impact is required"}
-                  />
-                  <InputField
-                    label="Potential"
-                    placeholder="Enter potential"
-                    type="date"
-                    name="potential"
-                    register={register}
-                    errorMessage={errors.potential && "Potential is required"}
-                  />
+                  {t("AddEditProjectPage.riskAssessment.feilds", {
+                    returnObjects: true,
+                  }).map((feild, key) =>
+                    feild.type === "date" ? (
+                      <InputField
+                        key={key}
+                        label={feild.label}
+                        placeholder={feild.placeholder}
+                        type={feild.type}
+                        name={feild.name}
+                        register={register}
+                        errorMessage={errors.impact && feild.errorMessage}
+                      />
+                    ) : (
+                      <InputField
+                        key={key}
+                        label={feild.label}
+                        placeholder={feild.placeholder}
+                        name={feild.name}
+                        register={register}
+                        errorMessage={
+                          errors.mitigationStrategies && feild.errorMessage
+                        }
+                      />
+                    )
+                  )}
                 </div>
               )}
               <p
                 className="text-primaryColor font-semibold cursor-pointer mt-4 mb-4"
                 onClick={() => setShowMilestones(!showMilestones)}
               >
-                + Add Milestones
+                {t("AddEditProjectPage.addMilestones.text")}
               </p>
               {showMilestones && (
                 <div className="pl-4">
-                  <InputField
-                    label="Start Date"
-                    placeholder="Start Date"
-                    type="date"
-                    name="taskStartDate"
-                    register={register}
-                    errorMessage={
-                      errors.taskStartDate && "Task Start Date is required"
-                    }
-                  />
-                  <InputField
-                    label="End Date"
-                    placeholder="End Date"
-                    type="date"
-                    name="taskEndDate"
-                    register={register}
-                    errorMessage={
-                      errors.taskEndDate && "Task End Date is required"
-                    }
-                  />
+                  {t("AddEditProjectPage.riskAssessment.feilds", {
+                    returnObjects: true,
+                  }).map((feild, key) => (
+                    <InputField
+                      key={key}
+                      label={feild.label}
+                      placeholder={feild.placeholder}
+                      type={feild.type}
+                      name={feild.name}
+                      register={register}
+                      errorMessage={errors.taskStartDate && feild.errorMessage}
+                    />
+                  ))}
                 </div>
               )}
             </div>
             <div>
-              <InputField
-                label="Client Name"
-                placeholder="Select Client"
-                name="clientName"
-                register={register}
-                required={true}
-                errorMessage={errors.clientName && "Client Name is required"}
-                type="select"
-                options={clients}
-                isClient={true}
-              />
-              <InputField
-                label="End Date"
-                placeholder="25/12/2023"
-                type="date"
-                name="endDate"
-                register={register}
-                required={true}
-                errorMessage={errors.endDate && "End Date is required"}
-              />
-              <InputField
-                label="Budget"
-                placeholder="Enter budget"
-                name="budget"
-                register={register}
-                required={true}
-                errorMessage={errors.budget && "Budget is required"}
-                type="number"
-              />
-              <TextAreaField
-                label="Description"
-                placeholder="Enter description"
-                name="description"
-                register={register}
-                errorMessage={errors.description && "Description is required"}
-              />
-              <div className="mb-4">
-                <label className="block text-gray-700 font-semibold mb-2">
-                  Upload Document
-                </label>
-                <input
-                  type="file"
-                  name="documents"
-                  multiple
-                  onChange={handleDocumentChange}
-                  className="w-full px-4 py-2 border rounded-md border-primaryColor focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {/* {errors.document && <p className="text-red-500 text-sm mt-2">Document is required</p>} */}
-              </div>
+              {t("AddEditProjectPage.feilds2", { returnObjects: true }).map(
+                (feild, key) =>
+                  feild.type ? (
+                    feild.type === "select" ? (
+                      <InputField
+                        label={feild.label}
+                        placeholder={feild.placeholder}
+                        name={feild.name}
+                        register={register}
+                        required={feild.required}
+                        errorMessage={
+                          errors.clientName && feild.errorMessage
+                        }
+                        type={feild.type}
+                        options={clients}
+                        isClient={true}
+                      />
+                    ) : feild.type === "date" ? (
+                      <InputField
+                        label={feild.label}
+                        placeholder={feild.placeholder}
+                        type={feild.type}
+                        name={feild.name}
+                        register={register}
+                        required={feild.required}
+                        errorMessage={errors.endDate && feild.errorMessage}
+                      />
+                    ) : feild.type === "number" ? (
+                      <InputField
+                        label={feild.label}
+                        placeholder={feild.placeholder}
+                        name={feild.name}
+                        register={register}
+                        required={feild.required}
+                        errorMessage={errors.budget && feild.errorMessage}
+                        type={feild.type}
+                      />
+                    ) : (
+                      <div className="mb-4">
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          {feild.label}
+                        </label>
+                        <input
+                          type={feild.type}
+                          name={feild.name}
+                          multiple
+                          onChange={handleDocumentChange}
+                          className="w-full px-4 py-2 border rounded-md border-primaryColor focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {/* {errors.document && <p className="text-red-500 text-sm mt-2">Document is required</p>} */}
+                      </div>
+                    )
+                  ) : (
+                    <TextAreaField
+                      key={key}
+                      label={feild.label}
+                      placeholder={feild.placeholder}
+                      name={feild.name}
+                      register={register}
+                      errorMessage={errors.description && feild.errorMessage}
+                    />
+                  )
+              )}
             </div>
           </div>
           <div className="mt-8 flex justify-end gap-4">
@@ -403,13 +394,13 @@ const AddProjectForm = () => {
               onClick={() => navigate(-1)}
               className="px-8 py-2 bg-primaryColor text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
-              Back
+              {t("AddEditProjectPage.backButton")}
             </button>
             <button
               type="submit"
               className="px-8 py-2 bg-primaryColor text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
-              Save
+              {t("AddEditProjectPage.saveButton")}
             </button>
           </div>
         </div>

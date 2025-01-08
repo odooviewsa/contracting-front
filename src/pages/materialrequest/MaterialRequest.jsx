@@ -1,9 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Grid,
-  Card,
-  CardContent,
   Typography,
   TextField,
   Button,
@@ -15,14 +13,11 @@ import {
   Snackbar,
   Alert,
   CssBaseline,
-  useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { motion } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-import PrintIcon from "@mui/icons-material/Print";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -30,23 +25,15 @@ import PendingIcon from "@mui/icons-material/HourglassTop";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import ProductsList from "../ProductsList/ProductsList";
+// import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ProductsList from "../elements/ProductsList/ProductsList";
 import Modal from "@mui/material/Modal";
+import { useEffect } from "react";
+import { axiosInstance } from "../../axios/axios";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 const MaterialRequest = () => {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [darkMode, setDarkMode] = useState(prefersDarkMode);
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: darkMode ? "dark" : "light",
-        },
-      }),
-    [darkMode]
-  );
-
   const [project, setProject] = useState("");
   const [workItem, setWorkItem] = useState("");
   const [linkWithBOQ, setLinkWithBOQ] = useState(false);
@@ -60,13 +47,8 @@ const MaterialRequest = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const summaryData = [
-    { label: "Total Approved Line", value: 7155, color: "#4CAF50" },
-    { label: "Number of Items", value: 2, color: "#FF9800" },
-    { label: "Total Cost", value: 5685, color: "#2196F3" },
-  ];
 
-  const requestSequence = "MR-2024-001";
+  const [projectsData, setProjectsData] = useState(null);
 
   const [items, setItems] = useState([]);
   const handleSelectItem = (item) => {
@@ -223,15 +205,6 @@ const MaterialRequest = () => {
     }
   };
 
-  // const MaterialRequest = () => {
-  //   return (
-  //     <div>
-  //       <h1>Material Request</h1>
-  //       <p>This is the Material Request page.</p>
-  //     </div>
-  //   );
-  // };
-
   const handleSaveAsDraft = () => {
     setOpenSnackbar({
       open: true,
@@ -240,12 +213,30 @@ const MaterialRequest = () => {
     });
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  //  Fetch User Projects
+  useEffect(() => {
+    const fetchUserProjects = async () => {
+      try {
+        const res = await axiosInstance.get("/api/projects");
+        if (!res) {
+          console.log("Somthing went wrong!");
+        }
+        setProjectsData(
+          res.data.projects.map((project) => ({
+            label: project.projectName,
+            value: project._id,
+          }))
+        );
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    fetchUserProjects();
+  }, []);
+  const animatedComponents = makeAnimated();
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
       <Container>
         <Snackbar
@@ -350,70 +341,16 @@ const MaterialRequest = () => {
             Help
           </Button>
         </Grid>
-        <Grid container justifyContent="flex-end" sx={{ mt: 3 }}>
-          <Tooltip title="Toggle Dark Mode">
-            <Switch
-              checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
-            />
-          </Tooltip>
-          <Tooltip title="Refresh Data">
-            <IconButton color="primary">
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Print Request">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handlePrint}
-              startIcon={<PrintIcon />}
-            >
-              Print
-            </Button>
-          </Tooltip>
-        </Grid>
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          component={motion.div}
-          animate={{ scale: 1.1 }}
-          sx={{ mt: 2 }}
-        >
-          Material Request {requestSequence}
-        </Typography>
-        <Grid container spacing={2} sx={{ mt: 2 }}>
-          {summaryData.map((data, index) => (
-            <Grid item xs={4} key={index}>
-              <motion.div whileHover={{ scale: 1.05 }}>
-                <Card
-                  sx={{
-                    backgroundColor: data.color,
-                    color: "white",
-                    borderRadius: 2,
-                    boxShadow: 3,
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {data.label}
-                    </Typography>
-                    <Typography variant="h4">{data.value}</Typography>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
+
         {/* Input Fields Section */}
-        <Grid container spacing={3} sx={{ mt: 3 }}>
+        <Grid container spacing={2} sx={{ mt: 3 }}>
           {[
             // General project information
             {
               label: "Project",
               value: project,
               onChange: (e) => setProject(e.target.value),
+              type: "select",
             },
             {
               label: "Work Item",
@@ -462,23 +399,64 @@ const MaterialRequest = () => {
             },
           ].map((field, index) => (
             <Grid item xs={12} sm={6} md={6} key={index}>
-              {field.type === "switch" ? (
-                <Box display="flex" alignItems="center" sx={{ mt: 1 }}>
-                  <Typography variant="body2" sx={{ mr: 1 }}>
-                    {field.label}
-                  </Typography>
-                  <Switch checked={field.value} onChange={field.onChange} />
-                </Box>
+              {field.type ? (
+                field.type === "switch" ? (
+                  <Box display="flex" alignItems="center" sx={{ mt: 1 }}>
+                    <Typography variant="body2" sx={{ mr: 1 }}>
+                      {field.label}
+                    </Typography>
+                    <Switch checked={field.value} onChange={field.onChange} />
+                  </Box>
+                ) : (
+                  field.type === "select" && (
+                    <div>
+                      <label className="block text-gray-700 font-semibold mb-2">
+                        {field.label}
+                      </label>
+                      <Select
+                        closeMenuOnSelect={false}
+                        components={animatedComponents}
+                        isMulti
+                        options={projectsData}
+                        // onChange={(e) => setSelectedTeamMembers(e)}
+                        className="border-primaryColor"
+                        styles={{
+                          control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            borderColor: state.isFocused
+                              ? "#06385c"
+                              : "#06385c",
+                            padding: "2px",
+                            "&:hover": {
+                              borderColor: "#06385c",
+                            },
+                          }),
+                        }}
+                      />
+                    </div>
+                  )
+                )
               ) : (
-                <TextField
-                  label={field.label}
-                  type={field.type || "text"}
-                  value={field.value}
-                  onChange={field.onChange}
-                  fullWidth
-                  variant="outlined"
-                  sx={{ mt: 1 }}
-                />
+                <>
+                  <div className="">
+                    <label className="block text-gray-700 font-semibold mb-2">
+                      {field.label}
+                    </label>
+                    <input
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      name={field.name}
+                      className={`w-full px-4 py-2 border rounded-md border-primaryColor focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-black`}
+                      onFocus={(e) => {
+                        if (field.type === "date") {
+                          e.target.max = new Date(3000, 0, 1)
+                            .toISOString()
+                            .split("T")[0];
+                        }
+                      }}
+                    />
+                  </div>
+                </>
               )}
             </Grid>
           ))}
@@ -560,7 +538,7 @@ const MaterialRequest = () => {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "content-fit",
+                width: "80%",
                 bgcolor: "background.paper",
                 border: "2px solid #000",
                 boxShadow: 24,
@@ -570,14 +548,12 @@ const MaterialRequest = () => {
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 List of products
               </Typography>
-              <ProductsList
-                onSelect={handleSelectItem}
-              />
+              <ProductsList onSelect={handleSelectItem} />
             </Box>
           </Modal>
         </div>
       </Container>
-    </ThemeProvider>
+    </>
   );
 };
 

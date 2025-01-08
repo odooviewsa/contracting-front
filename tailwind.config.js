@@ -12,7 +12,7 @@ export default {
         bgOverlay: "#13121233",
         textLabalForm: "#030229",
       },
-        screens: {
+      screens: {
         smm: { min: "100px", max: "600px" },
       },
     },
