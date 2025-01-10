@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function ContractForm() {
   const [projects, setProjects] = useState([]);
@@ -13,6 +14,8 @@ function ContractForm() {
   const [consultants, setConsultants] = useState([]);
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
+  // Language
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -81,7 +84,6 @@ function ContractForm() {
   }, [selectedContractType]);
 
   const onSubmit = async (data) => {
-
     const formDate = {
       ...data,
       projectId: data.projectId.value,
@@ -112,16 +114,17 @@ function ContractForm() {
             {/* Contract Code */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Code <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.code")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                placeholder="Enter code"
+                placeholder={t("ContractsForms.form1.codePlaceholder")}
                 {...register("code", {
-                  required: "Code is required",
+                  required: t("ContractsForms.form1.codeRequired"),
                   maxLength: {
                     value: 10,
-                    message: "Code must be at most 10 characters long",
+                    message: t("ContractsForms.form1.codeMaxLength"),
                   },
                 })}
                 className={`py-[6px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
@@ -136,19 +139,24 @@ function ContractForm() {
             {/* Contract Type */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Contract Type <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.contractType")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("contractType", {
-                  required: "Contract Type is required",
+                  required: t("ContractsForms.form1.contractTypeRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
               
                 `}
               >
-                <option value="">choose</option>
-                <option value="Owner">Owner</option>
-                <option value="Sub-contractor">Sub-Contractor Contract</option>
+                {t("ContractsForms.form1.contractTypeOptions", {
+                  returnObjects: true,
+                }).map((item, key) => (
+                  <option value={item.value} key={key}>
+                    {item.text}
+                  </option>
+                ))}
               </select>
               {errors.contractType && (
                 <p className="text-red-400 text-sm">
@@ -160,17 +168,18 @@ function ContractForm() {
             {/* Project */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Project <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.project")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <Controller
                 name="projectId"
                 control={control}
-                rules={{ required: "Project is required" }}
+                rules={{ required: t("ContractsForms.form1.projectRequired") }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     options={projects}
-                    placeholder="Choose..."
+                    placeholder={t("ContractsForms.form1.projectPlaceholder")}
                     className={`w-full 
                    
                     `}
@@ -187,17 +196,18 @@ function ContractForm() {
             {/* Partner */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Partner <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.partner")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <Controller
                 name="partnerId"
                 control={control}
-                rules={{ required: "Partner is required" }}
+                rules={{ required: t("ContractsForms.form1.partnerRequired") }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     options={partners}
-                    placeholder="Choose..."
+                    placeholder={t("ContractsForms.form1.partnerPlaceholder")}
                     className={`w-full 
                    
                     `}
@@ -213,12 +223,13 @@ function ContractForm() {
             {/* Start Date */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Start Date <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.startDate")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 {...register("startDate", {
-                  required: "Start date is required.",
+                  required: t("ContractsForms.form1.startDateRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
                 
@@ -233,12 +244,13 @@ function ContractForm() {
             {/* End Date */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                End Date <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.endDate")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 {...register("endDate", {
-                  required: "End date is required.",
+                  required: t("ContractsForms.form1.endDateRequired"),
                   validate: (value) => {
                     const startDate = new Date(
                       document.querySelector(
@@ -247,7 +259,7 @@ function ContractForm() {
                     );
                     const endDate = new Date(value);
                     if (endDate < startDate) {
-                      return "End date must be later than start date.";
+                      return t("ContractsForms.form1.endDateInvalid");
                     }
                     return true;
                   },
@@ -263,17 +275,22 @@ function ContractForm() {
             {/* Consultant */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Consultant <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.consultant")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <Controller
                 name="consultantId"
                 control={control}
-                rules={{ required: "Consultant is required" }}
+                rules={{
+                  required: t("ContractsForms.form1.consultantRequired"),
+                }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     options={consultants}
-                    placeholder="Choose..."
+                    placeholder={t(
+                      "ContractsForms.form1.consultantPlaceholder"
+                    )}
                     className={`w-full 
                    
                     `}
@@ -289,24 +306,23 @@ function ContractForm() {
             {/* Type of Progress */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Type of Progress <span className="text-red-500">*</span>
+              {t("ContractsForms.form1.typeOfProgress")} <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("typeOfProgress", {
-                  required: "Type of Progress is required",
+                  required: t("ContractsForms.form1.typeOfProgressRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
                
                 `}
               >
-                <option value="">choose</option>
-                <option value="In Progress">Quantity</option>
-                <option value="Completed">Percentage Per Line</option>
-                <option value="Suspended">
-                  Percentage Applied to Total of Line
-                </option>
-                <option value="Suspended">Financial Progress</option>
-                <option value="Suspended">Time-Based Progress</option>
+                {t("ContractsForms.form1.typeOfProgressOptions", {
+                  returnObjects: true,
+                }).map((item, key) => (
+                  <option value={item.value} key={key}>
+                    {item.text}
+                  </option>
+                ))}
               </select>
               {errors.typeOfProgress && (
                 <p className="text-red-400 text-sm">
@@ -317,11 +333,11 @@ function ContractForm() {
             {/* Description */}
             <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Description <span className="text-red-500">*</span>
+              {t("ContractsForms.form1.description")} <span className="text-red-500">*</span>
               </label>
               <textarea
                 {...register("description", {
-                  required: "Description is required.",
+                  required: t("ContractsForms.form1.descriptionRequired"),
                 })}
                 className={`py-2 px-4 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full h-24 
                   

@@ -9,8 +9,11 @@ import { useState } from "react";
 import SureDeleteEstimation from "./componantEstimator/SureDeleteEstimation";
 import { ToastContainer } from "react-toastify";
 import CreateEstimator from "./componantEstimator/CreateEstimator";
+import { useTranslation } from "react-i18next";
 
 export default function TableEstimator() {
+  // Language
+  const { t } = useTranslation();
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
   const [openCreate, setOpenCreate] = useState(false);
@@ -41,7 +44,7 @@ export default function TableEstimator() {
         <div className="flex md:flex-row flex-col gap-3 md:items-center justify-between">
           <input
             type="text"
-            placeholder="Search Estimation"
+            placeholder={t("EstimationPage.searchBar")}
             className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
           />
           <button
@@ -49,14 +52,14 @@ export default function TableEstimator() {
             className="text-white border border-primaryColor px-3 pt-1 pb-2 w-fit rounded-md bg-primaryColor"
             onClick={() => setOpenCreate(true)}
           >
-            Create Estimator
+            {t("EstimationPage.buttons.createButton")}
           </button>
         </div>
 
         <div>
           {data?.data?.length === 0 ? (
             <div className="flex items-center justify-center min-h-[60vh] text-gray-500">
-              No Estimation Found
+              {t("EstimationPage.noFound")}
             </div>
           ) : (
             <div>
@@ -64,11 +67,9 @@ export default function TableEstimator() {
                 <table>
                   <thead>
                     <tr className="bg-primaryColor text-white">
-                      <th className="thContract">name</th>
-                      <th className="thContract">project Name</th>
-                      <th className="thContract">Contract</th>
-                      <th className="thContract">Apply On</th>
-                      <th className="thContract">Delete</th>
+                        {t("EstimationPage.table", {returnObjects: true}).map((item,key) => (
+                          <th key={key}>{item}</th>
+                        ))}
                     </tr>
                   </thead>
                   <tbody>
@@ -102,7 +103,7 @@ export default function TableEstimator() {
                           }}
                         >
                           <MdDelete size={18} />
-                          <p>Delete</p>
+                          <p>{t("EstimationPage.buttons.deleteButton")}</p>
                         </td>
                       </tr>
                     ))}

@@ -4,7 +4,11 @@ import BlockWorkItem from "./BlockWorkItem";
 import { useContext, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import Menu from "./ModalSubItem/Menu";
+import { useTranslation } from "react-i18next";
+
 export default function BlockSubItem({ indexSubItem, subitem }) {
+  // Language
+  const { t } = useTranslation();
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
   const [openMore, setOpenMore] = useState(false);
   const toggleItem = () => {
@@ -24,7 +28,7 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
       >
         <div className="flex items-center gap-4 text-colorTextValueItem transform translate-x-7 ">
           <div className="flex flex-col">
-            <h4 className="text-black">Sub Item</h4>
+            <h4 className="text-black">{t("ContractsForms.BOQ.table.allItems.sub.text")}</h4>
             <p className="text-[0.8rem]">{subitem?.subItemName}</p>
           </div>
         </div>
@@ -35,7 +39,7 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
             setOpenMore((e) => !e);
           }}
         >
-          <p> More</p>
+          <p>{t("ContractsForms.BOQ.table.allItems.sub.moreButton")}</p>
           <BsThreeDotsVertical />
           {openMore && <Menu subItem={subitem} />}
         </div>

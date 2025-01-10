@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../../../axios/axios";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function ProjectBlockSureDelete({
   refreshProjects,
@@ -9,7 +10,8 @@ function ProjectBlockSureDelete({
   sureDelete,
 }) {
   const [loading, setLoading] = useState(false);
-
+  // Language
+  const {t} = useTranslation()
   const handleDeleteProject = async () => {
     setLoading(true);
     try {
@@ -28,13 +30,13 @@ function ProjectBlockSureDelete({
   return (
     <div className=" fixed top-0 left-0  w-full flex justify-center bg-bgOverlay items-center h-full  p-5 z-50">
       <div className="bg-white rounded-lg shadow p-5  w-[300px]  text-textLabalForm flex flex-col items-center gap-5">
-        <h1 className="font-bold text-[2rem]">Are You Sure !</h1>
+        <h1 className="font-bold text-[2rem]">{t("DeleteProject.message")}</h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
             className="border rounded-md py-2 px-5 font-semibold"
             onClick={() => setSureDelete(null)}
           >
-            Back
+            {t("DeleteProject.backButton")}
           </button>
           <button
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
@@ -43,7 +45,7 @@ function ProjectBlockSureDelete({
               handleDeleteProject();
             }}
           >
-            {loading ? "Loading..." : "Delete"}
+            {loading ? "Loading..." : t("DeleteProject.deleteButton")}
           </button>
         </div>
       </div>

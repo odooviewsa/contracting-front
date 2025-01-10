@@ -8,8 +8,11 @@ import { FaEdit, FaUserFriends } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function ModalDetails({ contract, setOpenDeletePopup }) {
+  // Language
+  const {t} = useTranslation()
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
 
@@ -20,7 +23,7 @@ export default function ModalDetails({ contract, setOpenDeletePopup }) {
         onClick={() => navigate(`/${user?.companyName}/estimation`)}
       >
         <MdOutlineAppRegistration size={18} />
-        <p>Open Estimator</p>
+        <p>{t("ContractsPage.details.openEstimator")}</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700"
@@ -32,19 +35,19 @@ export default function ModalDetails({ contract, setOpenDeletePopup }) {
         }}
       >
         <FaEdit size={18} />
-        <p>Edit</p>
+        <p>{t("ContractsPage.details.edit")}</p>
       </div>
       <div className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700">
         <FaUserFriends size={18} />
-        <p>Assign to Subcontractor</p>
+        <p>{t("ContractsPage.details.assignSubcontractor")}</p>
       </div>
       <div className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700">
         <FaFileCircleQuestion size={18} />
-        <p>Create Quotation</p>
+        <p>{t("ContractsPage.details.createQuotation")}</p>
       </div>
       <div className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700">
         <MdOutlineAttachment size={18} />
-        <p>Attach Document</p>
+        <p>{t("ContractsPage.details.attachDocument")}</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 text-red-700 cursor-pointer"
@@ -54,7 +57,7 @@ export default function ModalDetails({ contract, setOpenDeletePopup }) {
         }}
       >
         <MdDelete size={18} />
-        <p>Delete</p>
+        <p>{t("ContractsPage.details.delete")}</p>
       </div>
     </div>
   );

@@ -4,17 +4,20 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
+import { useTranslation } from "react-i18next";
 // import DeductionSureDelete from "./DeductionSureDelete";
 // import { toast } from "react-toastify";
 
-const EmptyTable = () => (
+const EmptyTable = ({ texts }) => (
   <div className="text-center py-10 text-gray-500">
-    <p className="text-xl">No deductions available.</p>
-    <p className="text-sm">Add deductions to see them listed here.</p>
+    <p className="text-xl">{texts[0]}</p>
+    <p className="text-sm">{texts[1]}</p>
   </div>
 );
 
 const DeductionsTable = () => {
+  // Language
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
   // const [sureDeleteModel, setSureDeleteModel] = useState(false);
@@ -69,10 +72,13 @@ const DeductionsTable = () => {
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border p-2 bg-gray-100">Code</th>
-                <th className="border p-2 bg-gray-100">Name of Deduction</th>
-                <th className="border p-2 bg-gray-100">Type</th>
-                <th className="border p-2 bg-gray-100">Amount</th>
+                {t("ContractsForms.deduction.table.items", {
+                  returnObjects: true,
+                }).map((item, key) => (
+                  <th className="border p-2 bg-gray-100" key={key}>
+                    {item}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -90,7 +96,7 @@ const DeductionsTable = () => {
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
                 <td colSpan="3" className="border p-2 text-center font-bold">
-                  Total Deductions
+                  {t("ContractsForms.deduction.table.footer")}
                 </td>
                 <td colSpan="2" className="border p-2 text-center">
                   {totalDeductions}
@@ -100,14 +106,18 @@ const DeductionsTable = () => {
           </table>
         </div>
       ) : (
-        <EmptyTable />
+        <EmptyTable
+          texts={t("ContractsForms.deduction.table.noFound", {
+            returnObjects: true,
+          })}
+        />
       )}
 
       <button
         onClick={() => setIsModalOpen(true)}
         className="text-blue-600 mt-4 underline"
       >
-        + Add Deduction
+        {t("ContractsForms.deduction.table.addButton")}
       </button>
 
       {isModalOpen && (

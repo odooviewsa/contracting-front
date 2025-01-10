@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import { ContextBOQ } from "../../../../../../context/BOQContext";
+import { useTranslation } from "react-i18next";
+
 export default function Menu({ workItem }) {
+  // Language
+  const { t } = useTranslation();
   const { setOpenModalUpdateWorkItemId, setOpenModalDeleteWorkItemId } =
     useContext(ContextBOQ);
   return (
@@ -13,14 +17,14 @@ export default function Menu({ workItem }) {
         onClick={() => setOpenModalUpdateWorkItemId(workItem)}
       >
         <CiEdit size={18} />
-        <p>Update</p>
+        <p>{t("ContractsForms.BOQ.table.detailsButtons.editButton")}</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700"
         onClick={() => setOpenModalDeleteWorkItemId(workItem._id)}
       >
         <MdDelete size={18} />
-        <p>Delete</p>
+        <p>{t("ContractsForms.BOQ.table.detailsButtons.deleteButton")}</p>
       </div>
     </div>
   );

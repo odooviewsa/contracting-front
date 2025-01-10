@@ -1,6 +1,7 @@
 import React from "react";
-
+import { useTranslation } from "react-i18next";
 const ProductTable = ({ onEdit, onDelete, products }) => {
+  const { t } = useTranslation();
   // Fields we want to display
   const fields = [
     "sku",
@@ -17,14 +18,11 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
       <table style={styles.table}>
         <thead style={styles.tableHeader}>
           <tr>
-            {fields.map((field) => (
-              <th key={field}>
-                {field.charAt(0).toUpperCase() + field.slice(1)}
-              </th>
-            ))}
-            <th>Supplier</th>
-            <th>Id</th>
-            <th>Actions</th>
+            {t("ProductsPage.table", { returnObjects: true }).map(
+              (item, key) => (
+                <th key={key}>{item}</th>
+              )
+            )}
           </tr>
         </thead>
         <tbody>
@@ -47,14 +45,14 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
                     style={styles.editButton}
                     aria-label={`Edit ${product.name || "product"}`}
                   >
-                    Edit
+                    {t("ProductsPage.editButton")}
                   </button>
                   <button
                     onClick={() => onDelete(product._id)}
                     style={styles.deleteButton}
                     aria-label={`Delete ${product.name || "product"}`}
                   >
-                    Delete
+                    {t("ProductsPage.deleteButton")}
                   </button>
                 </td>
               </tr>
@@ -62,7 +60,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
           ) : (
             <tr>
               <td colSpan={fields.length + 3} style={styles.noData}>
-                No products available
+                {t("ProductsPage.noFound")}
               </td>
             </tr>
           )}

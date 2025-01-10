@@ -4,12 +4,13 @@ import Avatar from "../../../componant/Avatar";
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { url } from "../../../axios/axios";
+import { useTranslation } from "react-i18next";
 export default function TablePartners({
   setOpenEfitPartnerId,
   setOpenDeletePartnerId,
   data,
 }) {
-  
+  const { t } = useTranslation();
   const [idPartner, setIdPartner] = useState(null);
   // close menu
   const menuRef = useRef(null);
@@ -29,7 +30,7 @@ export default function TablePartners({
     return (
       <div className="min-h-[70vh] flex justify-center items-center">
         <h1 className="text-gray-600 font-bold text-[2rem] ">
-          Not Partners Yet
+          {t("PartnersPage.noFound")}
         </h1>
       </div>
     );
@@ -38,14 +39,11 @@ export default function TablePartners({
       <table className="border-separate border-spacing-y-3">
         <thead>
           <tr className="text-black">
-            <th className="p-3">Name</th>
-            <th>Type</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Tax Number</th>
-            <th>Commercial Number</th>
-            <th>Details </th>
+            {t("PartnersPage.table", { returnObjects: true }).map(
+              (item, key) => (
+                <th key={key}>{item}</th>
+              )
+            )}
           </tr>
         </thead>
 
@@ -79,7 +77,6 @@ export default function TablePartners({
                     <ModalDetailsPartners
                       setOpenEfitPartnerId={setOpenEfitPartnerId}
                       item={item}
-                      
                       setOpenDeletePartnerId={setOpenDeletePartnerId}
                       menuRef={menuRef}
                     />

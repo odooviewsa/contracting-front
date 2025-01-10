@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { Grid, Pagination } from "@mui/material";
 
 import { axiosInstance, url } from "../../../axios/axios";
+import { useTranslation } from "react-i18next";
 
 const ProductsManagement = () => {
   const [data, setData] = useState(null);
@@ -21,6 +22,8 @@ const ProductsManagement = () => {
   });
   // Pagination state
   const [page, setPage] = useState(1);
+  // Language
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,69 +119,75 @@ const ProductsManagement = () => {
     <div style={styles.container}>
       <div style={styles.actions}>
         <Link to="/" style={styles.backLink} aria-label="Go back to main menu">
-          &larr; Back to Main Menu
+          &larr; {t("ProductsPage.backButton")}
         </Link>
         <button
           onClick={handleAddProduct}
           style={styles.addButton}
           aria-label="Add a new product"
         >
-          + Add Product
+          {t("ProductsPage.addButton")}
         </button>
       </div>
       <div style={styles.filterContainer}>
         <div style={styles.filterGroup}>
-          <div style={styles.filterItem}>
-            <label style={styles.label} htmlFor="name">
-              <i className="fas fa-search" style={styles.icon}></i> Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Search by name"
-              value={filters.name}
-              onChange={handleFilterChange}
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.filterItem}>
-            <label style={styles.label} htmlFor="category">
-              <i className="fas fa-tags" style={styles.icon}></i> Category
-            </label>
-            <select
-              id="category"
-              name="category"
-              value={filters.category}
-              onChange={handleFilterChange}
-              style={styles.select}
-            >
-              <option value="">All Categories</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Furniture">Furniture</option>
-              <option value="Clothing">Clothing</option>
-            </select>
-          </div>
-          <div style={styles.filterItem}>
-            <label style={styles.label} htmlFor="supplier">
-              <i className="fas fa-user" style={styles.icon}></i> Supplier
-            </label>
-            <select
-              id="supplier"
-              name="supplier"
-              value={filters.supplier}
-              onChange={handleFilterChange}
-              style={styles.select}
-            >
-              <option value="">All Suppliers</option>
-              <option value="Supplier A">Supplier A</option>
-              <option value="Supplier B">Supplier B</option>
-              <option value="Supplier C">Supplier C</option>
-            </select>
-          </div>
+          {t("ProductsPage.fields", { returnObjects: true }).map((field, key) =>
+            field.type === "text" ? (
+              <div key={key} style={styles.filterItem}>
+                <label style={styles.label} htmlFor={field.id}>
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  id={field.id}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  value={filters.name}
+                  onChange={handleFilterChange}
+                  style={styles.input}
+                />
+              </div>
+            ) : field.id === "category" ? (
+              <div key={key} style={styles.filterItem}>
+                <label style={styles.label} htmlFor={field.id}>
+                  {field.label}
+                </label>
+                <select
+                  id={field.id}
+                  name={field.name}
+                  value={filters.category}
+                  onChange={handleFilterChange}
+                  style={styles.select}
+                >
+                  <option value="">All Categories</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Clothing">Clothing</option>
+                </select>
+              </div>
+            ) : (
+              <div key={key} style={styles.filterItem}>
+                <label style={styles.label} htmlFor={field.id}>
+                  {field.label}
+                </label>
+                <select
+                  id={field.id}
+                  name={field.name}
+                  value={filters.supplier}
+                  onChange={handleFilterChange}
+                  style={styles.select}
+                >
+                  <option value="">All Suppliers</option>
+                  <option value="Supplier A">Supplier A</option>
+                  <option value="Supplier B">Supplier B</option>
+                  <option value="Supplier C">Supplier C</option>
+                </select>
+              </div>
+            )
+          )}
         </div>
         <button style={styles.searchButton} aria-label="Apply filters">
-          <i className="fas fa-filter" style={styles.searchIcon}></i> Search
+          {t("ProductsPage.searchButton")}
         </button>
       </div>
       <ProductTable
@@ -254,6 +263,7 @@ const styles = {
     backgroundColor: "#fff",
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     borderRadius: "10px",
+    gap: "16px",
   },
   filterGroup: {
     display: "flex",

@@ -2,10 +2,13 @@ import { Grid, Pagination, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { axiosInstance, url } from "../../../axios/axios";
+import { useTranslation } from "react-i18next";
 
 const ProductsList = ({ onSelect }) => {
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
+  // Language
+  const {t} = useTranslation()
   // Pagination state
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({
@@ -61,7 +64,7 @@ const ProductsList = ({ onSelect }) => {
         sx={{ my: 3 }}
       >
         <TextField
-          label="Search Product by name"
+          label={t("ProductsList.searchBar")}
           style={{ flex: 1 }}
           variant="outlined"
           name="name"
@@ -76,14 +79,11 @@ const ProductsList = ({ onSelect }) => {
         <table style={styles.table}>
           <thead style={styles.tableHeader}>
             <tr>
-              {fields.map((field) => (
-                <th key={field}>
-                  {field.charAt(0).toUpperCase() + field.slice(1)}
-                </th>
-              ))}
-              <th>Supplier</th>
-              <th>Id</th>
-              <th>Actions</th>
+              {t("ProductsList.table", { returnObjects: true }).map(
+                (item, key) => (
+                  <th key={key}>{item}</th>
+                )
+              )}
             </tr>
           </thead>
           <tbody>
@@ -108,7 +108,7 @@ const ProductsList = ({ onSelect }) => {
                       style={styles.selectButton}
                       aria-label={`Edit ${product.name || "product"}`}
                     >
-                      Select
+                      {t("ProductsList.selectButton")}
                     </button>
                   </td>
                 </tr>
@@ -116,7 +116,7 @@ const ProductsList = ({ onSelect }) => {
             ) : (
               <tr>
                 <td colSpan={fields.length + 3} style={styles.noData}>
-                  No products available
+                {t("ProductsList.noFound")}
                 </td>
               </tr>
             )}

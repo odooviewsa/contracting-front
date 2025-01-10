@@ -1,7 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import DeductionsTable from "./componantDeduction/DeductionsTable";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 export default function Deduction() {
+  // Language
+  const {t} = useTranslation()
   const { id } = useParams();
   const user = useSelector((state) => state?.user);
 
@@ -15,7 +18,7 @@ export default function Deduction() {
           className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
           onClick={() => navigate(-1)}
         >
-          Back
+          {t("ContractsForms.deduction.buttons.backButton")}
         </button>
         <button
           type="submit"
@@ -26,7 +29,7 @@ export default function Deduction() {
           }
           className="text-white bg-primaryColor border border-primaryColor px-3 pt-1 pb-2 rounded-md"
         >
-          Next
+          {t("ContractsForms.deduction.buttons.nextButton")}
         </button>
       </div>
     </div>

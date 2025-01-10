@@ -2,30 +2,19 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { FaBars, FaCaretDown, FaCaretUp } from "react-icons/fa6";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function PartHeaderTableWork({ setSearchWorkConfirmation }) {
+  // Language
+  const { t } = useTranslation();
   const [openColumValue, setOpenColumValue] = useState(false);
   const {
     currentValueColumWorkConfirmation,
     setCurrentValueColumWorkConfirmation,
   } = useContext(ContextBOQ);
-  const nameColum = [
-    "work item",
-    "Unit Of Measure",
-    "Contract Quantity",
-    "Previous Quantity",
-    "Current Work",
-    "Current Work QTY",
-    "Current Work %",
-    "Total Quantity",
-    "Price",
-    "Total Amount",
-    "Completion %",
-    "Invoicing %",
-    "Net Amount",
-    "Duo Amount",
-    "Calculate",
-  ];
+  const nameColum = t("ConfirmationForms.BOQ.table.nameColumn", {
+    returnObjects: true,
+  });
 
   const toggleSelect = (name) => {
     setCurrentValueColumWorkConfirmation((prevState) => ({
@@ -51,7 +40,7 @@ export default function PartHeaderTableWork({ setSearchWorkConfirmation }) {
     <div className="flex items-center gap-7  text-[0.9rem] flex-wrap">
       <input
         type="text"
-        placeholder="Search work confirmation..."
+        placeholder={t("ConfirmationForms.BOQ.table.searchBar")}
         className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
         onChange={(e) => setSearchWorkConfirmation(e.target.value)}
       />

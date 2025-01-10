@@ -3,7 +3,10 @@ import { toast } from "react-toastify";
 import { ContextBOQ } from "../../../../../../context/BOQContext";
 import { axiosInstance } from "../../../../../../axios/axios";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
+
 function SureDeleteMainItem({ refetch }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const { openModalDeleteMainItemId, setOpenModalDeleteMainItemId } =
     useContext(ContextBOQ);
@@ -27,13 +30,15 @@ function SureDeleteMainItem({ refetch }) {
   return (
     <div className="fixed top-0 left-0 w-full flex justify-center bg-bgOverlay items-center h-full p-5 z-50">
       <div className="bg-white rounded-lg shadow p-5 w-[300px] text-textLabalForm flex flex-col items-center gap-5">
-        <h1 className="font-bold text-[2rem]">Are You Sure !</h1>
+        <h1 className="font-bold text-[2rem]">
+          {t("contractsForms.BOQ.sureDelete.text")}
+        </h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
             onClick={() => setOpenModalDeleteMainItemId(null)}
             className="border rounded-md py-2 px-5 font-semibold z-40"
           >
-            Back
+            {t("contractsForms.BOQ.sureDelete.backButton")}
           </button>
           <button
             onClick={(e) => {
@@ -42,7 +47,9 @@ function SureDeleteMainItem({ refetch }) {
             }}
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
           >
-            {isLoading ? "Loading..." : "Delete"}
+            {isLoading
+              ? t("contractsForms.BOQ.sureDelete.deleteButton.loading")
+              : t("contractsForms.BOQ.sureDelete.deleteButton.text")}
           </button>
         </div>
       </div>

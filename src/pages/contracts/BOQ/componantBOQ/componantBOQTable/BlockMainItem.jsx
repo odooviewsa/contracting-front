@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 import { useContext, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import Menu from "./ModalMainItem/Menu";
+import { useTranslation } from "react-i18next";
+
 export default function BlockMainItem({ mainItem }) {
+  // Language
+  const {t} = useTranslation()
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
   const [openMore, setOpenMore] = useState(false);
   const toggleItem = () => {
@@ -25,7 +29,7 @@ export default function BlockMainItem({ mainItem }) {
       >
         <div className="flex items-center gap-4 text-colorTextValueItem ">
           <div className="flex flex-col">
-            <h4 className="text-black">Main Item</h4>
+            <h4 className="text-black">{t("ContractsForms.BOQ.table.allItems.main.text")}</h4>
             <p className="text-[0.8rem]">{mainItem?.itemName}</p>
           </div>
         </div>
@@ -36,7 +40,7 @@ export default function BlockMainItem({ mainItem }) {
             setOpenMore((e) => !e);
           }}
         >
-          <p> More</p>
+          <p> {t("ContractsForms.BOQ.table.allItems.main.moreButton")}</p>
           <BsThreeDotsVertical />
           {openMore && <Menu mainItem={mainItem} />}
         </div>

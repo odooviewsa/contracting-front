@@ -25,7 +25,6 @@ import { logout } from "./utils/logout";
 import Partners from "./pages/partners/Partners";
 import AddProjectForm from "./pages/projects/AddProjectForm";
 import ProjectDetails from "./pages/projects/ProjectDetails";
-import AddUsersTanet from "./pages/userTanet/AddUsersTanet";
 import UpdateProject from "./pages/projects/UpdateProject";
 import WorkConfirmation from "./pages/WorkConfirmation/firstWorkConfirmation/WorkConfirmation";
 import EditSingleConfirmation from "./pages/WorkConfirmation/firstWorkConfirmation/EditSingleConfirmation";
@@ -189,7 +188,7 @@ function App() {
         },
         {
           path: `:companyName/setting`,
-          element: <AddUsersTanet />,
+          element: <UserTanetPage />,
         },
 
         {

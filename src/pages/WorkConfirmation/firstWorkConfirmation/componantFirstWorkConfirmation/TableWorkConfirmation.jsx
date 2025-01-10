@@ -8,8 +8,11 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function TableWorkConfirmation() {
+  // Language
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [openModalDetails, setOpenModalDetails] = useState(false);
@@ -60,7 +63,7 @@ export default function TableWorkConfirmation() {
     <div>
       {data?.data?.length === 0 ? (
         <div className="flex items-center justify-center min-h-[60vh] text-gray-500">
-          No Work Confirmation Found
+          {t("ConfirmationPage.table.noFound")}
         </div>
       ) : (
         <div>
@@ -68,16 +71,13 @@ export default function TableWorkConfirmation() {
             <table>
               <thead>
                 <tr className="bg-primaryColor text-white">
-                  <th className="thContract">Type</th>
-                  <th className="thContract">Contract</th>
-                  <th className="thContract">arrange for contract</th>
-                  <th className="thContract">Date</th>
-                  <th className="thContract">Project</th>
-                  <th className="thContract">Partner</th>
-                  <th className="thContract">Total Amount</th>
-                  <th className="thContract">Duo Amount</th>
-                  <th className="thContract">Status</th>
-                  <th className="thContract">Details</th>
+                  {t("ConfirmationPage.table.items", {
+                    returnObjects: true,
+                  }).map((item, key) => (
+                    <th className="thContract" key={key}>
+                      {item}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -154,7 +154,10 @@ export default function TableWorkConfirmation() {
 
           <div className="flex justify-between items-center">
             <div className="text-gray-600 mt-2">
-              Page {data.currentPage} of {data.totalPages}
+              {t("ConfirmationPage.table.paggination", {
+                currentPage: data.currentPage,
+                totalPages: data.totalPages,
+              })}
             </div>
             <div className="flex justify-end gap-4 mt-4">
               <button
@@ -163,7 +166,7 @@ export default function TableWorkConfirmation() {
                 onClick={() => setPage((prev) => prev - 1)}
                 disabled={data.currentPage === 1}
               >
-                Previous
+                {t("ConfirmationPage.buttons.previousButton")}
               </button>
               <button
                 type="button"
@@ -171,7 +174,7 @@ export default function TableWorkConfirmation() {
                 onClick={() => setPage((prev) => prev + 1)}
                 disabled={data.currentPage === data.totalPages}
               >
-                Next
+                {t("ConfirmationPage.buttons.nextButton")}
               </button>
             </div>
           </div>

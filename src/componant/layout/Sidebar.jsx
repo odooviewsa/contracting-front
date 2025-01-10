@@ -15,8 +15,11 @@ import { FaRegWindowRestore } from "react-icons/fa";
 import { GiExplosiveMaterials } from "react-icons/gi";
 import { FaProductHunt } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 export default function Sidebar({ setOpenSidebar, openSidebar }) {
   const { pathname } = useLocation();
+  // Language
+  const { t } = useTranslation();
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,7 +29,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
   }
   return (
     <div
-      className={`flex flex-col gap-2 p-2 md:p-0   ${
+      className={`flex flex-col gap-2 p-2 md:p-0 ${
         !openSidebar && "hidden md:block"
       }`}
     >
@@ -45,7 +48,9 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <FaProjectDiagram size={20} />
-          <h1 className={`${openSidebar ? "block" : "hidden"}`}>Project</h1>
+          <h1 className={`${openSidebar ? "block" : "hidden"}`}>
+            {t("Sidebar.project")}
+          </h1>
         </Link>
 
         <Link
@@ -55,7 +60,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <LuBookTemplate size={20} />
-          {openSidebar && <h1>BOQ Templates</h1>}
+          {openSidebar && <h1>{t("boqTemplates")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/contracts`}
@@ -64,28 +69,27 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <FaFileContract size={20} />
-          {openSidebar && <h1>Contracts</h1>}
+          {openSidebar && <h1>{t("Sidebar.contracts")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/workconfirm`}
-          className={`flex items-center gap-2 text-grayColor p-3
-            
-            ${pathname.includes("workconfirm") && "activeSidebar"}
-            `}
+          className={`flex items-center gap-2 text-grayColor p-3 ${
+            pathname.includes("workconfirm") && "activeSidebar"
+          }`}
         >
           <FaCheckCircle size={20} />
-          {openSidebar && <h1>Work Confirmation</h1>}
+          {openSidebar && <h1>{t("Sidebar.workConfirmation")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/estimation`}
           className="flex items-center gap-2 text-grayColor p-3"
         >
           <FaRegWindowRestore size={20} />
-          {openSidebar && <h1>Estimator</h1>}
+          {openSidebar && <h1>{t("Sidebar.estimator")}</h1>}
         </Link>
         <Link to={"/"} className="flex items-center gap-2 text-grayColor p-3">
           <MdPayment size={20} />
-          {openSidebar && <h1>Billing</h1>}
+          {openSidebar && <h1>{t("Sidebar.billing")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/partners`}
@@ -94,9 +98,8 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <TiGroup size={20} />
-          {openSidebar && <h1>Partenrs</h1>}
+          {openSidebar && <h1>{t("Sidebar.partners")}</h1>}
         </Link>
-        {/* // */}
         <Link
           to={`/${user?.companyName}/materials`}
           className={`flex items-center gap-2 text-grayColor p-3 ${
@@ -104,9 +107,8 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <GiExplosiveMaterials size={20} />
-          {openSidebar && <h1>Material Request</h1>}
+          {openSidebar && <h1>{t("Sidebar.materialRequest")}</h1>}
         </Link>
-        {/* // */}
         <Link
           to={`/${user?.companyName}/productsManagemet`}
           className={`flex items-center gap-2 text-grayColor p-3 ${
@@ -114,30 +116,29 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <FaProductHunt size={20} />
-          {openSidebar && <h1>Product</h1>}
+          {openSidebar && <h1>{t("Sidebar.product")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/users`}
           className="flex items-center gap-2 text-grayColor p-3"
         >
           <IoPeople size={20} />
-          {openSidebar && <h1>Users</h1>}
+          {openSidebar && <h1>{t("Sidebar.users")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/setting`}
           className="flex items-center gap-2 text-grayColor p-3"
         >
           <IoIosSettings size={20} />
-          {openSidebar && <h1>Setting</h1>}
+          {openSidebar && <h1>{t("Sidebar.setting")}</h1>}
         </Link>
-
         <Link
           to={"/"}
           className="flex items-center gap-2 text-red-500 p-3"
           onClick={handleLogout}
         >
           <AiOutlineLogout size={20} />
-          {openSidebar && <h1>Logout</h1>}
+          {openSidebar && <h1>{t("Sidebar.logout")}</h1>}
         </Link>
       </div>
     </div>

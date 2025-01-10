@@ -1,8 +1,11 @@
 import { toast, ToastContainer } from "react-toastify";
 import { axiosInstance } from "../../axios/axios";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const EditUsersTanet = ({ userData, className = "" }) => {
+  // Language
+  const { t } = useTranslation();
   const {
     handleSubmit,
     register,
@@ -33,7 +36,7 @@ const EditUsersTanet = ({ userData, className = "" }) => {
           className={`p-3 md:w-[60%] w-full overflow-auto text-textLabalForm mt-5 ${className}`}
         >
           <h3 className="font-semibold text-gray-900 text-[1.3rem] mb-3">
-            Edit User
+            {t("UserTanetPage.editUser.title")}
           </h3>
 
           <form
@@ -41,12 +44,7 @@ const EditUsersTanet = ({ userData, className = "" }) => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] gap-5">
-              {[
-                { label: "First Name", type: "text", name: "firstName" },
-                { label: "Second Name", type: "text", name: "secondName" },
-                { label: "Company Email", type: "email", name: "email" },
-                { label: "Phone number", type: "number", name: "phone" },
-              ].map((field, index) => (
+              {t("UserTanetPage.editUser.fields", {returnObjects: true}).map((field, index) => (
                 <div className="flex flex-col gap-2" key={index}>
                   <label htmlFor={field.name} className="text-[0.9rem]">
                     {field.label}
@@ -54,9 +52,11 @@ const EditUsersTanet = ({ userData, className = "" }) => {
                   <input
                     type={field.type}
                     className="bg-bgInput py-1 px-2 rounded-md outline-none"
-                    placeholder={`Enter ${field.label}`}
+                    placeholder={field.placeholder}
                     {...register(field.name, {
-                      required: `${field.name} is required`,
+                      required: t("UserTanetPage.editUser.requiredMessage", {
+                        name: field.name,
+                      }),
                       pattern:
                         field.name === "email"
                           ? {

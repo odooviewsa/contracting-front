@@ -1,12 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import AdditionsTable from "./componantAddition/AdditionsTable";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function Addition() {
+  // Language
+  const {t} = useTranslation()
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const param = useParams();
-  console.log(param);
   return (
     <div>
       <AdditionsTable />
@@ -16,7 +18,7 @@ export default function Addition() {
           className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
           onClick={() => navigate(-1)}
         >
-          Back
+          {t("ContractsForms.addition.buttons.backButton")}
         </button>
         <button
           type="submit"
@@ -27,7 +29,7 @@ export default function Addition() {
           }
           className="text-white bg-primaryColor border border-primaryColor px-3 pt-1 pb-2 rounded-md"
         >
-          Next
+          {t("ContractsForms.addition.buttons.nextButton")}
         </button>
       </div>
     </div>

@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function ButtonLast({ onSubmit, isSubmitting }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleNextClick = async () => {
@@ -15,7 +17,7 @@ export default function ButtonLast({ onSubmit, isSubmitting }) {
         className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
         onClick={() => navigate(-1)}
       >
-        Back
+        {t("ContractsForms.buttons.backButton")}
       </button>
       <button
         onClick={handleNextClick}
@@ -25,7 +27,9 @@ export default function ButtonLast({ onSubmit, isSubmitting }) {
         }`}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Loading..." : "Next"}
+        {isSubmitting
+          ? t("ContractsForms.buttons.nextButton.loading")
+          : t("ContractsForms.buttons.nextButton.text")}
       </button>
     </div>
   );

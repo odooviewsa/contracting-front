@@ -1,6 +1,6 @@
 import { FcGoogle } from "react-icons/fc";
-import PropTypes from 'prop-types'
-export default function SignWithGoogle({ title }) {
+import PropTypes from "prop-types";
+export default function SignWithGoogle({ title, text, orText }) {
   return (
     <>
       {/* // sign with google */}
@@ -8,12 +8,12 @@ export default function SignWithGoogle({ title }) {
         <div className="p-[2px] rounded-full bg-white ">
           <FcGoogle size={20} />
         </div>
-        <p>Sign up with google</p>
+        <p>{text}</p>
       </div>
       {/* // line or  */}
       <div className="w-[80%] h-[2px] bg-bgWhite  relative mt-2">
         <div className="absolute rounded-full left-[50%] translate-x-[-50%]  -top-4 bg-[#2571bd] font-semibold py-1 px-2">
-          Or
+          {orText}
         </div>
       </div>
       {/* // header */}
@@ -22,5 +22,5 @@ export default function SignWithGoogle({ title }) {
   );
 }
 SignWithGoogle.propTypes = {
-    title:PropTypes.string
-}
+  title: PropTypes.string,
+};

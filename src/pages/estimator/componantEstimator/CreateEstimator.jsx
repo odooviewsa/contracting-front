@@ -9,10 +9,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function CreateEstimator({ setOpenCreate, refetch }) {
   const [contractsCode, setContractsCode] = useState([]);
-
+  // Language
+  const { t } = useTranslation();
   const fetchProjectNameEstimator = async () => {
     const response = await axiosInstance.get(`/api/projects/names`);
     return response.data;
@@ -78,7 +80,9 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-            <h3 className="text-xl font-semibold text-gray-800">Add Estimator</h3>
+            <h3 className="text-xl font-semibold text-gray-800">
+              {t("EstimationForm.title")}
+            </h3>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -94,7 +98,9 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               {/* Name Field */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Name</label>
+                <label className="text-sm font-medium text-gray-700">
+                  {t("EstimationForm.fields.name")}
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <FaUser className="text-gray-400" />
@@ -102,8 +108,8 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
                   <input
                     type="text"
                     className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                    placeholder="Enter name"
-                    {...register("name", { required: "Name is required" })}
+                    placeholder={t("EstimationForm.fields.enterName")}
+                    {...register("name", { required: t("EstimationForm.fields.nameRequired") })}
                   />
                 </div>
                 {errors.name && (
@@ -114,7 +120,7 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
               {/* Project Name Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Project Name
+                  {t("EstimationForm.fields.projectName")}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -123,10 +129,10 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
                   <select
                     className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white appearance-none"
                     {...register("projectName", {
-                      required: "Project name is required",
+                      required: t("EstimationForm.fields.projectNameRequired"),
                     })}
                   >
-                    <option value="">Select Project Name</option>
+                    <option value="">{t("EstimationForm.fields.selectProjectName")}</option>
                     {data?.data?.map((e, i) => (
                       <option key={i} value={e?._id}>
                         {e?.projectName}
@@ -144,7 +150,7 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
               {/* Apply On Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Apply On
+                  {t("EstimationForm.fields.applyOn")}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -153,23 +159,25 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
                   <select
                     className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white appearance-none"
                     {...register("applyOn", {
-                      required: "Apply On is required",
+                      required: t("EstimationForm.fields.applyOnRequired"),
                     })}
                   >
-                    <option value="">Select Apply On</option>
-                    <option value="Whole BOQ">Whole BOQ</option>
-                    <option value="BOQ Lines">BOQ Lines</option>
+                    <option value="">{t("EstimationForm.fields.selectApplyOn")}</option>
+                    <option value="Whole BOQ">{t("EstimationForm.fields.wholeBOQ")}</option>
+                    <option value="BOQ Lines">{t("EstimationForm.fields.boqLines")}</option>
                   </select>
                 </div>
                 {errors.applyOn && (
-                  <p className="text-sm text-red-500">{errors.applyOn.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.applyOn.message}
+                  </p>
                 )}
               </div>
 
               {/* Contract Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Contract
+                  {t("EstimationForm.fields.contract")}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -178,10 +186,10 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
                   <select
                     className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white appearance-none"
                     {...register("contract", {
-                      required: "Contract is required",
+                      required: t("EstimationForm.fields.contractRequired"),
                     })}
                   >
-                    <option value="">Select Contract</option>
+                    <option value="">{t("EstimationForm.fields.selectContract")}</option>
                     {contractsCode?.map((e, i) => (
                       <option key={i} value={e?._id}>
                         {e?.code}
@@ -216,10 +224,10 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
               {isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin" />
-                  <span>Adding Estimator...</span>
+                  <span>{t("EstimationForm.adddButton.loading")}</span>
                 </div>
               ) : (
-                "Add Estimator"
+                t("EstimationForm.addButton.text")
               )}
             </motion.button>
           </div>

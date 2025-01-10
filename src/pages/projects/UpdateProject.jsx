@@ -9,6 +9,7 @@ import makeAnimated from "react-select/animated";
 import Header from "../../componant/layout/Header";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const animatedComponents = makeAnimated();
 
@@ -51,6 +52,9 @@ const InputField = ({
         type={type}
         placeholder={placeholder}
         name={name}
+        defaultValue={
+          type === "date" && !defaultValue ? "2023-01-01" : defaultValue
+        }
         {...register(name, { required })}
         className={`w-full px-4 py-2 border rounded-md border-primaryColor focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           errorMessage ? "border-red-500" : ""
@@ -128,7 +132,70 @@ const UpdateProjectForm = () => {
   } = useForm();
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
-
+  // Language
+  const { t } = useTranslation();
+  const renderField = (field, key) => {
+    switch (field.type) {
+      case "textarea":
+        return (
+          <TextAreaField
+            key={key}
+            label={field.label}
+            placeholder={field.placeholder}
+            name={field.name}
+            register={register}
+            required={field.required}
+            errorMessage={errors?.projectName && field.errorMessage}
+          />
+        );
+      case "select":
+        if (field.isMulti) {
+          return (
+            <div key={key}>
+              <label className="block text-gray-700 font-semibold mb-2">
+                {field.label} <span className="text-red-500">*</span>
+              </label>
+              <Select
+                closeMenuOnSelect={false}
+                components={animatedComponents}
+                isMulti
+                options={teamMembers}
+                onChange={(e) => setSelectedTeamMembers(e)}
+                value={selectedTeamMembers}
+              />
+            </div>
+          );
+        }
+        return (
+          <InputField
+            key={key}
+            label={field.label}
+            placeholder={field.placeholder}
+            name={field.name}
+            register={register}
+            required={field.required}
+            errorMessage={errors?.projectName && field.errorMessage}
+            type="select"
+            options={managers}
+            defaultValue={projectData[field.name]}
+          />
+        );
+      default:
+        return (
+          <InputField
+            key={key}
+            label={field.label}
+            placeholder={field.placeholder}
+            name={field.name}
+            register={register}
+            required={field.required}
+            errorMessage={errors?.projectName && field.errorMessage}
+            type={field.type || "text"}
+            defaultValue={projectData[field.name] || "2023-10-10"}
+          />
+        );
+    }
+  };
   useEffect(() => {
     // Fetch other necessary data
     async function getManagers() {
@@ -190,6 +257,8 @@ const UpdateProjectForm = () => {
   }, [id]);
 
   const onSubmit = async (data) => {
+    console.log(data);
+
     const formDataToSend = new FormData();
     for (let key in data) {
       formDataToSend.append(key, data[key]);
@@ -213,7 +282,6 @@ const UpdateProjectForm = () => {
   const handleDocumentChange = (e) => {
     setSelectedDocuments(Array.from(e.target.files));
   };
-
   return (
     <>
       <ToastContainer />
@@ -223,58 +291,80 @@ const UpdateProjectForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div>
               <InputField
-                label="Project name"
-                placeholder="Enter project name"
+                label={t("EditProjectPage.fields.projectName")}
+                placeholder={t("EditProjectPage.fields.enterProjectName")}
                 name="projectName"
                 register={register}
                 required={true}
-                errorMessage={errors?.projectName && "Project Name is required"}
+                errorMessage={
+                  errors?.projectName &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.projectName"),
+                  })
+                }
               />
               <InputField
-                label="Start Date"
-                placeholder="10/10/2023"
+                label={t("EditProjectPage.fields.startDate")}
+                placeholder={t("EditProjectPage.fields.enterStartDate")}
                 type="date"
                 name="startDate"
                 register={register}
                 required={true}
-                errorMessage={errors?.startDate && "Start Date is required"}
+                errorMessage={
+                  errors?.startDate &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.startDate"),
+                  })
+                }
               />
               <InputField
-                label="Project Location"
-                placeholder="Select"
+                label={t("EditProjectPage.fields.projectLocation")}
+                placeholder={t("EditProjectPage.fields.select")}
                 name="projectLocation"
                 register={register}
                 required={true}
                 errorMessage={
-                  errors?.projectLocation && "Project Location is required"
+                  errors?.projectLocation &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.projectLocation"),
+                  })
                 }
               />
               <InputField
-                label="Project Manager"
-                placeholder="Select Project Manager"
-                name="projectManger"
+                label={t("EditProjectPage.fields.projectManager")}
+                placeholder={t("EditProjectPage.fields.selectProjectManager")}
+                name="projectManager"
                 register={register}
                 required={true}
                 errorMessage={
-                  errors?.projectManager && "Project Manager is required"
+                  errors?.projectManager &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.projectManager"),
+                  })
                 }
                 type="select"
                 options={managers}
-                defaultValue={projectData?.projectManger}
+                defaultValue={projectData?.projectManager}
               />
               <InputField
-                label="Status"
-                placeholder="Select Status"
+                label={t("EditProjectPage.fields.status")}
+                placeholder={t("EditProjectPage.fields.selectStatus")}
                 name="status"
                 register={register}
                 required={true}
-                errorMessage={errors?.status && "Status is required"}
+                errorMessage={
+                  errors?.status &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.status"),
+                  })
+                }
                 type="select"
                 options={["Completed", "Planning", "in Progress"]}
               />
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Team Members <span className="text-red-500">*</span>
+                  {t("EditProjectPage.fields.teamMembers")}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <Select
                   closeMenuOnSelect={false}
@@ -286,55 +376,79 @@ const UpdateProjectForm = () => {
                 />
               </div>
               <TextAreaField
-                label="Scope Of Work"
-                placeholder="Enter details"
+                label={t("EditProjectPage.fields.scopeOfWork")}
+                placeholder={t("EditProjectPage.fields.enterDetails")}
                 name="scopeOfWork"
                 register={register}
                 required={true}
                 errorMessage={
-                  errors?.scopeOfWork && "Scope of Work is required"
+                  errors?.scopeOfWork &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.scopeOfWork"),
+                  })
                 }
               />
             </div>
+
             <div>
               <InputField
-                label="Client Name"
-                placeholder="Select Client"
+                label={t("EditProjectPage.fields.clientName")}
+                placeholder={t("EditProjectPage.fields.selectClient")}
                 name="clientName"
                 register={register}
                 required={true}
-                errorMessage={errors?.clientName && "Client Name is required"}
+                errorMessage={
+                  errors?.clientName &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.clientName"),
+                  })
+                }
                 type="select"
                 options={clients}
                 isClient={true}
               />
               <InputField
-                label="End Date"
-                placeholder="25/12/2023"
+                label={t("EditProjectPage.fields.endDate")}
+                placeholder={t("EditProjectPage.fields.enterEndDate")}
                 type="date"
                 name="endDate"
                 register={register}
                 required={true}
-                errorMessage={errors?.endDate && "End Date is required"}
+                errorMessage={
+                  errors?.endDate &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.endDate"),
+                  })
+                }
               />
               <InputField
-                label="Budget"
-                placeholder="Enter budget"
+                label={t("EditProjectPage.fields.budget")}
+                placeholder={t("EditProjectPage.fields.enterBudget")}
                 name="budget"
                 register={register}
                 required={true}
-                errorMessage={errors?.budget && "Budget is required"}
+                errorMessage={
+                  errors?.budget &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.budget"),
+                  })
+                }
               />
               <TextAreaField
-                label="Description"
-                placeholder="Enter project description"
+                label={t("EditProjectPage.fields.description")}
+                placeholder={t("EditProjectPage.fields.enterDescription")}
                 name="description"
                 register={register}
-                errorMessage={errors?.description && "Description is required"}
+                errorMessage={
+                  errors?.description &&
+                  t("requiredField", {
+                    field: t("EditProjectPage.fields.description"),
+                  })
+                }
               />
               <div>
                 <label className="block text-primaryColor font-semibold mb-2">
-                  Documents
+                  {t("EditProjectPage.fields.documents")}
                 </label>
                 <input
                   type="file"
@@ -351,7 +465,7 @@ const UpdateProjectForm = () => {
               type="submit"
               className="bg-green-600 text-white py-2 px-6 rounded-md"
             >
-              Update Project
+              {t("EditProjectPage.updateButton")}
             </button>
           </div>
         </div>

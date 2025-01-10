@@ -1,32 +1,35 @@
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
+import { useTranslation } from "react-i18next";
 export default function BlockContantWorkItem({ workItemDetails }) {
+  // Language
+  const {t} = useTranslation()
   const { currentValueColum } = useContext(ContextBOQ);
   const columns = [
-    { header: "Unit Of Measure", value: `${workItemDetails?.unitOfMeasure}` },
+    { header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.unitOfMeasure"), value: `${workItemDetails?.unitOfMeasure}` },
     {
-      header: "Assigned Quantity",
+      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.assignedQuantity"),
       value: `${workItemDetails?.assignedQuantity?.toLocaleString("en-US")}`,
     },
     {
-      header: "Previous Quantity",
+      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.previousQuantity"),
       value: `${workItemDetails?.previousQuantity?.toLocaleString("en-US")}`,
     },
     {
-      header: "Remaining Quantity",
+      header:t("ContractsForms.BOQ.table.allItems.contentWorkItems.remainingQuantity"),
       value: `${workItemDetails?.remainingQuantity?.toLocaleString("en-US")}`,
     },
     {
-      header: "Financial Category",
+      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.financialCategory"),
       value: `${workItemDetails?.financialCategory?.toLocaleString("en-US")}`,
     },
     {
-      header: "Price",
+      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.price"),
       value: `${workItemDetails?.price?.toLocaleString("en-US")}`,
     },
     {
-      header: "Total",
+      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.total"),
       value: `${workItemDetails?.total?.toLocaleString("en-US")}`,
     },
   ];

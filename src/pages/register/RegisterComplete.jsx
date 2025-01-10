@@ -7,8 +7,10 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { setUser } from "../../redux/features/userSlice";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterComplete() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -36,7 +38,10 @@ export default function RegisterComplete() {
         navigate(`/${result?.data?.user?.companyName}/projects`);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Registration failed. Please try again.");
+      toast.error(
+        error?.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
     }
   }
 
@@ -44,52 +49,66 @@ export default function RegisterComplete() {
     <div className="w-full min-h-screen flex items-center justify-center lg:justify-between p-5 overflow-x-hidden text-white bg-[#06385c]">
       <div className="lg:w-1/2 w-full flex justify-center items-center">
         <div className="w-full max-w-md flex flex-col gap-5 items-center">
-          <Link to="/register" className="flex items-center text-white gap-2 mb-4 hover:underline">
+          <Link
+            to="/register"
+            className="flex items-center text-white gap-2 mb-4 hover:underline"
+          >
             <FaArrowLeftLong />
-            <span>Back</span>
+            <span>{t("RegisterPage.buttons.backButton")}</span>
           </Link>
 
-          <form className="flex flex-col gap-5 w-full" onSubmit={handleSubmit(onSubmit)}>
-            {[
-              { label: "First Name", type: "text", name: "firstName" },
-              { label: "Second Name", type: "text", name: "secondName" },
-              { label: "Company Name", type: "text", name: "companyName" },
-              { label: "Company Size", type: "select", name: "companySize", options: [
-                  "1-10 employees (Small startup)",
-                  "11-50 employees (Growing small business)",
-                  "51-200 employees (Medium-sized business)",
-                  "201-500 employees (Mid-large company)",
-                  "501-1,000 employees (Large company)",
-                  "1,001-5,000 employees (Enterprise level)",
-                ] 
-              },
-              { label: "Company Type", type: "select", name: "companyType", options: ["Contractor", "Sub-Contractor"] },
-            ].map((field, index) => (
-              <div key={index} className="flex flex-col gap-2 w-full">
-                <label className="text-gray-100 font-medium">
-                  {field.label} <span className="text-red-400">*</span>
-                </label>
-                {field.type === "select" ? (
-                  <select
-                    className={`py-2 px-3 border rounded-md bg-white text-black ${errors[field.name] ? "border-red-500" : "border-gray-300"}`}
-                    {...register(field.name, { required: `${field.label} is required` })}
-                  >
-                    <option value="" disabled>Select {field.label}</option>
-                    {field.options?.map((option, idx) => (
-                      <option key={idx} value={option}>{option}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={field.type}
-                    placeholder={`Enter ${field.label}`}
-                    className={`py-2 px-3 placeholder-gray-400 border rounded-md bg-white text-black ${errors[field.name] ? "border-red-500" : "border-gray-300"}`}
-                    {...register(field.name, { required: `${field.label} is required` })}
-                  />
-                )}
-                {errors[field.name] && <p className="text-red-500 text-sm">{errors[field.name].message}</p>}
-              </div>
-            ))}
+          <form
+            className="flex flex-col gap-5 w-full"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            {t("RegisterPage.fields2", { returnObjects: true }).map(
+              (field, index) => (
+                <div key={index} className="flex flex-col gap-2 w-full">
+                  <label className="text-gray-100 font-medium">
+                    {field.label} <span className="text-red-400">*</span>
+                  </label>
+                  {field.type === "select" ? (
+                    <select
+                      className={`py-2 px-3 border rounded-md bg-white text-black ${
+                        errors[field.name]
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                      {...register(field.name, {
+                        required: `${field.label} is required`,
+                      })}
+                    >
+                      <option value="" disabled>
+                        Select {field.label}
+                      </option>
+                      {field.options?.map((option, idx) => (
+                        <option key={idx} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      placeholder={`Enter ${field.label}`}
+                      className={`py-2 px-3 placeholder-gray-400 border rounded-md bg-white text-black ${
+                        errors[field.name]
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                      {...register(field.name, {
+                        required: `${field.label} is required`,
+                      })}
+                    />
+                  )}
+                  {errors[field.name] && (
+                    <p className="text-red-500 text-sm">
+                      {errors[field.name].message}
+                    </p>
+                  )}
+                </div>
+              )
+            )}
 
             <button
               type="submit"
@@ -98,12 +117,14 @@ export default function RegisterComplete() {
                 isSubmitting && "opacity-50 cursor-not-allowed"
               }`}
             >
-              {isSubmitting ? "Processing..." : "Create"}
+              {isSubmitting ? t("RegisterPage.buttons.createButton.loading") : t("RegisterPage.buttons.createButton.text")}
             </button>
 
             <div className="flex items-center justify-between mt-4 text-sm text-gray-300 font-semibold">
-              <span>Already have an account?</span>
-              <Link to="/" className="text-blue-400 hover:underline">Login</Link>
+              <span>{t("RegisterPage.buttons.alreadyHave")}</span>
+              <Link to="/" className="text-blue-400 hover:underline">
+                {t("RegisterPage.buttons.loginButton")}
+              </Link>
             </div>
           </form>
         </div>

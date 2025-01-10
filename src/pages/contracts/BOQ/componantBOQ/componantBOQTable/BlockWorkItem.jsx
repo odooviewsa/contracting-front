@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 import BlockContantWorkItem from "./BlockContantWorkItem";
 import Menu from "./ModalWorkItem/Menu";
 import { ContextBOQ } from "../../../../../context/BOQContext";
+import { useTranslation } from "react-i18next";
+
 export default function BlockWorkItem({ workItem }) {
+  // Language
+  const { t } = useTranslation();
   const [openMore, setOpenMore] = useState(false);
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
   const toggleItem = () => {
@@ -24,7 +28,7 @@ export default function BlockWorkItem({ workItem }) {
       >
         <div className="flex items-center gap-4 text-colorTextValueItem ">
           <div className="flex flex-col">
-            <h4 className="text-black">Work Item</h4>
+            <h4 className="text-black">{t("ContractsForms.BOQ.table.allItems.work.text")}</h4>
             <p className="text-[0.8rem] ">{workItem?.workItemName}</p>
           </div>
         </div>
@@ -35,7 +39,7 @@ export default function BlockWorkItem({ workItem }) {
             setOpenMore((e) => !e);
           }}
         >
-          <p> More</p>
+          <p> {t("ContractsForms.BOQ.table.allItems.work.moreButton")}</p>
           <BsThreeDotsVertical />
           {openMore && <Menu workItem={workItem} />}
         </div>

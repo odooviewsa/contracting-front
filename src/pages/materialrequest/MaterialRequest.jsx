@@ -32,6 +32,7 @@ import { useEffect } from "react";
 import { axiosInstance } from "../../axios/axios";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { useTranslation } from "react-i18next";
 
 const MaterialRequest = () => {
   const [project, setProject] = useState("");
@@ -51,6 +52,8 @@ const MaterialRequest = () => {
   const [projectsData, setProjectsData] = useState(null);
 
   const [items, setItems] = useState([]);
+  // Language
+  const { t } = useTranslation();
   const handleSelectItem = (item) => {
     handleAddNewItem(item);
     handleClose(true);
@@ -83,65 +86,90 @@ const MaterialRequest = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const itemColumns = [
-    { field: "product", headerName: "Product", width: 150, editable: true },
-    { field: "boqLine", headerName: "BOQ Line", width: 130, editable: true },
-    { field: "uom", headerName: "UOM", width: 90, editable: true },
-    { field: "boqQty", headerName: "BOQ Qty", width: 100, editable: true },
+    {
+      field: "product",
+      headerName: t("MaterialRequestForm.table.items.product"),
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "boqLine",
+      headerName: t("MaterialRequestForm.table.items.boqLine"),
+      width: 130,
+      editable: true,
+    },
+    {
+      field: "uom",
+      headerName: t("MaterialRequestForm.table.items.uom"),
+      width: 90,
+      editable: true,
+    },
+    {
+      field: "boqQty",
+      headerName: t("MaterialRequestForm.table.items.boqQty"),
+      width: 100,
+      editable: true,
+    },
     {
       field: "qtyAvailable",
-      headerName: "QTY Available",
+      headerName: t("MaterialRequestForm.table.items.qtyAvailable"),
       width: 130,
       editable: true,
     },
     {
       field: "qtyApproved",
-      headerName: "QTY Approved",
+      headerName: t("MaterialRequestForm.table.items.qtyApproved"),
       width: 130,
       editable: true,
     },
     {
       field: "qtyRequests",
-      headerName: "QTY Requests",
+      headerName: t("MaterialRequestForm.table.items.qtyRequests"),
       width: 130,
       editable: true,
     },
     {
       field: "qtyDelivered",
-      headerName: "QTY Delivered",
+      headerName: t("MaterialRequestForm.table.items.qtyDelivered"),
       width: 130,
       editable: true,
     },
-    { field: "unitCost", headerName: "Unit Cost", width: 110, editable: true },
+    {
+      field: "unitCost",
+      headerName: t("MaterialRequestForm.table.items.unitCost"),
+      width: 110,
+      editable: true,
+    },
     {
       field: "totalCost",
-      headerName: "Total Cost",
+      headerName: t("MaterialRequestForm.table.items.totalCost"),
       width: 110,
       editable: true,
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: t("MaterialRequestForm.table.items.actions"),
       width: 250,
       renderCell: (params) => (
         <>
-          <Tooltip title="Edit">
+          <Tooltip title={t("edit")}>
             <IconButton color="primary">
               <EditIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title={t("delete")}>
             <IconButton color="secondary">
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Approve Line">
+          <Tooltip title={t("approveLine")}>
             <Button
               variant="contained"
               color="success"
               onClick={() => handleApproveLine(params.row.id)}
               sx={{ ml: 1 }}
             >
-              Approve Line
+              {t("approveLine")}
             </Button>
           </Tooltip>
         </>
@@ -322,7 +350,7 @@ const MaterialRequest = () => {
             onClick={handleSaveAsDraft}
             sx={{ ml: 2 }}
           >
-            Save as Draft
+            {t("MaterialRequestForm.buttons.saveButton")}
           </Button>
           <Button
             variant="outlined"
@@ -338,61 +366,54 @@ const MaterialRequest = () => {
               })
             }
           >
-            Help
+            {t("MaterialRequestForm.buttons.helpButton")}
           </Button>
         </Grid>
 
         {/* Input Fields Section */}
         <Grid container spacing={2} sx={{ mt: 3 }}>
           {[
-            // General project information
             {
-              label: "Project",
+              label: t("MaterialRequestForm.fields.project"),
               value: project,
               onChange: (e) => setProject(e.target.value),
               type: "select",
             },
             {
-              label: "Work Item",
+              label: t("MaterialRequestForm.fields.workItem"),
               value: workItem,
               onChange: (e) => setWorkItem(e.target.value),
             },
-
-            // Dates
             {
-              label: "Order Date",
+              label: t("MaterialRequestForm.fields.orderDate"),
               value: orderDate,
               onChange: (e) => setOrderDate(e.target.value),
               type: "date",
             },
             {
-              label: "Delivery Date",
+              label: t("MaterialRequestForm.fields.deliveryDate"),
               value: deliveryDate,
               onChange: (e) => setDeliveryDate(e.target.value),
               type: "date",
             },
-
-            // Status & Reason
             {
-              label: "Status",
+              label: t("MaterialRequestForm.fields.status"),
               value: status,
               onChange: (e) => setStatus(e.target.value),
             },
             {
-              label: "Reason",
+              label: t("MaterialRequestForm.fields.reason"),
               value: reason,
               onChange: (e) => setReason(e.target.value),
             },
-
-            // Toggle switches
             {
-              label: "Link with BOQ",
+              label: t("MaterialRequestForm.fields.linkWithBOQ"),
               value: linkWithBOQ,
               onChange: () => setLinkWithBOQ(!linkWithBOQ),
               type: "switch",
             },
             {
-              label: "Emergency",
+              label: t("MaterialRequestForm.fields.emergency"),
               value: emergency,
               onChange: () => setEmergency(!emergency),
               type: "switch",
@@ -463,7 +484,7 @@ const MaterialRequest = () => {
         </Grid>
         <Grid container alignItems="center" sx={{ mt: 3 }}>
           <TextField
-            label="Search Items"
+            label={t("MaterialRequestForm.searchBar")}
             fullWidth
             variant="outlined"
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -473,7 +494,7 @@ const MaterialRequest = () => {
           />
         </Grid>
         <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-          Items
+          {t("MaterialRequestForm.table.title")}
         </Typography>
         <motion.div whileHover={{ scale: 1.02 }}>
           <DataGrid
@@ -498,14 +519,14 @@ const MaterialRequest = () => {
             onClick={handleOpen}
             sx={{ borderRadius: 2 }}
           >
-            Add New Line
+            {t("MaterialRequestForm.buttons.addLineButton")}
           </Button>
           <Button variant="contained" color="success" sx={{ borderRadius: 2 }}>
-            Bulk Approve
+          {t("MaterialRequestForm.buttons.bulkButton")}
           </Button>
         </Grid>
         <Typography variant="h6" gutterBottom>
-          Upload Document
+          {t("MaterialRequestForm.upload.text")}
         </Typography>
         <Box
           mt={2}
@@ -518,11 +539,11 @@ const MaterialRequest = () => {
         >
           <AttachFileIcon sx={{ fontSize: "2rem", color: "#2196F3" }} />
           <Typography variant="body1" color="textSecondary">
-            Drag & Drop File Here
+            {t("MaterialRequestForm.upload.model")}
           </Typography>
         </Box>
         <div>
-          <Button>Open modal</Button>
+          <Button>{t("MaterialRequestForm.upload.button")}</Button>
           <Modal
             open={open}
             onClose={handleClose}
@@ -546,7 +567,7 @@ const MaterialRequest = () => {
               }}
             >
               <Typography id="modal-modal-title" variant="h6" component="h2">
-                List of products
+              {t("ProductsList.title")}
               </Typography>
               <ProductsList onSelect={handleSelectItem} />
             </Box>

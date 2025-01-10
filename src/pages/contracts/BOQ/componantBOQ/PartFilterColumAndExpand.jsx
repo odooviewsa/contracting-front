@@ -10,7 +10,10 @@ import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../axios/axios";
 import { toast } from "react-toastify";
 import FilterColum from "./FilterColum";
+import { useTranslation } from "react-i18next";
 export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
+  // Language
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -22,11 +25,8 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
   });
   const [tagInput, setTagInput] = useState("");
   const { id } = useParams();
-  const {
-    idOnlyOpen,
-    setIdOnlyOpen,
-    allIdMainItemAndSubItemAndWorkItem,
-  } = useContext(ContextBOQ);
+  const { idOnlyOpen, setIdOnlyOpen, allIdMainItemAndSubItemAndWorkItem } =
+    useContext(ContextBOQ);
   const handleExpand = () => {
     if (idOnlyOpen?.length > 0) {
       setIdOnlyOpen([]);
@@ -48,15 +48,23 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
         ...formData,
         contractId: id,
       });
-      setMessage("Template saved successfully!");
+      setMessage(
+        t("ContractsForms.BOQ.filter.saveTemplateForm.messages.saveSuccess")
+      );
       setShowPopup(false);
       setFormData({ name: "", description: "", category: "", tags: [] });
-      toast.success("Template saved successfully!");
+      toast.success(
+        t("ContractsForms.BOQ.filter.saveTemplateForm.messages.saveSuccess")
+      );
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setMessage("Template with the same name already exists!");
+        setMessage(
+          t("ContractsForms.BOQ.filter.saveTemplateForm.messages.sameName")
+        );
       } else {
-        setMessage("Failed to save template. Please try again.");
+        setMessage(
+          t("ContractsForms.BOQ.filter.saveTemplateForm.messages.saveFailed")
+        );
       }
     } finally {
       setLoading(false);
@@ -85,7 +93,7 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
       <div className="flex md:flex-row flex-col md:items-center justify-between">
         <div className="flex items-center gap-7 text-[0.9rem] flex-wrap">
           {/* Columns */}
-       <FilterColum/>
+          <FilterColum />
           {/* Expand */}
           <div className="relative">
             <div
@@ -93,7 +101,7 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
               onClick={handleExpand}
             >
               <FaExpandAlt size={20} />
-              <p>Expand</p>
+              <p> {t("ContractsForms.BOQ.filter.expand")}</p>
               {idOnlyOpen?.length > 0 ? (
                 <FaCaretDown color="gray" size={20} />
               ) : (
@@ -108,7 +116,7 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
               onClick={() => setIdOnlyOpen([])}
             >
               <BiReset size={20} />
-              <p>Reset</p>
+              <p>{t("ContractsForms.BOQ.filter.reset")}</p>
             </div>
           </div>
         </div>
@@ -131,10 +139,14 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md w-96 ">
-            <h3 className="text-lg font-semibold mb-4">Save as Template</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              {t("ContractsForms.BOQ.filter.saveTemplateForm.title")}
+            </h3>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Name</label>
+                <label className="block text-sm font-medium mb-2">
+                  {t("ContractsForms.BOQ.filter.saveTemplateForm.fields.name")}
+                </label>
                 <input
                   type="text"
                   value={formData.name}
@@ -147,7 +159,9 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Description
+                  {t(
+                    "ContractsForms.BOQ.filter.saveTemplateForm.fields.description"
+                  )}
                 </label>
                 <textarea
                   value={formData.description}
@@ -160,7 +174,9 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Category
+                  {t(
+                    "ContractsForms.BOQ.filter.saveTemplateForm.fields.category"
+                  )}
                 </label>
                 <input
                   type="text"
@@ -173,7 +189,9 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Tags</label>
+                <label className="block text-sm font-medium mb-2">
+                  {t("ContractsForms.BOQ.filter.saveTemplateForm.fields.tags")}
+                </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -186,7 +204,9 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
                     onClick={handleTagAdd}
                     className="bg-blue-500 text-white px-3 py-2 rounded"
                   >
-                    Add
+                    {t(
+                      "ContractsForms.BOQ.filter.saveTemplateForm.fields.tagsButton"
+                    )}
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -213,13 +233,17 @@ export default function PartFilterColumAndExpand({ includeTax, DownPayment }) {
                   onClick={() => setShowPopup(false)}
                   className="px-4 py-2 border rounded"
                 >
-                  Cancel
+                  {t(
+                    "ContractsForms.BOQ.filter.saveTemplateForm.fields.buttons.cancelButton"
+                  )}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white rounded"
                 >
-                  Save
+                  {t(
+                    "ContractsForms.BOQ.filter.saveTemplateForm.fields.buttons.saveButton"
+                  )}
                 </button>
               </div>
             </form>

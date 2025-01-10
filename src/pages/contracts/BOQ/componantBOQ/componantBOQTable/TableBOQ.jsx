@@ -1,4 +1,5 @@
 
+import { useTranslation } from "react-i18next";
 import PartAllItemTable from "./PartAllItemTable";
 import PartFilterAndNewItemInTableBOQ from "./PartFilterAndNewItemInTableBOQ";
 import PropTypes from "prop-types";
@@ -8,7 +9,8 @@ export default function TableBOQ({
   setValueSearch,
   valueSearch,
 }) {
-
+  // Language
+  const {t} = useTranslation()
   return (
     <div className="w-full rounded-md border border-gray-300 shadow-md">
       <PartFilterAndNewItemInTableBOQ
@@ -24,7 +26,7 @@ export default function TableBOQ({
  
         </>
       ) : (
-        <p className="flex justify-center p-5">Not item yet, Add First Item</p>
+        <p className="flex justify-center p-5">{t("ContractsForms.BOQ.table.noFound")}</p>
       )}
     </div>
   );

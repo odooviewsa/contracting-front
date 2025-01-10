@@ -1,12 +1,15 @@
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function OptionsBoqTemplate({
   setShowOptions,
   setSureDelete,
   handleSaveClick,
 }) {
+  // Language
+  const { t } = useTranslation();
   //   const navigate = useNavigate();
   //   const user = useSelector((state) => state?.user);
 
@@ -21,7 +24,7 @@ function OptionsBoqTemplate({
         }}
       >
         <FaEdit size={18} />
-        <p>Edit</p>
+        <p>{t("BoqTemplatePage.detailsModel.edit")}</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 text-red-700 cursor-pointer"
@@ -33,7 +36,7 @@ function OptionsBoqTemplate({
         }}
       >
         <MdDelete size={18} />
-        <p>Delete</p>
+        <p>{t("BoqTemplatePage.detailsModel.delete")}</p>
       </div>
     </div>
   );

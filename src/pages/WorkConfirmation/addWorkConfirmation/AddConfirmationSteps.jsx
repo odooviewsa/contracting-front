@@ -6,42 +6,45 @@ import { FiPlusCircle } from "react-icons/fi";
 
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-const steps = [
-  {
-    name: "Add Confirmation",
-    icon: <MdOutlineNoteAdd />,
-    path: "/",
-  },
-  {
-    name: "firstProgressDahedLine",
-  },
-  { name: "BOQ", icon: <IoListSharp />, path: "BOQ" },
-  {
-    name: "secondProgressDahedLine",
-  },
-  {
-    name: "Deduction",
-    icon: <FiMinusCircle />,
-    path: "deduction",
-  },
-  {
-    name: "thirdProgressDahedLine",
-  },
-  {
-    name: "Addition",
-    icon: <FiPlusCircle />,
-    path: "addition",
-  },
-  // {
-  //   name: "forthProgressDahedLine",
-  // },
-  // {
-  //   name: "Summary",
-  //   icon: <BiSticker />,
-  //   path: "summary",
-  // },
-];
+import { useTranslation } from "react-i18next";
 function AddConfirmationSteps() {
+  // Language
+  const { t } = useTranslation();
+  const steps = [
+    {
+      name: t("ConfirmationSetps.addConfirmation"),
+      icon: <MdOutlineNoteAdd />,
+      path: "/",
+    },
+    {
+      name: "firstProgressDahedLine",
+    },
+    { name: t("ConfirmationSetps.boq"), icon: <IoListSharp />, path: "BOQ" },
+    {
+      name: "secondProgressDahedLine",
+    },
+    {
+      name: t("ConfirmationSetps.deduction"),
+      icon: <FiMinusCircle />,
+      path: "deduction",
+    },
+    {
+      name: "thirdProgressDahedLine",
+    },
+    {
+      name: t("ConfirmationSetps.addition"),
+      icon: <FiPlusCircle />,
+      path: "addition",
+    },
+    // {
+    //   name: "forthProgressDahedLine",
+    // },
+    // {
+    //   name: "Summary",
+    //   icon: <BiSticker />,
+    //   path: "summary",
+    // },
+  ];
   const location = useLocation();
   const [totalIndex, setTotalIndex] = useState(0);
   useEffect(() => {

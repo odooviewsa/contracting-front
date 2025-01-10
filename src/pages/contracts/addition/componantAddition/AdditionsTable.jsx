@@ -4,15 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../../axios/axios";
 import Loading from "../../../../componant/Loading";
+import { useTranslation } from "react-i18next";
 
-const EmptyTable = () => (
+const EmptyTable = ({ texts }) => (
   <div className="text-center py-10 text-gray-500">
-    <p className="text-xl">No Additions available.</p>
-    <p className="text-sm">Add Additions to see them listed here.</p>
+    <p className="text-xl">{texts[0]}</p>
+    <p className="text-sm">{texts[1]}</p>
   </div>
 );
 
 const AdditionsTable = () => {
+  // Language
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
 
@@ -26,8 +29,6 @@ const AdditionsTable = () => {
     queryFn: getAdditions,
     keepPreviousData: true,
   });
-
-  console.log(data);
 
   if (isLoading)
     return (
@@ -52,10 +53,13 @@ const AdditionsTable = () => {
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border p-2 bg-gray-100">Code</th>
-                <th className="border p-2 bg-gray-100">Name of Addition</th>
-                <th className="border p-2 bg-gray-100">Type</th>
-                <th className="border p-2 bg-gray-100">Amount</th>
+                {t("ContractsForms.addition.table.items", {
+                  returnObjects: true,
+                }).map((item, key) => (
+                  <th key={key} className="border p-2 bg-gray-100">
+                    {item}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -73,7 +77,7 @@ const AdditionsTable = () => {
             <tfoot>
               <tr className="bg-gray-50 font-semibold">
                 <td colSpan="3" className="border p-2 text-center font-bold">
-                  Total Additions
+                  {t("ContractsForms.addition.table.footer")}
                 </td>
                 <td className="border p-2 text-center">{totalAdditions}</td>
               </tr>
@@ -81,14 +85,18 @@ const AdditionsTable = () => {
           </table>
         </div>
       ) : (
-        <EmptyTable />
+        <EmptyTable
+          texts={t("ContractsForms.addition.table.noFound", {
+            returnObjects: true,
+          })}
+        />
       )}
 
       <button
         onClick={() => setIsModalOpen(true)}
         className="text-blue-600 mt-4 underline"
       >
-        + Add Addition
+        {t("ContractsForms.addition.table.addButton")}
       </button>
 
       {isModalOpen && (

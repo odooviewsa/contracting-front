@@ -8,6 +8,7 @@ import NotFoundContract from "./NotFoundContract";
 import Loading from "../../../componant/Loading";
 import SureDeleteContract from "./SureDeleteContract";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function TableAllContract({
   contracts,
@@ -23,6 +24,8 @@ export default function TableAllContract({
   searchLoading,
   isLoading,
 }) {
+  // Language
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [openDeletePopup, setOpenDeletePopup] = useState(null);
   const user = useSelector((state) => state?.user);
@@ -60,12 +63,13 @@ export default function TableAllContract({
         <table className="min-w-full bg-white rounded-lg ">
           <thead>
             <tr className="bg-primaryColor text-white">
-              <th className="thContract">Code</th>
-              <th className="thContract">Contract</th>
-              <th className="thContract">Partner</th>
-              <th className="thContract">Contract Type</th>
-              <th className="thContract">Status</th>
-              <th className="thContract">Details</th>
+              {t("ContractsPage.table", { returnObjects: true }).map(
+                (item, key) => (
+                  <th className="thContract" key={key}>
+                    {item}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody>

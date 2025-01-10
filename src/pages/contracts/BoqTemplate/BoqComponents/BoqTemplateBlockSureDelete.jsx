@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../../../../axios/axios";
+import { useTranslation } from "react-i18next";
 
 function BoqTemplateBlockSureDelete({
   item,
@@ -9,6 +10,8 @@ function BoqTemplateBlockSureDelete({
   refreshTemplates,
   setSureDelete,
 }) {
+  // Language
+  const {t} = useTranslation()
   const [loading, setLoading] = useState(false);
 
   const handleDeleteProject = async () => {
@@ -32,7 +35,7 @@ function BoqTemplateBlockSureDelete({
   return (
     <div className="fixed top-0 left-0 w-full flex justify-center bg-bgOverlay items-center h-full p-5 z-50">
       <div className="bg-white rounded-lg shadow p-5 w-[300px] text-textLabalForm flex flex-col items-center gap-5">
-        <h1 className="font-bold text-[2rem]">Are You Sure !</h1>
+        <h1 className="font-bold text-[2rem]">{t("BoqTemplatePage.sureDelete.text")}</h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
             className="border rounded-md py-2 px-5 font-semibold"
@@ -41,7 +44,7 @@ function BoqTemplateBlockSureDelete({
               setSureDelete(false);
             }}
           >
-            Back
+            {t("BoqTemplatePage.sureDelete.buttons.backButton")}
           </button>
           <button
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
@@ -50,7 +53,7 @@ function BoqTemplateBlockSureDelete({
               handleDeleteProject();
             }}
           >
-            {loading ? "Loading..." : "Delete"}
+            {loading ? t("BoqTemplatePage.sureDelete.buttons.deleteButton.loading") : t("BoqTemplatePage.sureDelete.buttons.deleteButton.text")}
           </button>
         </div>
       </div>

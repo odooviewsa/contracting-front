@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { axiosInstance } from "../../../../axios/axios";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function BlockSureDeleteWork({
   setOpenDeleteWorkId,
@@ -9,6 +10,8 @@ export default function BlockSureDeleteWork({
   refetchData,
   setOpenModalDetails,
 }) {
+  // Language
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -28,7 +31,9 @@ export default function BlockSureDeleteWork({
   return (
     <div className="fixed top-0 left-0 w-full flex justify-center bg-bgOverlay items-center h-full p-5 z-50">
       <div className="bg-white rounded-lg shadow p-5 w-[300px] text-textLabalForm flex flex-col items-center gap-5">
-        <h1 className="font-bold text-[2rem]">Are You Sure!</h1>
+        <h1 className="font-bold text-[2rem]">
+          {t("ConfirmationForms.sureDelete.text")}
+        </h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
             onClick={(e) => {
@@ -38,7 +43,7 @@ export default function BlockSureDeleteWork({
             }}
             className="border rounded-md py-2 px-5 font-semibold"
           >
-            Back
+            {t("ConfirmationForms.sureDelete.buttons.backButton")}
           </button>
           <button
             onClick={(e) => {
@@ -48,7 +53,7 @@ export default function BlockSureDeleteWork({
             }}
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
           >
-            {isLoading ? "Loading..." : "Delete"}
+            {isLoading ? t("ConfirmationForms.sureDelete.buttons.backButton") : t("ConfirmationForms.sureDelete.buttons.backButton.loading")}
           </button>
         </div>
       </div>

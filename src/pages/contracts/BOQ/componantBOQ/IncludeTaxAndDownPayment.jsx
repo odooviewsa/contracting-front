@@ -5,8 +5,11 @@ import { useParams } from "react-router-dom";
 import Loading from "../../../../componant/Loading";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function IncludeTaxAndDownPayment({ includeTax, DownPayment }) {
+  // Language
+  const {t} = useTranslation()
   const { id } = useParams();
   const [checkDownPayment, setCheckDownPayment] = useState(null);
   const [checkIncludeTax, setCheckIncludeTax] = useState(null);
@@ -51,13 +54,13 @@ export default function IncludeTaxAndDownPayment({ includeTax, DownPayment }) {
             <FaCheckSquare color="green" />
           )}
           <label htmlFor="" className="text-gray-700 w-20 font-medium">
-            Include Tax
+            {t("ContractsForms.BOQ.taxAndDownPayment.taxInput.placeholder")}
           </label>
         </div>
         <div className="w-full">
           <input
             type="number"
-            placeholder="Tax Value"
+            placeholder={t("ContractsForms.BOQ.taxAndDownPayment.taxInput.placeholder")}
             name="taxValue"
             required
             disabled={!checkIncludeTax}
@@ -82,13 +85,13 @@ export default function IncludeTaxAndDownPayment({ includeTax, DownPayment }) {
             <FaCheckSquare color="green" />
           )}
           <label htmlFor="" className="text-gray-700 w-32 font-medium ">
-            Down Payment
+          {t("ContractsForms.BOQ.taxAndDownPayment.downPaymentInput.text")}
           </label>
         </div>
         <div className="w-full">
           <input
             type="number"
-            placeholder="Down Payment"
+            placeholder={t("ContractsForms.BOQ.taxAndDownPayment.downPaymentInput.placeholder")}
             name="downPaymentValue"
             required
             disabled={!checkDownPayment}
@@ -105,7 +108,7 @@ export default function IncludeTaxAndDownPayment({ includeTax, DownPayment }) {
         className="py-[2px] px-2 rounded-md border bg-gray-400 text-white flex justify-center"
         disabled={!checkIncludeTax && !checkDownPayment}
       >
-        {loading ? <Loading /> : "Add"}
+        {loading ? <Loading /> : t("ContractsForms.BOQ.taxAndDownPayment.addButton")}
       </button>
     </form>
   );

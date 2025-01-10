@@ -5,8 +5,11 @@ import TableAllContract from "./componantContract/TableAllContract";
 import { axiosInstance } from "../../axios/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function Contracts() {
+  // Language
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [openModalDetails, setOpenModalDetails] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,7 +63,6 @@ export default function Contracts() {
       : []
     : contracts || [];
 
-
   return (
     <>
       <div className="p-2 pg:p-5 flex flex-col gap-5">
@@ -71,7 +73,7 @@ export default function Contracts() {
               type="text"
               value={searchQuery}
               onChange={handleSearch}
-              placeholder="Search contracts..."
+              placeholder={t("ContractsPage.searchBar")}
               className="border rounded-md p-2 w-full"
             />
           </div>
@@ -80,7 +82,7 @@ export default function Contracts() {
             to={`/${user?.companyName}/contracts/addContract`}
             className="p-2 bg-primaryColor rounded-md text-white text-[0.8rem] w-fit"
           >
-            + Add Contract
+            {t("ContractsPage.buttons.addButton")}
           </Link>
         </div>
         <>

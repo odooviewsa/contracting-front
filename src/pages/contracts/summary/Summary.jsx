@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import ContractDetails from "./componantSummary/ContractDetails";
+import { useTranslation } from "react-i18next";
 
 export default function Summary() {
+  // Language
+  const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <div>
@@ -12,7 +15,7 @@ export default function Summary() {
           className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
           onClick={() => navigate(-1)}
         >
-          Back
+          {t("ContractsForms.summary.backButton")}
         </button>
       </div>
     </div>

@@ -7,11 +7,14 @@ import { useParams } from "react-router-dom";
 import Loading from "../../../../componant/Loading";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 export default function ImportExcelAndGetTemplete({
   refetch,
   setIdTemplate,
   checkFetchData,
 }) {
+  // Language
+  const { t } = useTranslation();
   const [checkGetTemplete, setCheckGetTemplete] = useState(true);
   const [templateNames, setTemplateNames] = useState([]);
   const [fileExcel, setFileExcel] = useState(null);
@@ -25,7 +28,6 @@ export default function ImportExcelAndGetTemplete({
     await axiosInstance
       .post(`/api/work/sheet/${id}`, formDate)
       .then((result) => {
-       
         if (result?.data?.message === "Success") {
           refetch();
           toast.success("add excel file successfully");
@@ -69,7 +71,7 @@ export default function ImportExcelAndGetTemplete({
           )}
 
           <p className="text-primaryColor text-[0.9rem] font-semibold">
-            Get BOQ From Template
+            {t("ContractsForms.BOQ.excelAndTemplate.getTemplate")}
           </p>
         </div>
         {checkFetchData ? (
@@ -110,7 +112,7 @@ export default function ImportExcelAndGetTemplete({
             className="p-[4px] h-fit cursor-pointer flex items-center gap-1 text-[0.9rem] border border-green-500 rounded-md text-green-900 font-semibold"
           >
             <RiFileExcel2Fill />
-            <p>Import</p>
+            <p> {t("ContractsForms.BOQ.excelAndTemplate.excelButton")}</p>
             <BsDownload />
           </label>
           <input

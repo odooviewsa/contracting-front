@@ -8,7 +8,10 @@ import victor from "../../../../assets/images/Vector.png";
 import { motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 export default function CurrentWorkConfirmationDetails({ data }) {
+  // Language
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const ref = useRef();
@@ -38,7 +41,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
     >
       <div className="flex justify-between">
         <h4 className="text-blue-950 font-semibold text-[0.8rem] md:text-[1rem]">
-          Current Work Confirmation Details
+          {t("ConfirmationForms.BOQ.currentWork.title")}
         </h4>
 
         <motion.div
@@ -58,27 +61,27 @@ export default function CurrentWorkConfirmationDetails({ data }) {
       <div className="grid grid-cols-[repeat(auto-fit,_minmax(0,_260px))] smm:grid-cols-[repeat(auto-fit,_minmax(250px,1fr))] gap-3">
         {[
           {
-            label: "Total Current Work",
+            label: t("ConfirmationForms.BOQ.currentWork.data.totalCurrent"),
             value: data?.totalAmount,
             icon: <img src={money1} alt="victor" className="w-full h-full" />,
           },
           {
-            label: "Guarantee Deduction",
+            label: t("ConfirmationForms.BOQ.currentWork.data.guaranteeDeduction"),
             value: "$0.00",
             icon: <img src={block} alt="victor" className="w-full h-full" />,
           },
           {
-            label: "Total Other Deductions",
+            label: t("ConfirmationForms.BOQ.currentWork.data.totalOtherDeductions"),
             value: data?.totalDeduction,
             icon: <img src={close} alt="victor" className="w-full h-full" />,
           },
           {
-            label: "Total Additions",
+            label: t("ConfirmationForms.BOQ.currentWork.data.totalAdditions"),
             value: data?.totalAddition,
             icon: <img src={money4} alt="victor" className="w-full h-full" />,
           },
           {
-            label: "Due Amount",
+            label: t("ConfirmationForms.BOQ.currentWork.data.dueAmount"),
             value: data?.dueAmount,
             icon: <img src={victor} alt="victor" className="w-full h-full" />,
           },

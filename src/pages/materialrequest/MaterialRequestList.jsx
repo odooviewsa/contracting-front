@@ -9,14 +9,12 @@ import {
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { useTranslation } from "react-i18next";
 
 const MaterialRequestList = () => {
+  const { t } = useTranslation();
   const requestSequence = "MR-2024-001";
-  const summaryData = [
-    { label: "Total Approved Line", value: 7155, color: "#4CAF50" },
-    { label: "Number of Items", value: 2, color: "#FF9800" },
-    { label: "Total Cost", value: 5685, color: "#2196F3" },
-  ];
+  const summaryData = t("MaterialRequestPage.cards", { returnObjects: true });
   const handlePrint = () => {
     window.print();
   };
@@ -24,19 +22,19 @@ const MaterialRequestList = () => {
     <main className="flex flex-col items-stretch gap-8">
       <div>
         <Grid container justifyContent="flex-end" sx={{ mt: 3 }}>
-          <Tooltip title="Refresh Data">
+          <Tooltip title={t("MaterialRequestPage.tooltips.refresh")}>
             <IconButton color="primary">
               <RefreshIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Print Request">
+          <Tooltip title={t("MaterialRequestPage.tooltips.print")}>
             <Button
               variant="contained"
               color="primary"
               onClick={handlePrint}
               startIcon={<PrintIcon />}
             >
-              Print
+              {t("MaterialRequestPage.buttons.printButton")}
             </Button>
           </Tooltip>
         </Grid>
@@ -47,7 +45,7 @@ const MaterialRequestList = () => {
           animate={{ scale: 1.1 }}
           sx={{ mt: 2 }}
         >
-          Material Request {requestSequence}
+          {t("MaterialRequestPage.title")} {requestSequence}
         </Typography>
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {summaryData.map((data, index) => (
@@ -71,7 +69,7 @@ const MaterialRequestList = () => {
           ))}
         </Grid>
       </div>
-      <div>No Materials Yet</div>
+      <div>{t("MaterialRequestPage.noFound")}</div>
     </main>
   );
 };

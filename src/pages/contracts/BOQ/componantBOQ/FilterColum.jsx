@@ -1,7 +1,10 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { ContextBOQ } from "../../../../context/BOQContext";
 import { FaBars, FaCaretDown, FaCaretUp } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 export default function FilterColum() {
+  // Language
+  const { t } = useTranslation();
   const menuRef = useRef(null);
   const [openColumValue, setOpenColumValue] = useState(false);
   const { currentValueColum, setCurrentValueColum } = useContext(ContextBOQ);
@@ -11,15 +14,9 @@ export default function FilterColum() {
       [name]: !prevState[name],
     }));
   };
-  const nameColum = [
-    "Unit Of Measure",
-    "Assigned Quantity",
-    "Previous Quantity",
-    "Remaining Quantity",
-    "Financial Category",
-    "Price",
-    "Total",
-  ];
+  const nameColum = t("ContractsForms.BOQ.filter.columns", {
+    returnObjects: true,
+  });
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -199,7 +199,7 @@ const AddProjectForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div>
-              {t("AddEditProjectPage.feilds1", { returnObjects: true }).map(
+              {t("AddProjectPage.feilds1", { returnObjects: true }).map(
                 (feild, key) =>
                   !feild.type && !feild.multiSelect ? (
                     <InputField
@@ -266,11 +266,11 @@ const AddProjectForm = () => {
                 className="text-primaryColor font-semibold cursor-pointer mb-4"
                 onClick={() => setShowRiskAssessment(!showRiskAssessment)}
               >
-                {t("AddEditProjectPage.riskAssessment.text")}
+                {t("AddProjectPage.riskAssessment.text")}
               </p>
               {showRiskAssessment && (
                 <div className="pl-4">
-                  {t("AddEditProjectPage.riskAssessment.feilds", {
+                  {t("AddProjectPage.riskAssessment.feilds", {
                     returnObjects: true,
                   }).map((feild, key) =>
                     feild.type === "date" ? (
@@ -302,11 +302,11 @@ const AddProjectForm = () => {
                 className="text-primaryColor font-semibold cursor-pointer mt-4 mb-4"
                 onClick={() => setShowMilestones(!showMilestones)}
               >
-                {t("AddEditProjectPage.addMilestones.text")}
+                {t("AddProjectPage.addMilestones.text")}
               </p>
               {showMilestones && (
                 <div className="pl-4">
-                  {t("AddEditProjectPage.riskAssessment.feilds", {
+                  {t("AddProjectPage.riskAssessment.feilds", {
                     returnObjects: true,
                   }).map((feild, key) => (
                     <InputField
@@ -323,7 +323,7 @@ const AddProjectForm = () => {
               )}
             </div>
             <div>
-              {t("AddEditProjectPage.feilds2", { returnObjects: true }).map(
+              {t("AddProjectPage.feilds2", { returnObjects: true }).map(
                 (feild, key) =>
                   feild.type ? (
                     feild.type === "select" ? (
@@ -394,13 +394,13 @@ const AddProjectForm = () => {
               onClick={() => navigate(-1)}
               className="px-8 py-2 bg-primaryColor text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
-              {t("AddEditProjectPage.backButton")}
+              {t("AddProjectPage.backButton")}
             </button>
             <button
               type="submit"
               className="px-8 py-2 bg-primaryColor text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
-              {t("AddEditProjectPage.saveButton")}
+              {t("AddProjectPage.saveButton")}
             </button>
           </div>
         </div>

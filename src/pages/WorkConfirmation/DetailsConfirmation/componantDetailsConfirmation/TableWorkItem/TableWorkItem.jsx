@@ -5,7 +5,10 @@ import { useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { ContextBOQ } from "../../../../../context/BOQContext";
+import { useTranslation } from "react-i18next";
 export default function TableWorkItem({ dispalyDate, refetch }) {
+  // Language
+  const { t } = useTranslation();
   const nav = useNavigate();
   const { currentValueColumWorkConfirmation } = useContext(ContextBOQ);
   const user = useSelector((state) => state?.user);
@@ -63,68 +66,69 @@ export default function TableWorkItem({ dispalyDate, refetch }) {
       })
       .finally(() => setLoading(null));
   }
+  console.log(t("ConfirmationForms.BOQ.table.columns.workItem"));
   const colums = [
     {
-      header: "work item",
+      header: t("ConfirmationForms.BOQ.table.columns.workItem"),
       display: true,
     },
     {
-      header: "Unit Of Measure",
+      header: t("ConfirmationForms.BOQ.table.columns.unitOfMeasure"),
       display: true,
     },
     {
-      header: "Contract Quantity",
+      header: t("ConfirmationForms.BOQ.table.columns.contractQuantity"),
       display: true,
     },
     {
-      header: "Previous Quantity",
+      header: t("ConfirmationForms.BOQ.table.columns.previousQuantity"),
       display: true,
     },
     {
-      header: "Current Work %",
+      header: t("ConfirmationForms.BOQ.table.columns.currentWorkPercent"),
       display:
         dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
-      header: "Current Work QTY",
+      header: t("ConfirmationForms.BOQ.table.columns.currentWorkQty"),
       display:
         dispalyDate?.data?.data?.typeOfProgress !== "Percentage per Line",
     },
     {
-      header: "Current Work",
+      header: t("ConfirmationForms.BOQ.table.columns.currentWork"),
       display:
         dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
-      header: "Total Quantity",
+      header: t("ConfirmationForms.BOQ.table.columns.totalQuantity"),
       display: true,
     },
     {
-      header: "Price",
+      header: t("ConfirmationForms.BOQ.table.columns.price"),
       display: true,
     },
     {
-      header: "Total Amount",
+      header: t("ConfirmationForms.BOQ.table.columns.totalAmount"),
       display: true,
     },
     {
-      header: "Completion %",
+      header: t("ConfirmationForms.BOQ.table.columns.completionPercent"),
       display: dispalyDate?.data?.data?.completionPercentage === true,
     },
     {
-      header: "Invoicing %",
+      header: t("ConfirmationForms.BOQ.table.columns.invoicingPercent"),
       display: dispalyDate?.data?.data?.activateInvoicingByPercentage === true,
     },
     {
-      header: "Net Amount",
+      header: t("ConfirmationForms.BOQ.table.columns.netAmount"),
       display: true,
     },
     {
-      header: "Duo Amount",
+      header: t("ConfirmationForms.BOQ.table.columns.duoAmount"),
       display: true,
     },
     {
-      header: "Calculate",
+      header: t("ConfirmationForms.BOQ.table.columns.calculate"),
       display: true,
     },
   ];

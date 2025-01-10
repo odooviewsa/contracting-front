@@ -4,7 +4,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 function EditSingleContract() {
+  // Language
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { contractId } = useParams();
   const [consultants, setConsultants] = useState([]);
@@ -98,7 +101,7 @@ function EditSingleContract() {
       <ToastContainer />
       <div className="p-4 bg-gray-50">
         <h2 className="text-2xl mb-6 font-semibold text-primaryColor">
-          Edit Contract
+          {t("EditContractForm.title")}
         </h2>
         <form
           onSubmit={handleSubmit(onUpdate)}
@@ -108,18 +111,23 @@ function EditSingleContract() {
             {/* Contract Type */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Contract Type <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.contractType")} <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("contractType", {
-                  required: "Contract Type is required",
+                  required: t("EditContractForm.fields.contractTypeRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
                   errors.contractType ? "border-red-500" : ""
                 }`}
               >
-                <option value="Owner">Owner</option>
-                <option value="Sub-Contractor">Sub-Contractor Contract</option>
+                {t("EditContractForm.fields.contractTypeOptions", {
+                  returnObjects: true,
+                }).map((item, key) => (
+                  <option value={item.value} key={key}>
+                    {item.text}
+                  </option>
+                ))}
               </select>
               {errors.contractType && (
                 <p className="text-red-400 text-sm">
@@ -130,11 +138,11 @@ function EditSingleContract() {
             {/* Project */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                project <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.project")} <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("project", {
-                  required: "project is required",
+                  required: t("EditContractForm.fields.projectRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full `}
               >
@@ -151,11 +159,11 @@ function EditSingleContract() {
             {/* Partner */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Partner <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.partner")} <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("partner", {
-                  required: "partner is required",
+                  required: t("EditContractForm.fields.partnerRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full `}
               >
@@ -172,12 +180,12 @@ function EditSingleContract() {
             {/* Start Date */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Start Date <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.startDate")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 {...register("startDate", {
-                  required: "Start date is required.",
+                  required: t("EditContractForm.fields.startDateRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
                   errors.startDate ? "border-red-500" : ""
@@ -192,24 +200,23 @@ function EditSingleContract() {
             {/* Type of Progress */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Type of Progress <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.typeOfProgress")} <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("typeOfProgress", {
-                  required: "Type of Progress is required",
+                  required: t("EditContractForm.fields.typeOfProgressRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
                   errors.typeOfProgress ? "border-red-500" : ""
                 }`}
               >
-                <option value="">choose</option>
-                <option value="In Progress">Quantity</option>
-                <option value="Completed">Percentage Per Line</option>
-                <option value="Suspended">
-                  Percentage Applied to Total of Line
-                </option>
-                <option value="Suspended">Financial Progress</option>
-                <option value="Suspended">Time-Based Progress</option>
+                {t("EditContractForm.fields.typeOfProgressOptions", {
+                  returnObjects: true,
+                }).map((item, key) => (
+                  <option value={item.value} key={key}>
+                    {item.text}
+                  </option>
+                ))}
               </select>
               {errors.typeOfProgress && (
                 <p className="text-red-400 text-sm">
@@ -219,12 +226,12 @@ function EditSingleContract() {
             </div>
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Consaltant <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.consultant")} <span className="text-red-500">*</span>
               </label>
 
               <select
                 {...register("consultant", {
-                  required: "consultant is required",
+                  required: t("EditContractForm.fields.consultantRequired"),
                 })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full `}
               >
@@ -243,11 +250,11 @@ function EditSingleContract() {
             {/* End Date */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                End Date <span className="text-red-500">*</span>
+              {t("EditContractForm.fields.endDate")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
-                {...register("endDate", { required: "End date is required." })}
+                {...register("endDate", { required: t("EditContractForm.fields.endDateRequired") })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
                   errors.endDate ? "border-red-500" : ""
                 }`}
@@ -259,7 +266,7 @@ function EditSingleContract() {
             {/* Description */}
             <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-gray-700">
-                Description
+              {t("EditContractForm.fields.description")}
               </label>
               <textarea
                 {...register("description")}
@@ -274,7 +281,7 @@ function EditSingleContract() {
               className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
               disabled={isSubmitting}
             >
-              Update Contract
+              {t("EditContractForm.updateButton")}
             </button>
           </div>
         </form>

@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axios";
 import { useSelector } from "react-redux";
 import Header from "../../componant/layout/Header";
+import { useTranslation } from "react-i18next";
 
 const ProjectDetails = () => {
   const [project, setProject] = useState(null);
@@ -12,7 +13,7 @@ const ProjectDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const user = useSelector((state) => state?.user);
-
+  const { t } = useTranslation();
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
@@ -49,56 +50,41 @@ const ProjectDetails = () => {
       {/* Project Information */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-8">
         <div className="flex flex-col lg:flex-row lg:space-x-8 space-y-4 lg:space-y-0 justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">
-              Project Name
-            </h3>
-            <p className="text-gray-700">{project.projectName}</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">
-              Client Name
-            </h3>
-            <p className="text-gray-700">{project.clientName}</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">
-              Project Location
-            </h3>
-            <p className="text-gray-700">{project.projectLocation}</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">
-              Start Date
-            </h3>
-            <p className="text-gray-700">
-              {new Date(project.startDate).toLocaleDateString()}
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">
-              End Date
-            </h3>
-            <p className="text-gray-700">
-              {new Date(project.endDate).toLocaleDateString()}
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">Budget</h3>
-            <p className="text-gray-700">${project.budget}</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-primaryColor">Status</h3>
-            <p
-              className={`font-semibold ${
-                project.status === "Completed"
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}
-            >
-              {project.status}
-            </p>
-          </div>
+          {t("ProjectDetailsPage.projectInfo", { returnObjects: true }).map(
+            (info, key) =>
+              info.isDate ? (
+                <div key={key}>
+                  <h3 className="text-lg font-semibold text-primaryColor">
+                    {info.text}
+                  </h3>
+                  <p className="text-gray-700">
+                    {new Date(project.startDate).toLocaleDateString()}
+                  </p>
+                </div>
+              ) : info.isStatus ? (
+                <div key={key}>
+                  <h3 className="text-lg font-semibold text-primaryColor">
+                    {info.text}
+                  </h3>
+                  <p
+                    className={`font-semibold ${
+                      project.status === "Completed"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {project.status}
+                  </p>
+                </div>
+              ) : (
+                <div key={key}>
+                  <h3 className="text-lg font-semibold text-primaryColor">
+                    {info.text}
+                  </h3>
+                  <p className="text-gray-700">{project.projectName}</p>
+                </div>
+              )
+          )}
         </div>
       </div>
 
@@ -108,9 +94,11 @@ const ProjectDetails = () => {
         <div className="rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-primaryColor text-lg font-semibold">
-              Team Member
+              {t("ProjectDetailsPage.teamMember.title")}
             </h3>
-            <button className="text-blue-500 text-sm">See All</button>
+            <button className="text-blue-500 text-sm">
+              {t("ProjectDetailsPage.teamMember.seeAll")}
+            </button>
           </div>
           <ul>
             {/* Project Manager */}
@@ -159,11 +147,11 @@ const ProjectDetails = () => {
         {/* Project Overview */}
         <div className="col-span-2 bg-white shadow-md rounded-lg p-6 border border-primaryColor">
           <h3 className="text-lg font-semibold mb-4 text-primaryColor">
-            Project Overview
+            {t("ProjectDetailsPage.projectOverview")}
           </h3>
           <p className="text-gray-700 mb-4">{project.description}</p>
           <h3 className="text-lg font-semibold mb-2 text-primaryColor">
-            Scope of Work
+            {t("ProjectDetailsPage.scopeOfWork")}
           </h3>
           <ul className="list-decimal list-inside text-gray-700">
             {project.scopeOfWork}
@@ -177,7 +165,7 @@ const ProjectDetails = () => {
           onClick={() => navigate(`/${user?.companyName}/projects`)}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 "
         >
-          Back
+          {t("ProjectDetailsPage.backButton")}
         </button>
       </div>
     </div>

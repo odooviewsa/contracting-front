@@ -7,7 +7,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 const ConfirmationForm = () => {
+  // Language
+  const { t } = useTranslation();
   const [isWithContract, setIsWithContract] = useState(false);
   const [isInvoicingActive, setIsInvoicingActive] = useState(false);
   const [isCompletionActive, setIsCompletionActive] = useState(false);
@@ -47,11 +50,13 @@ const ConfirmationForm = () => {
       completionPercentage: isCompletionActive,
       status: "Estimation",
     };
-    if (!formData?.contractId) return toast.error("you must choose contract");
+    if (!formData?.contractId)
+      return toast.error(
+        t("ConfirmationForms.form1.messages.mustChooseContract")
+      );
     await axiosInstance
       .post("/api/workConfirmation/create", formData)
       .then((result) => {
-     
         if (result.status === 201) {
           nav(
             `/${user?.companyName}/workconfirm/addConfirmation/Details/${result?.data?.data?._id}/${formData?.contractId}`
@@ -73,11 +78,12 @@ const ConfirmationForm = () => {
         {/* Contract Type */}
         <div>
           <label className="block text-lg font-medium mb-3">
-            Contract Type <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.contractType")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder=" Contract Type"
+            placeholder={t("ConfirmationForms.form1.contractTypePlaceholder")}
             readOnly
             value={imformationContract?.[0]?.contractType || ""}
           />
@@ -94,7 +100,9 @@ const ConfirmationForm = () => {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg whitespace-nowrap">With Contract</span>
+            <span className="text-lg whitespace-nowrap">
+              {t("ConfirmationForms.form1.contractType")}
+            </span>
           </div>
 
           {isWithContract && (
@@ -105,7 +113,9 @@ const ConfirmationForm = () => {
                 onChange={(e) => setCodeContract(e.target.value)}
                 required
               >
-                <option value="">Select Contract Number</option>
+                <option value="">
+                  {t("ConfirmationForms.form1.withContract")}
+                </option>
 
                 {data?.data?.contracts?.map((e, i) => (
                   <option value={e?._id} key={i}>
@@ -123,11 +133,12 @@ const ConfirmationForm = () => {
             className="block text-lg font-medium mb-3"
             htmlFor="projectName"
           >
-            Project Name <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.projectName")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder="Project Name"
+            placeholder={t("ConfirmationForms.form1.projectNamePlaceholder")}
             readOnly
             value={imformationContract?.[0]?.project?.projectName || ""}
           />
@@ -136,11 +147,12 @@ const ConfirmationForm = () => {
         {/* Partner */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="partner">
-            Partner <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder="Partner Name"
+            placeholder={t("ConfirmationForms.form1.partnerPlaceholder")}
             readOnly
             value={imformationContract?.[0]?.partner?.partnerName || ""}
           />
@@ -149,14 +161,15 @@ const ConfirmationForm = () => {
         {/* Start Date */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="startDate">
-            Start Date <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.startDate")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
             id="startDate"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("startDate", {
-              required: "start Date is required",
+              required: t("ConfirmationForms.form1.startDateRequired"),
               validate: (value) => {
                 const inputDate = new Date(value);
                 const contractStart = new Date(
@@ -179,14 +192,15 @@ const ConfirmationForm = () => {
         {/* End Date */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="endDate">
-            End Date <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.endDate")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
             id="endDate"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("endDate", {
-              required: "start Date is required",
+              required: t("ConfirmationForms.form1.endDateRequired"),
               validate: (value) => {
                 const inputDate = new Date(value);
                 const contractStart = new Date(
@@ -218,32 +232,25 @@ const ConfirmationForm = () => {
             className="block text-lg font-medium mb-3"
             htmlFor="workConfirmationType"
           >
-            Work Confirmation Type <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.workConfirmationType")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <select
             id="workConfirmationType"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("workConfirmationType", {
-              required: "work Confirmation Type is required",
+              required: t(
+                "ConfirmationForms.form1.workConfirmationTypeRequired"
+              ),
             })}
           >
-            <option value="">Select</option>
-            <option value="progress">Progress Work Confirmation</option>
-            <option value="inspection">Inspection-Based Confirmation</option>
-            <option value="substantial">
-              Substantial Completion Confirmation
-            </option>
-            <option value="final">Final Work Confirmation</option>
-            <option value="material">
-              Material and Equipment Receipt Confirmation
-            </option>
-            <option value="safety">Safety and Compliance Confirmation</option>
-            <option value="daily">Daily Work Reports (DWR)</option>
-            <option value="punch">Punch List Completion Confirmation</option>
-            <option value="changeOrder">Change Order Work Confirmation</option>
-            <option value="warranty">
-              Warranty and Maintenance Confirmation
-            </option>
+            {t("ConfirmationForms.form1.workConfirmationTypeOptions", {
+              returnObjects: true,
+            }).map((item, key) => (
+              <option value={item.value} key={key}>
+                {item.text}
+              </option>
+            ))}
           </select>
 
           <p className="text-red-400 text-[0.8rem] -mb-3">
@@ -258,18 +265,23 @@ const ConfirmationForm = () => {
             className="block text-lg font-medium mb-3"
             htmlFor="typeOfProgress"
           >
-            Type of Progress <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.typeOfProgress")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <select
             id="typeOfProgress"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("typeOfProgress", {
-              required: "type Of Progress is required",
+              required: t("ConfirmationForms.form1.typeOfProgressRequired"),
             })}
           >
-            <option value="">Select</option>
-            <option value="Percentage per Line">Percentage per Line</option>
-            <option value="Quantity per Line">Quantity per Line</option>
+            {t("ConfirmationForms.form1.typeOfProgressOptions", {
+              returnObjects: true,
+            }).map((item, key) => (
+              <option key={key} value={item.value}>
+                {item.text}
+              </option>
+            ))}
           </select>
           <p className="text-red-400 text-[0.8rem] -mb-3">
             {errors["typeOfProgress"] && errors["typeOfProgress"].message}
@@ -287,7 +299,9 @@ const ConfirmationForm = () => {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg">Activate Invoicing by %</span>
+            <span className="text-lg">
+              {t("ConfirmationForms.form1.toggles.activate")}
+            </span>
           </div>
           <div
             className="flex items-center space-x-2 cursor-pointer"
@@ -299,7 +313,7 @@ const ConfirmationForm = () => {
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
             <span className="text-lg">
-              Completion % - Based Work Confirmation
+              {t("ConfirmationForms.form1.toggles.completion")}
             </span>
           </div>
         </div>
@@ -311,13 +325,15 @@ const ConfirmationForm = () => {
             className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
             onClick={() => nav(-1)}
           >
-            Back
+            {t("ConfirmationForms.form1.buttons.backButton")}
           </button>
           <button
             type="submit"
             className="text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor"
           >
-            {isSubmitting ? "Loading..." : "Next"}
+            {isSubmitting
+              ? t("ConfirmationForms.form1.buttons.nextButton.loading")
+              : t("ConfirmationForms.form1.buttons.nextButton.text")}
           </button>
         </div>
       </form>

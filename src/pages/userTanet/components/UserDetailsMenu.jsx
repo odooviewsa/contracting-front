@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import { axiosInstance } from "../../../axios/axios";
+import { useTranslation } from "react-i18next";
 
 const UserDetailsMenu = ({ user, setOpenMenuRow, setOpenEditUserModel }) => {
+  const {t} = useTranslation()
   // Delete user
   const handleDeleteUser = async () => {
     setOpenMenuRow(false);
@@ -23,13 +25,13 @@ const UserDetailsMenu = ({ user, setOpenMenuRow, setOpenEditUserModel }) => {
                 setOpenEditUserModel(true);
               }}
             >
-              Edit
+              {t("UserTanetPage.modelDetails.editButton")}
             </button>
           </li>
           {user?.role !== "Admin" && (
             <li className="hover:bg-red-500 hover:text-white">
               <button onClick={handleDeleteUser} className="w-full text-start">
-                Delete
+              {t("UserTanetPage.modelDetails.deleteButton")}
               </button>
             </li>
           )}

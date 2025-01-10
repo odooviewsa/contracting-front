@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa6";
 import { axiosInstance, url } from "../../axios/axios";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function EditPartners({
   refetch,
@@ -14,6 +15,7 @@ export default function EditPartners({
 }) {
   const [imgSend, setImgSend] = useState(null);
   const [imgReader, setImgReader] = useState(null);
+  const { t } = useTranslation();
 
   function handleChangeImage(e) {
     const file = e.target.files[0];
@@ -79,7 +81,7 @@ export default function EditPartners({
     >
       <div className="bg-white rounded-lg shadow p-3 md:w-[50%] w-full max-h-[90vh] scrollbar overflow-auto text-textLabalForm">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-900 ">update Partner</h3>
+          <h3 className="font-semibold text-gray-900 ">{t("EditPartnerForm.title")}</h3>
           <div
             className="p-1 ms-3 rounded-full bg-red-300 text-red-500 cursor-pointer"
             onClick={() => setOpenEfitPartnerId(null)}
@@ -119,83 +121,61 @@ export default function EditPartners({
             />
           </div>
           <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] gap-5">
-            {[
-              { label: "Partner Name", type: "text", name: "partnerName" },
-              {
-                label: "Type",
-                type: "select",
-                name: "type",
-                option: ["Owner", "Sub-contractor", "Consultant"],
-              },
-              { label: "Email ", type: "email", name: "email" },
-              { label: "Phone Number", type: "number", name: "phone" },
-              {
-                label: " Address",
-                type: "text",
-                name: "address",
-              },
-
-              {
-                label: "Tax Number",
-                type: "number",
-                name: "taxNumber",
-              },
-              {
-                label: "Commercial number",
-                type: "number",
-                name: "commercialNumber",
-              },
-            ].map((input, index) => {
-              if (input.type === "select") {
-                return (
-                  <div className="flex flex-col gap-2 w-full" key={index}>
-                    <label htmlFor="">
-                      {input.label} <span className="text-red-400">*</span>
-                    </label>
-                    <select
-                      className="bg-bgInput p-2 rounded-md outline-none"
-                      {...register(input.name, {
-                        required: `${input.name} is required`,
-                      })}
-                    >
-                      <option value="">{input.label}</option>
-                      {input.option?.map((e, i) => (
-                        <option key={i} value={e}>
-                          {e}
-                        </option>
-                      ))}
-                    </select>
-                    <p className="text-red-400 text-[0.8rem] -mb-3">
-                      {errors[input.name] && errors[input.name].message}
-                    </p>
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="flex flex-col gap-2" key={index}>
-                    <label htmlFor="" className="text-[0.9rem]">
-                      {input.label}
-                    </label>
-                    <input
-                      type={input.type}
-                      className="bg-bgInput py-1 px-2 rounded-md outline-none"
-                      placeholder={`enter ${input.label}`}
-                      name={input.name}
-                      {...register(input.name, {
-                        required: `${input.name} is required`,
-                      })}
-                    />
-                    <p className="text-red-400 text-[0.8rem] -mb-3">
-                      {errors[input.name] && errors[input.name].message}
-                    </p>
-                  </div>
-                );
+            {t("EditPartnerForm.fields", { returnObjects: true }).map(
+              (input, index) => {
+                if (input.type === "select") {
+                  return (
+                    <div className="flex flex-col gap-2 w-full" key={index}>
+                      <label htmlFor="">
+                        {input.label} <span className="text-red-400">*</span>
+                      </label>
+                      <select
+                        className="bg-bgInput p-2 rounded-md outline-none"
+                        {...register(input.name, {
+                          required: `${input.name} is required`,
+                        })}
+                      >
+                        <option value="">{input.label}</option>
+                        {input.option?.map((e, i) => (
+                          <option key={i} value={e}>
+                            {e}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-red-400 text-[0.8rem] -mb-3">
+                        {errors[input.name] && errors[input.name].message}
+                      </p>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="flex flex-col gap-2" key={index}>
+                      <label htmlFor="" className="text-[0.9rem]">
+                        {input.label}
+                      </label>
+                      <input
+                        type={input.type}
+                        className="bg-bgInput py-1 px-2 rounded-md outline-none"
+                        placeholder={`enter ${input.label}`}
+                        name={input.name}
+                        {...register(input.name, {
+                          required: `${input.name} is required`,
+                        })}
+                      />
+                      <p className="text-red-400 text-[0.8rem] -mb-3">
+                        {errors[input.name] && errors[input.name].message}
+                      </p>
+                    </div>
+                  );
+                }
               }
-            })}
+            )}
           </div>
 
           <button className="text-white bg-primaryColor border text-[0.9rem] border-primaryColor px-12 py-1 rounded-md mt-3">
-            {isSubmitting ? "Loading..." : "Update Item"}
+            {isSubmitting
+              ? t("EditPartnerForm.editButton.loading")
+              : t("EditPartnerForm.editButton.text")}
           </button>
         </form>
       </div>

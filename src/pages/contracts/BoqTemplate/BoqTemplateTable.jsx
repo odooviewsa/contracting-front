@@ -9,6 +9,7 @@ import { axiosInstance } from "../../../axios/axios";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 // Fetch templates using useQuery
 const fetchTemplates = async () => {
@@ -17,6 +18,8 @@ const fetchTemplates = async () => {
 };
 
 function BoqTemplateTable() {
+  // Language
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(null);
   const [sureDelete, setSureDelete] = useState(false);
@@ -141,7 +144,7 @@ function BoqTemplateTable() {
     return (
       <div className="flex items-center justify-center h-60">
         <p className="text-primaryColor font-bold text-2xl">
-          No Templates Found
+          {t("BoqTemplatePage.noFound")}
         </p>
       </div>
     );
@@ -153,12 +156,13 @@ function BoqTemplateTable() {
         <table className="min-w-full bg-white rounded-lg">
           <thead>
             <tr className="bg-primaryColor text-white">
-              <th className="p-4">Code</th>
-              <th className="p-4">Template Name</th>
-              <th className="p-4">Template Description</th>
-              <th className="p-4">Create Date</th>
-              <th className="p-4">Category</th>
-              <th className="p-4">Details</th>
+              {t("BoqTemplatePage.table", { returnObjects: true }).map(
+                (item, key) => (
+                  <th className="p-4" key={key}>
+                    {item}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody>
@@ -216,10 +220,14 @@ function BoqTemplateTable() {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md w-96">
-            <h3 className="text-lg font-semibold mb-4">Save as Template</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              {t("EditBoqTemplateForm.text")}
+            </h3>
             <form onSubmit={handleFormUpdated}>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Name</label>
+                <label className="block text-sm font-medium mb-2">
+                  {t("EditBoqTemplateForm.fields.name")}
+                </label>
                 <input
                   type="text"
                   value={formData.name}
@@ -234,7 +242,7 @@ function BoqTemplateTable() {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Description
+                  {t("EditBoqTemplateForm.fields.description")}
                 </label>
                 <textarea
                   value={formData.description}
@@ -251,7 +259,7 @@ function BoqTemplateTable() {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Category
+                  {t("EditBoqTemplateForm.fields.category")}
                 </label>
                 <input
                   type="text"
@@ -266,7 +274,9 @@ function BoqTemplateTable() {
                 )}
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Tags</label>
+                <label className="block text-sm font-medium mb-2">
+                  {t("EditBoqTemplateForm.fields.tags")}
+                </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -279,7 +289,7 @@ function BoqTemplateTable() {
                     onClick={handleTagAdd}
                     className="bg-blue-500 text-white px-3 py-2 rounded"
                   >
-                    Add
+                    {t("EditBoqTemplateForm.buttons.addButton")}
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -306,13 +316,15 @@ function BoqTemplateTable() {
                   onClick={() => setShowPopup(false)}
                   className="px-4 py-2 border rounded"
                 >
-                  Cancel
+                  {t("EditBoqTemplateForm.buttons.cancelButton")}
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white rounded"
                 >
-                  {loading ? "Waiting ..." : "Save"}
+                  {loading
+                    ? t("EditBoqTemplateForm.buttons.saveButton.laoding")
+                    : t("EditBoqTemplateForm.buttons.saveButton.text")}
                 </button>
               </div>
             </form>

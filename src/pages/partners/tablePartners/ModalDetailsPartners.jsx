@@ -1,6 +1,7 @@
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function ModalDetailsPartners({
   setOpenEfitPartnerId,
@@ -9,6 +10,7 @@ export default function ModalDetailsPartners({
   setOpenDeletePartnerId,
   menuRef,
 }) {
+  const { t } = useTranslation();
   return (
     <div
       ref={menuRef}
@@ -21,7 +23,7 @@ export default function ModalDetailsPartners({
         }}
       >
         <FaEdit size={18} />
-        <p>Edit</p>
+        <p>{t("PartnersPage.detailsButton.editButton")}</p>
       </div>
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 text-red-700 cursor-pointer"
@@ -30,7 +32,7 @@ export default function ModalDetailsPartners({
         }}
       >
         <MdDelete size={18} />
-        <p>Delete</p>
+        <p>{t("PartnersPage.detailsButton.deleteButton")}</p>
       </div>
     </div>
   );

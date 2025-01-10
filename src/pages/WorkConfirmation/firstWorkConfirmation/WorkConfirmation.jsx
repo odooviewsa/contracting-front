@@ -6,8 +6,11 @@ import { useState } from "react";
 import NotFoundWorkConfirmation from "./componantFirstWorkConfirmation/NotFoundWorkConfirmation";
 import BlockSureDeleteWork from "./componantFirstWorkConfirmation/BlockSureDeleteWork";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function WorkConfirmation() {
+  // Language
+  const { t } = useTranslation();
   const user = useSelector((state) => state?.user);
   const [work] = useState(true);
   const [openDeleteWorkId, setOpenDeleteWorkId] = useState(null);
@@ -19,14 +22,14 @@ function WorkConfirmation() {
         <div className="flex md:flex-row flex-col gap-3 md:justify-between md:items-center">
           <input
             type="text"
-            placeholder="Search work confirmation..."
+            placeholder={t("ConfirmationPage.searchBar")}
             className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
           />
           <Link
             to={`/${user?.companyName}/workconfirm/addConfirmation`}
             className="p-2 bg-primaryColor rounded-md text-white text-[0.8rem] w-fit"
           >
-            + Create Work Confirmation
+            {t("ConfirmationPage.buttons.createButton")}
           </Link>
         </div>
 

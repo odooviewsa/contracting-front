@@ -4,7 +4,10 @@ import discount from "../../../../assets/images/iconamoon_discount.png";
 import dollor from "../../../../assets/images/bx_dollar.png";
 import { motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 export default function TaxDetailsConfirmation() {
+  // Language
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const ref = useRef();
@@ -33,7 +36,7 @@ export default function TaxDetailsConfirmation() {
     >
       <div className="flex justify-between">
         <h4 className="text-blue-950 font-semibold text-[0.8rem] md:text-[1rem]">
-          Tax Details
+          {t("ConfirmationForms.BOQ.taxDetails.title")}
         </h4>
         <motion.div
           className="cursor-pointer"
@@ -52,12 +55,12 @@ export default function TaxDetailsConfirmation() {
       <div className="grid grid-cols-[repeat(auto-fit,_minmax(0,_260px))] smm:grid-cols-[repeat(auto-fit,_minmax(250px,1fr))] gap-3">
         {[
           {
-            label: "Total Untaxed Amount",
+            label: t("ConfirmationForms.BOQ.taxDetails.data.totalUntaxed"),
             value: "$0.00",
             icon: <img src={discount} alt="victor" className="w-full h-full" />,
           },
           {
-            label: "Tax Amount",
+            label: t("ConfirmationForms.BOQ.taxDetails.data.taxAmount"),
             value: "$0.00",
             icon: <img src={dollor} alt="victor" className="w-full h-full" />,
           },
