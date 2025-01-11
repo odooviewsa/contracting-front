@@ -60,7 +60,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}
         >
           <LuBookTemplate size={20} />
-          {openSidebar && <h1>{t("boqTemplates")}</h1>}
+          {openSidebar && <h1>{t("Sidebar.boqTemplates")}</h1>}
         </Link>
         <Link
           to={`/${user?.companyName}/contracts`}

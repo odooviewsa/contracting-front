@@ -67,7 +67,11 @@ const TranslationEnglish = {
                 { label: "Email", placeholder: "Enter your email", type: "email", name: "email" },
                 { label: "Phone number", placeholder: "Enter your phone number", type: "number", name: "phone" },
             ],
-            requiredMessage: "{{name}} is required"
+            requiredMessage: "{{name}} is required",
+            updateButton: {
+                text: "Update User",
+                loading: "Saving..."
+            }
         }
     },
     // Projects Page

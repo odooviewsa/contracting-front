@@ -4,6 +4,10 @@ const TranslationArabic = {
         AddButton: "إضافة مستخدم",
         SearchBar: "ابحث عن المستخدمين...",
         Table: ["الاسم الأول", "الاسم الثاني", "البريد الإلكتروني", "رقم الهاتف", "اسم الشركة", "نوع الشركة", "التفاصيل"],
+        "modelDetails": {
+            "editButton": "تعديل",
+            "deleteButton": "حذف"
+        },
         AddUser: {
             Title: "إضافة مستخدم",
             Fields: [
@@ -45,6 +49,21 @@ const TranslationArabic = {
                 },
             ],
             SubmitButton: "إضافة مستخدم"
+        },
+        "editUser": {
+            "title": "تعديل المستخدم",
+            "fields": [
+                { "label": "الاسم الأول", "placeholder": "أدخل اسمك الأول", "type": "text", "name": "firstName" },
+                { "label": "الاسم الثاني", "placeholder": "أدخل اسمك الثاني", "type": "text", "name": "secondName" },
+                { "label": "البريد الإلكتروني", "placeholder": "أدخل بريدك الإلكتروني", "type": "email", "name": "email" },
+                { "label": "رقم الهاتف", "placeholder": "أدخل رقم هاتفك", "type": "number", "name": "phone" }
+            ],
+            "requiredMessage": "{{name}} مطلوب",
+            "updateButton": {
+                "text": "تحديث المستخدم",
+                "loading": "جارٍ الحفظ..."
+            },
+
         }
     },
     // Projects Page
@@ -692,35 +711,589 @@ const TranslationArabic = {
         "searchBar": "ابحث عن العقود...",
         "buttons": {
             "addButton": "+ إضافة عقد"
+        },
+        "table": ["الرمز", "العقد", "الشريك", "نوع العقد", "الحالة", "التفاصيل"],
+        "details": {
+            "openEstimator": "افتح التقدير",
+            "edit": "تعديل",
+            "assignSubcontractor": "تعيين للمقاول الفرعي",
+            "createQuotation": "إنشاء عرض سعر",
+            "attachDocument": "إرفاق مستند",
+            "delete": "حذف"
         }
+
     },
     "ContractsForms": {
+        "buttons": {
+            "nextButton": {
+                "text": "التالي",
+                "loading": "جاري التحميل.."
+            },
+            "backButton": "السابق"
+        },
         "form1": {
             "code": "الكود",
             "codePlaceholder": "أدخل الكود",
             "codeRequired": "الكود مطلوب",
-            "codeMaxLength": "يجب أن يتكون الكود من 10 أحرف كحد أقصى",
+            "codeMaxLength": "يجب أن يكون الكود 10 أحرف كحد أقصى",
             "contractType": "نوع العقد",
             "contractTypeRequired": "نوع العقد مطلوب",
+            "contractTypeOptions": [
+                {
+                    "value": "",
+                    "text": "اختر"
+                },
+                {
+                    "value": "Owner",
+                    "text": "المالك"
+                },
+                {
+                    "value": "Sub-contractor",
+                    "text": "عقد مقاول فرعي"
+                }
+            ],
             "project": "المشروع",
             "projectRequired": "المشروع مطلوب",
+            "projectPlaceholder": "اختر...",
             "partner": "الشريك",
             "partnerRequired": "الشريك مطلوب",
+            "partnerPlaceholder": "اختر...",
             "startDate": "تاريخ البداية",
-            "startDateRequired": "تاريخ البداية مطلوب",
-            "endDate": "تاريخ الانتهاء",
-            "endDateRequired": "تاريخ الانتهاء مطلوب",
-            "endDateInvalid": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البداية",
-            "consultant": "الاستشاري",
-            "consultantRequired": "الاستشاري مطلوب",
+            "startDateRequired": "تاريخ البداية مطلوب.",
+            "endDate": "تاريخ النهاية",
+            "endDateRequired": "تاريخ النهاية مطلوب.",
+            "endDateInvalid": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية.",
+            "consultant": "المستشار",
+            "consultantRequired": "المستشار مطلوب",
+            "consultantPlaceholder": "اختر...",
             "typeOfProgress": "نوع التقدم",
             "typeOfProgressRequired": "نوع التقدم مطلوب",
+            "typeOfProgressOptions": [
+                {
+                    "value": "",
+                    "text": "اختر"
+                },
+                {
+                    "value": "In Progress",
+                    "text": "الكمية"
+                },
+                {
+                    "value": "Completed",
+                    "text": "النسبة لكل بند"
+                },
+                {
+                    "value": "Suspended",
+                    "text": "النسبة المطبقة على المجموع الكلي للبند"
+                },
+                {
+                    "value": "Suspended",
+                    "text": "التقدم المالي"
+                },
+                {
+                    "value": "Suspended",
+                    "text": "التقدم الزمني"
+                }
+            ],
             "description": "الوصف",
-            "descriptionRequired": "الوصف مطلوب",
-            "createContract": "إنشاء عقد",
-            "choose": "اختار...",
-            "owner": "المالك",
-            "subcontractor": "عقد المقاول الفرعي"
+            "descriptionRequired": "الوصف مطلوب."
+        },
+        "BOQ": {
+            "form": {
+                "title": "+إضافة عنصر",
+                "addButton": "إضافة عنصر",
+                "fields": [
+                    { "label": "العنصر الرئيسي", "type": "text", "name": "itemName", "errorMessage": "العنصر الرئيسي مطلوب" },
+                    { "label": "العنصر الفرعي", "type": "text", "name": "subItemName", "errorMessage": "العنصر الفرعي مطلوب" },
+                    { "label": "بيان العمل", "type": "text", "name": "workItemName", "errorMessage": "بيان العمل مطلوب" },
+                    { "label": "وحدة القياس", "type": "text", "name": "unitOfMeasure", "errorMessage": "وحدة القياس مطلوبة" },
+                    { "label": "الكمية المخصصة", "type": "number", "name": "assignedQuantity", "errorMessage": "الكمية المخصصة مطلوبة" },
+                    { "label": "الكمية السابقة", "type": "number", "name": "previousQuantity", "errorMessage": "الكمية السابقة مطلوبة" },
+                    { "label": "الكمية المتبقية", "type": "number", "name": "remainingQuantity", "errorMessage": "الكمية المتبقية مطلوبة" },
+                    { "label": "التصنيف المالي", "type": "number", "name": "financialCategory", "errorMessage": "التصنيف المالي مطلوب" },
+                    { "label": "السعر", "type": "number", "name": "price", "errorMessage": "السعر مطلوب" }
+                ]
+            },
+            "table": {
+                "noFound": "لا توجد عناصر بعد، قم بإضافة أول عنصر",
+                "filter": {
+                    "filterButton": "تصفية",
+                    "searchBar": "ابحث باسم العنصر",
+                    "addButton": "+ إضافة عنصر"
+                },
+                "allItems": {
+                    "text": "العناصر",
+                    "main": {
+                        "text": "العنصر الرئيسي",
+                        "moreButton": "المزيد"
+                    },
+                    "sub": {
+                        "text": "العنصر الفرعي",
+                        "moreButton": "المزيد"
+                    },
+                    "work": {
+                        "text": "بيان العمل",
+                        "moreButton": "المزيد"
+                    },
+                    "contentWorkItems": {
+                        "unitOfMeasure": "وحدة القياس",
+                        "assignedQuantity": "الكمية المخصصة",
+                        "previousQuantity": "الكمية السابقة",
+                        "remainingQuantity": "الكمية المتبقية",
+                        "financialCategory": "التصنيف المالي",
+                        "price": "السعر",
+                        "total": "الإجمالي"
+                    }
+                },
+                "detailsButtons": {
+                    "editButton": "تعديل",
+                    "deleteButton": "حذف"
+                }
+            },
+            "filter": {
+                "columns": [
+                    "وحدة القياس",
+                    "الكمية المخصصة",
+                    "الكمية السابقة",
+                    "الكمية المتبقية",
+                    "التصنيف المالي",
+                    "السعر",
+                    "الإجمالي"
+                ],
+                "expand": "توسيع",
+                "reset": "إعادة تعيين",
+                "saveTemplateForm": {
+                    "title": "حفظ كقالب",
+                    "fields": {
+                        "name": "الاسم",
+                        "description": "الوصف",
+                        "category": "الفئة",
+                        "tags": "الوسوم",
+                        "tagsButton": "إضافة",
+                        "buttons": {
+                            "cancelButton": "إلغاء",
+                            "saveButton": "حفظ"
+                        },
+                        "messages": {
+                            "saveFailed": "فشل في حفظ القالب. حاول مرة أخرى.",
+                            "sameName": "قالب بنفس الاسم موجود بالفعل!",
+                            "saveSuccess": "تم حفظ القالب بنجاح!"
+                        }
+                    }
+                }
+            }
+        },
+        "deduction": {
+            "buttons": {
+                "nextButton": "التالي",
+                "backButton": "السابق"
+            },
+            "table": {
+                "noFound": ["لا توجد استقطاعات متاحة.", "أضف استقطاعات لعرضها هنا."],
+                "addButton": "+ إضافة استقطاع",
+                "items": ["الرمز", "اسم الاستقطاع", "النوع", "القيمة"],
+                "footer": "إجمالي الاستقطاعات"
+            },
+            "addForm": {
+                "title": "إضافة استقطاع",
+                "name": "اسم الاستقطاع",
+                "namePlaceholder": "أدخل اسم الاستقطاع",
+                "type": "النوع",
+                "typeOptions": [
+                    {
+                        "value": "Amount",
+                        "text": "قيمة"
+                    },
+                    {
+                        "value": "Percentage %",
+                        "text": "النسبة المئوية %"
+                    }
+                ],
+                "valueType": "أدخل قيمة {{type}}",
+                "addButton": "إضافة"
+            }
+        },
+        "addition": {
+            "buttons": {
+                "nextButton": "التالي",
+                "backButton": "السابق"
+            },
+            "table": {
+                "noFound": ["لا توجد إضافات متاحة.", "أضف إضافات لعرضها هنا."],
+                "addButton": "+ إضافة إضافة",
+                "items": ["الرمز", "اسم الإضافة", "النوع", "القيمة"],
+                "footer": "إجمالي الإضافات"
+            },
+            "addForm": {
+                "title": "إضافة إضافة",
+                "name": "اسم الإضافة",
+                "namePlaceholder": "أدخل اسم الإضافة",
+                "type": "النوع",
+                "typeOptions": [
+                    {
+                        "value": "Amount",
+                        "text": "قيمة"
+                    },
+                    {
+                        "value": "Percentage %",
+                        "text": "النسبة المئوية %"
+                    }
+                ],
+                "valueType": "أدخل قيمة {{type}}",
+                "addButton": "إضافة"
+            }
+        },
+        "summary": {
+            "backButton": "السابق",
+            "contractDetails": {
+                "text": "تفاصيل العقد",
+                "data": {
+                    "totalContract": "إجمالي قيمة العقد",
+                    "totalAdditon": "إجمالي الإضافات",
+                    "otherDetection": "الاستقطاع/الخصم الآخر",
+                    "workGuarantee": "خصم ضمان العمل"
+                }
+            },
+            "financialDetails": {
+                "text": "التفاصيل المالية للعقد",
+                "data": {
+                    "totalAmount": "إجمالي المبلغ المدفوع",
+                    "totalValue": "إجمالي قيمة الفواتير الصادرة",
+                    "outstandingAmount": "المبلغ المستحق",
+                    "otherAddition": "إضافة/خصم آخر"
+                }
+            },
+            "taxDetails": {
+                "text": "تفاصيل الضرائب",
+                "data": {
+                    "currentWork": "قيمة العمل الحالي",
+                    "totalTax": "إجمالي مبلغ الضريبة"
+                }
+            }
+        }
+
+    },
+    "EditContractForm": {
+        "title": "تعديل العقد",
+        "fields": {
+            "contractType": "نوع العقد",
+            "contractTypeRequired": "نوع العقد مطلوب",
+            "contractTypeOptions": [
+                {
+                    "value": "",
+                    "text": "اختر"
+                },
+                {
+                    "value": "Owner",
+                    "text": "المالك"
+                },
+                {
+                    "value": "Sub-contractor",
+                    "text": "عقد مقاول فرعي"
+                }
+            ],
+            "project": "المشروع",
+            "projectRequired": "المشروع مطلوب",
+            "projectPlaceholder": "اختر...",
+            "partner": "الشريك",
+            "partnerRequired": "الشريك مطلوب",
+            "partnerPlaceholder": "اختر...",
+            "startDate": "تاريخ البداية",
+            "startDateRequired": "تاريخ البداية مطلوب.",
+            "typeOfProgress": "نوع التقدم",
+            "typeOfProgressRequired": "نوع التقدم مطلوب",
+            "typeOfProgressOptions": [
+                {
+                    "value": "",
+                    "text": "اختر"
+                },
+                {
+                    "value": "In Progress",
+                    "text": "الكمية"
+                },
+                {
+                    "value": "Completed",
+                    "text": "النسبة لكل بند"
+                },
+                {
+                    "value": "Suspended",
+                    "text": "النسبة المطبقة على إجمالي البند"
+                },
+                {
+                    "value": "Suspended",
+                    "text": "التقدم المالي"
+                },
+                {
+                    "value": "Suspended",
+                    "text": "التقدم حسب الوقت"
+                }
+            ],
+            "consultant": "المستشار",
+            "consultantRequired": "المستشار مطلوب",
+            "consultantPlaceholder": "اختر...",
+            "endDate": "تاريخ النهاية",
+            "endDateRequired": "تاريخ النهاية مطلوب.",
+            "endDateInvalid": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية.",
+            "description": "الوصف"
+        },
+        "updateButton": "تحديث العقد"
+    },
+    "ContractSteps": {
+        "addContract": "إضافة عقد",
+        "boq": "قائمة الكميات",
+        "deduction": "الخصم",
+        "addition": "الإضافة",
+        "summary": "الملخص"
+    },
+    "ConfirmationSteps": {
+        "addConfirmation": "إضافة تأكيد",
+        "boq": "قائمة الكميات",
+        "deduction": "الخصم",
+        "addition": "الإضافة"
+    },
+    "ConfirmationPage": {
+        "buttons": {
+            "createButton": "+ إنشاء تأكيد عمل",
+            "nextButton": "التالي",
+            "previousButton": "السابق"
+        },
+        "searchBar": "ابحث عن تأكيد العمل...",
+        "table": {
+            "paggination": "الصفحة {{currentPage}} من {{totalPages}}",
+            "items": [
+                "النوع",
+                "العقد",
+                "ترتيب العقد",
+                "التاريخ",
+                "المشروع",
+                "الشريك",
+                "المبلغ الإجمالي",
+                "المبلغ المستحق",
+                "الحالة",
+                "التفاصيل"
+            ],
+            "noFound": "لم يتم العثور على أي تأكيد عمل"
+        },
+        "detailsModel": {
+            "editButton": "تعديل",
+            "deleteButton": "حذف"
+        }
+    },
+    "ConfirmationForms": {
+        "sureDelete": {
+            "text": "هل أنت متأكد!",
+            "buttons": {
+                "backButton": "رجوع",
+                "deleteButton": {
+                    "text": "حذف",
+                    "loading": "جارٍ التحميل..."
+                }
+            }
+        },
+        "BOQ": {
+            "currentWork": {
+                "title": "تفاصيل تأكيد العمل الحالي",
+                "data": {
+                    "totalCurrent": "إجمالي العمل الحالي",
+                    "guaranteeDeduction": "خصم الضمان",
+                    "totalOtherDeductions": "إجمالي الخصومات الأخرى",
+                    "totalAdditions": "إجمالي الإضافات",
+                    "dueAmount": "المبلغ المستحق"
+                }
+            },
+            "cuntractDetails": {
+                "title": "تفاصيل العقد",
+                "data": {
+                    "totalContract": "إجمالي قيمة العقد",
+                    "totalWorkConfirmation": "إجمالي تأكيدات العمل المصدرة حتى الآن",
+                    "workGuarantee": "مبلغ ضمان العمل حتى الآن",
+                    "otherDetection": "الكشف/الخصم الآخر",
+                    "totalAdditions": "إجمالي الإضافات",
+                    "remainingAmount": "المبلغ المتبقي"
+                }
+            },
+            "taxDetails": {
+                "title": "تفاصيل الضريبة",
+                "data": {
+                    "totalUntaxed": "الإجمالي غير الخاضع للضريبة",
+                    "taxAmount": "قيمة الضريبة"
+                }
+            },
+            "table": {
+                "calculateButton": "احسب",
+                "searchBar": "ابحث عن تأكيد العمل...",
+                "columns": {
+                    "workItem": "عنصر العمل",
+                    "unitOfMeasure": "وحدة القياس",
+                    "contractQuantity": "كمية العقد",
+                    "previousQuantity": "الكمية السابقة",
+                    "currentWorkPercent": "العمل الحالي %",
+                    "currentWorkQty": "كمية العمل الحالي",
+                    "currentWork": "العمل الحالي",
+                    "totalQuantity": "إجمالي الكمية",
+                    "price": "السعر",
+                    "totalAmount": "الإجمالي",
+                    "completionPercent": "نسبة الإنجاز %",
+                    "invoicingPercent": "نسبة الفوترة %",
+                    "netAmount": "المبلغ الصافي",
+                    "duoAmount": "المبلغ المستحق",
+                    "calculate": "احسب"
+                },
+                "nameColumn": [
+                    "عنصر العمل",
+                    "وحدة القياس",
+                    "كمية العقد",
+                    "الكمية السابقة",
+                    "العمل الحالي",
+                    "كمية العمل الحالي",
+                    "العمل الحالي %",
+                    "إجمالي الكمية",
+                    "السعر",
+                    "الإجمالي",
+                    "نسبة الإنجاز %",
+                    "نسبة الفوترة %",
+                    "المبلغ الصافي",
+                    "المبلغ المستحق",
+                    "احسب"
+                ]
+            }
+        },
+        "form1": {
+            "contractType": "نوع العقد",
+            "contractTypePlaceholder": "نوع العقد",
+            "withContract": "مع العقد",
+            "withContractSelect": "اختر رقم العقد",
+            "projectName": "اسم المشروع",
+            "projectNamePlaceholder": "اسم المشروع",
+            "partner": "الشريك",
+            "partnerPlaceholder": "اسم الشريك",
+            "startDate": "تاريخ البداية",
+            "startDateRequired": "تاريخ البداية مطلوب",
+            "endDate": "تاريخ النهاية",
+            "endDateRequired": "تاريخ النهاية مطلوب",
+            "workConfirmationType": "نوع تأكيد العمل",
+            "workConfirmationTypeRequired": "نوع تأكيد العمل مطلوب",
+            "workConfirmationTypeOptions": [
+                {
+                    "value": "",
+                    "text": "اختر"
+                },
+                {
+                    "value": "progress",
+                    "text": "تأكيد عمل متقدم"
+                },
+                {
+                    "value": "inspection",
+                    "text": "تأكيد عمل قائم على الفحص"
+                },
+                {
+                    "value": "substantial",
+                    "text": "تأكيد الإنجاز المادي"
+                },
+                {
+                    "value": "final",
+                    "text": "تأكيد العمل النهائي"
+                },
+                {
+                    "value": "material",
+                    "text": "تأكيد استلام المواد والمعدات"
+                },
+                {
+                    "value": "safety",
+                    "text": "تأكيد السلامة والامتثال"
+                },
+                {
+                    "value": "daily",
+                    "text": "تقارير العمل اليومية (DWR)"
+                },
+                {
+                    "value": "punch",
+                    "text": "تأكيد إنجاز قائمة التحقق"
+                },
+                {
+                    "value": "changeOrder",
+                    "text": "تأكيد عمل تغيير الأوامر"
+                },
+                {
+                    "value": "warranty",
+                    "text": "تأكيد الضمان والصيانة"
+                }
+            ],
+            "typeOfProgress": "نوع التقدم",
+            "typeOfProgressOptions": [
+                {
+                    "value": "",
+                    "text": "اختر"
+                },
+                {
+                    "value": "Percentage per Line",
+                    "text": "النسبة لكل بند"
+                },
+                {
+                    "value": "Quantity per Line",
+                    "text": "الكمية لكل بند"
+                }
+            ],
+            "typeOfProgressRequired": "نوع التقدم مطلوب",
+            "toggles": {
+                "activate": "تفعيل الفوترة بالنسب %",
+                "completion": "تأكيد العمل بناءً على نسبة الإنجاز %"
+            },
+            "messages": {
+                "mustChooseContract": "يجب اختيار العقد"
+            },
+            "buttons": {
+                "backButton": "رجوع",
+                "nextButton": {
+                    "text": "التالي",
+                    "loading": "جارٍ التحميل..."
+                }
+            }
+        }
+    },
+    "BoqTemplatePage": {
+        "searchBar": "ابحث عن القالب...",
+        "table": [
+            "الرمز",
+            "اسم القالب",
+            "وصف القالب",
+            "تاريخ الإنشاء",
+            "الفئة",
+            "التفاصيل"
+        ],
+        "detailsModel": {
+            "edit": "تعديل",
+            "delete": "حذف"
+        },
+        "noFound": "لم يتم العثور على قوالب",
+        "sureDelete": {
+            "text": "هل أنت متأكد؟",
+            "buttons": {
+                "backButton": "رجوع",
+                "deleteButton": {
+                    "text": "حذف",
+                    "loading": "جاري التحميل..."
+                }
+            }
+        }
+    },
+    "EditBoqTemplateForm": {
+        "text": "احفظ كقالب",
+        "fields": {
+            "name": "الاسم",
+            "nameRequired": "الاسم مطلوب.",
+            "description": "الوصف",
+            "descriptionRequired": "الوصف مطلوب.",
+            "category": "الفئة",
+            "categoryRequired": "الفئة مطلوبة.",
+            "tags": "العلامات"
+        },
+        "buttons": {
+            "addButton": "إضافة",
+            "cancelButton": "إلغاء",
+            "saveButton": {
+                "text": "حفظ",
+                "loading": "جاري الانتظار..."
+            }
         }
     }
 }

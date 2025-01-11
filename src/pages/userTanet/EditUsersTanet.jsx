@@ -74,7 +74,7 @@ const EditUsersTanet = ({ userData, className = "" }) => {
             </div>
 
             <button className="text-white bg-primaryColor border text-[0.9rem] border-primaryColor px-12 py-1 mt-3 rounded-md">
-              {isSubmitting ? "Saving..." : "Update User"}
+              {isSubmitting ? t("UserTanetPage.editUser.updateButton.loading") : t("UserTanetPage.editUser.updateButton.text")}
             </button>
           </form>
         </div>
