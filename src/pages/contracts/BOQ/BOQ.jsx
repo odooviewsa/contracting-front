@@ -47,7 +47,6 @@ export default function BOQ() {
       const workItemId = data.data.data.mainId.flatMap((e) =>
         e.subItems.flatMap((sub) => sub.workItems?.map((work) => work._id))
       );
-
       setAllIdMainItemAndSubItemAndWorkItem([
         ...mainItemId,
         ...subItemId,
@@ -75,7 +74,6 @@ export default function BOQ() {
       getSingleTemplate();
     }
   }, [idTemplate]);
-
   return (
     <>
       <ToastContainer />
@@ -100,7 +98,11 @@ export default function BOQ() {
 
         <Buttons id={id} />
         {openFormBOQ && (
-          <FormBOQNew setOpenFormBOQ={setOpenFormBOQ} refetch={refetch} />
+          <FormBOQNew
+            setOpenFormBOQ={setOpenFormBOQ}
+            refetch={refetch}
+            dataContract={idTemplate ? fetchedSingleTemplate : data}
+          />
         )}
         {openModalUpdateWorkItemId && <ModalUpdateWorkItem refetch={refetch} />}
         {openModalDeleteWorkItemId && <SureDeleteWorkItem refetch={refetch} />}

@@ -41,7 +41,6 @@ function DetailsConfirmation() {
     }
   }, [searchWorkConfirmation, workId]);
   const dispalyDate = searchWorkConfirmation ? valueSearch : work;
-  console.log(work);
   return (
     <div className="flex flex-col gap-3">
       <CurrentWorkConfirmationDetails data={work?.data?.data} />
@@ -54,7 +53,11 @@ function DetailsConfirmation() {
         <PartHeaderTableWork
           setSearchWorkConfirmation={setSearchWorkConfirmation}
         />
-        <TableWorkItem dispalyDate={dispalyDate} refetch={refetch} />
+        <TableWorkItem
+          dispalyDate={dispalyDate}
+          isNegativeActive={work.data.data.negativeActive}
+          refetch={refetch}
+        />
       </div>
     </div>
   );

@@ -31,14 +31,14 @@ function SureDeleteMainItem({ refetch }) {
     <div className="fixed top-0 left-0 w-full flex justify-center bg-bgOverlay items-center h-full p-5 z-50">
       <div className="bg-white rounded-lg shadow p-5 w-[300px] text-textLabalForm flex flex-col items-center gap-5">
         <h1 className="font-bold text-[2rem]">
-          {t("contractsForms.BOQ.sureDelete.text")}
+          {t("ContractsForms.BOQ.sureDelete.text")}
         </h1>
         <div className="flex items-center justify-between w-full gap-5">
           <button
             onClick={() => setOpenModalDeleteMainItemId(null)}
             className="border rounded-md py-2 px-5 font-semibold z-40"
           >
-            {t("contractsForms.BOQ.sureDelete.backButton")}
+            {t("ContractsForms.BOQ.sureDelete.backButton")}
           </button>
           <button
             onClick={(e) => {
@@ -48,8 +48,8 @@ function SureDeleteMainItem({ refetch }) {
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
           >
             {isLoading
-              ? t("contractsForms.BOQ.sureDelete.deleteButton.loading")
-              : t("contractsForms.BOQ.sureDelete.deleteButton.text")}
+              ? t("ContractsForms.BOQ.sureDelete.deleteButton.loading")
+              : t("ContractsForms.BOQ.sureDelete.deleteButton.text")}
           </button>
         </div>
       </div>

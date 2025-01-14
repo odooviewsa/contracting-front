@@ -822,35 +822,102 @@ const TranslationEnglish = {
                 title: "+AddItem",
                 addButton: "Add Item",
                 fields: [
-                    { label: "Main Item", type: "text", name: "itemName", errorMessage: "Main item is required" },
-                    { label: "Sub Item", type: "text", name: "subItemName", errorMessage: "Sub item is required" },
-                    { label: "Work statement ", type: "text", name: "workItemName", errorMessage: "Work statement is required" },
-                    { label: "Unit Of Measure", type: "text", name: "unitOfMeasure", errorMessage: "Unit of measure is required" },
+                    {
+                        label: "Main Item",
+                        type: "text",
+                        name: "itemName",
+                        errorMessage: "Main item is required",
+                        placeholder: "Enter main item"
+                    },
+                    {
+                        label: "Sub Item",
+                        type: "text",
+                        name: "subItemName",
+                        errorMessage: "Sub item is required",
+                        placeholder: "Enter sub item"
+                    },
+                    {
+                        label: "Work statement ",
+                        type: "text",
+                        name: "workItemName",
+                        errorMessage: "Work statement is required",
+                        placeholder: "Enter work item name"
+                    },
+                    {
+                        label: "Unit Of Measure",
+                        type: "text",
+                        name: "unitOfMeasure",
+                        errorMessage: "Unit of measure is required",
+                        placeholder: "Enter unit of measure"
+                    },
                     {
                         label: "Assigned Quantity",
                         type: "number",
                         name: "assignedQuantity",
-                        errorMessage: "Assined quantity is required"
+                        errorMessage: "Assined quantity is required",
+                        placeholder: "Enter "
                     },
                     {
-                        label: "Previous Quantity",
+                        label: "Price",
                         type: "number",
-                        name: "previousQuantity",
-                        errorMessage: "Previous quantity is required"
+                        name: "price",
+                        errorMessage: "Price is required",
+                        placeholder: "Enter price"
                     },
                     {
-                        label: "Remaining Quantity",
-                        type: "number",
-                        name: "remainingQuantity",
-                        errorMessage: "Remaining quantity is required"
+                        label: "Start Date",
+                        name: "startDate",
+                        type: "date",
+                        errorMessage: "Start Date is required",
                     },
                     {
-                        label: "Financial Category",
-                        type: "number",
-                        name: "financialCategory",
-                        errorMessage: "Financial category is required"
+                        label: "End Date",
+                        name: "endDate",
+                        type: "date",
+                        errorMessage: "End Date is required",
                     },
-                    { label: "Price", type: "number", name: "price", errorMessage: "Price is required" },
+                    {
+                        label: "Work Item Type",
+                        name: "workItemType",
+                        type: "select",
+                        errorMessage: "Work item type is required",
+                        options: [
+                            {
+                                value: "",
+                                text: "Select work item type",
+                            },
+                            {
+                                value: "installationOnlyItem",
+                                text: "Installation Only Item",
+                            },
+                            {
+                                value: "supplyAndInstallationItem",
+                                text: "Supply and Installation Item",
+                            },
+                            {
+                                value: "miscellaneousItem",
+                                text: "Miscellaneous Item",
+                            },
+                            {
+                                value: "storageItem",
+                                text: "Storage Item",
+                            },
+                            {
+                                value: "equipmentRentalItem",
+                                text: "Equipment Rental/Service Item",
+                            },
+                            {
+                                value: "otherItem",
+                                text: "Other Item",
+                            },
+                        ]
+                    },
+                    {
+                        label: "Notes",
+                        name: "notes",
+                        type: "textarea",
+                        placeholder: "Enter your notes",
+                    },
                 ]
             },
             table: {
@@ -893,9 +960,6 @@ const TranslationEnglish = {
                 columns: [
                     "Unit Of Measure",
                     "Assigned Quantity",
-                    "Previous Quantity",
-                    "Remaining Quantity",
-                    "Financial Category",
                     "Price",
                     "Total",
                 ],
@@ -1347,7 +1411,8 @@ const TranslationEnglish = {
             typeOfProgressRequired: "type Of Progress is required",
             toggles: {
                 activate: "Activate Invoicing by %",
-                completion: "Completion % - Based Work Confirmation"
+                completion: "Completion % - Based Work Confirmation",
+                negative: "Active negative values"
             },
             messages: {
                 mustChooseContract: "you must choose contract"
@@ -1357,9 +1422,14 @@ const TranslationEnglish = {
                 nextButton: {
                     text: "Next",
                     loading: "Loading..."
-                }
+                },
+                updateButton: {
+                    text: "Update",
+                    loading: "Loading..."
+                },
+                previousButton: "Previous",
             }
-        }
+        },
     },
     // BOQ Template
     "BoqTemplatePage": {

@@ -5,8 +5,11 @@ import { axiosInstance } from "../../../axios/axios";
 import { FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function EditSingleConfirmation() {
+  // Language
+  const { t } = useTranslation();
   const nav = useNavigate();
   const { workconfirm } = useParams();
   // get Single Work Confirmation
@@ -23,9 +26,9 @@ export default function EditSingleConfirmation() {
   const [isCompletionActive, setIsCompletionActive] = useState(
     data?.data?.data?.completionPercentage
   );
-
-  // console.log(data?.data?.data);
-
+  const [isNegativeActive, setIsNegativeActive] = useState(
+    data?.data?.data?.negativeActive
+  );
   // add work confirmation
   const {
     handleSubmit,
@@ -38,7 +41,9 @@ export default function EditSingleConfirmation() {
       ...data,
       activateInvoicingByPercentage: isInvoicingActive,
       completionPercentage: isCompletionActive,
+      negativeActive: isNegativeActive,
     };
+    console.log(formData)
 
     await axiosInstance
       .put(`/api/workConfirmation/${workconfirm}`, formData)
@@ -72,11 +77,12 @@ export default function EditSingleConfirmation() {
         {/* Contract Type */}
         <div>
           <label className="block text-lg font-medium mb-3">
-            Contract Type <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.contractType")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder=" Contract Type"
+            placeholder={t("ConfirmationForms.form1.contractTypePlaceholder")}
             readOnly
             value={data?.data?.data?.contractType || ""}
           />
@@ -85,7 +91,8 @@ export default function EditSingleConfirmation() {
         {/* With Contract Toggle */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="Contract">
-            Contract Number <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.contractType")}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
@@ -101,40 +108,43 @@ export default function EditSingleConfirmation() {
             className="block text-lg font-medium mb-3"
             htmlFor="projectName"
           >
-            Project Name <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.projectName")}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder="Project Name"
+            placeholder={t("ConfirmationForms.form1.projectNamePlaceholder")}
             readOnly
-            value={data?.data?.data?.projectName || ""}
+            value={data?.data?.data?.projectName.projectName || ""}
           />
         </div>
 
         {/* Partner */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="partner">
-            Partner <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.partner")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
-            placeholder="Partner Name"
+            placeholder={t("ConfirmationForms.form1.partnerPlaceholder")}
             readOnly
-            value={data?.data?.data?.partner || ""}
+            value={data?.data?.data?.partner.partnerName || ""}
           />
         </div>
 
         {/* Start Date */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="startDate">
-            Start Date <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.startDate")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
             id="startDate"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("startDate", {
-              required: "start Date is required",
+              required: t("ConfirmationForms.form1.startDateRequired"),
             })}
           />
           <p className="text-red-400 text-[0.8rem] -mb-3">
@@ -145,14 +155,15 @@ export default function EditSingleConfirmation() {
         {/* End Date */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="endDate">
-            End Date <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.endDate")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             type="date"
             id="endDate"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("endDate", {
-              required: "start Date is required",
+              required: t("ConfirmationForms.form1.endDateRequired"),
             })}
           />
           <p className="text-red-400 text-[0.8rem] -mb-3">
@@ -166,32 +177,25 @@ export default function EditSingleConfirmation() {
             className="block text-lg font-medium mb-3"
             htmlFor="workConfirmationType"
           >
-            Work Confirmation Type <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.workConfirmationType")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <select
             id="workConfirmationType"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("workConfirmationType", {
-              required: "work Confirmation Type is required",
+              required: t(
+                "ConfirmationForms.form1.workConfirmationTypeRequired"
+              ),
             })}
           >
-            <option value="">Select</option>
-            <option value="progress">Progress Work Confirmation</option>
-            <option value="inspection">Inspection-Based Confirmation</option>
-            <option value="substantial">
-              Substantial Completion Confirmation
-            </option>
-            <option value="final">Final Work Confirmation</option>
-            <option value="material">
-              Material and Equipment Receipt Confirmation
-            </option>
-            <option value="safety">Safety and Compliance Confirmation</option>
-            <option value="daily">Daily Work Reports (DWR)</option>
-            <option value="punch">Punch List Completion Confirmation</option>
-            <option value="changeOrder">Change Order Work Confirmation</option>
-            <option value="warranty">
-              Warranty and Maintenance Confirmation
-            </option>
+            {t("ConfirmationForms.form1.workConfirmationTypeOptions", {
+              returnObjects: true,
+            }).map((item, key) => (
+              <option value={item.value} key={key}>
+                {item.text}
+              </option>
+            ))}
           </select>
           <p className="text-red-400 text-[0.8rem] -mb-3">
             {errors["workConfirmationType"] &&
@@ -205,18 +209,23 @@ export default function EditSingleConfirmation() {
             className="block text-lg font-medium mb-3"
             htmlFor="typeOfProgress"
           >
-            Type of Progress <span className="text-red-500">*</span>
+            {t("ConfirmationForms.form1.typeOfProgress")}{" "}
+            <span className="text-red-500">*</span>
           </label>
           <select
             id="typeOfProgress"
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("typeOfProgress", {
-              required: "type Of Progress is required",
+              required: t("ConfirmationForms.form1.typeOfProgressRequired"),
             })}
           >
-            <option value="">Select</option>
-            <option value="Percentage per Line">Percentage per Line</option>
-            <option value="Quantity per Line">Quantity per Line</option>
+            {t("ConfirmationForms.form1.typeOfProgressOptions", {
+              returnObjects: true,
+            }).map((item, key) => (
+              <option key={key} value={item.value}>
+                {item.text}
+              </option>
+            ))}
           </select>
           <p className="text-red-400 text-[0.8rem] -mb-3">
             {errors["typeOfProgress"] && errors["typeOfProgress"].message}
@@ -234,7 +243,10 @@ export default function EditSingleConfirmation() {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg">Activate Invoicing by %</span>
+            <span className="text-lg">
+              {" "}
+              {t("ConfirmationForms.form1.toggles.activate")}
+            </span>
           </div>
           <div
             className="flex items-center space-x-2 cursor-pointer"
@@ -246,7 +258,20 @@ export default function EditSingleConfirmation() {
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
             <span className="text-lg">
-              Completion % - Based Work Confirmation
+              {t("ConfirmationForms.form1.toggles.completion")}{" "}
+            </span>
+          </div>
+          <div
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => setIsNegativeActive(!isNegativeActive)}
+          >
+            {isNegativeActive ? (
+              <FaToggleOn className="text-blue-500 text-3xl" />
+            ) : (
+              <FaToggleOff className="text-gray-400 text-3xl" />
+            )}
+            <span className="text-lg">
+              {t("ConfirmationForms.form1.toggles.negative")}{" "}
             </span>
           </div>
         </div>
@@ -258,13 +283,13 @@ export default function EditSingleConfirmation() {
             className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
             onClick={() => nav(-1)}
           >
-            Back
+            {t("ConfirmationForms.form1.buttons.backButton")}
           </button>
           <button
             type="submit"
             className="text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor"
           >
-            {isSubmitting ? "Loading..." : "update"}
+            {isSubmitting ? t("ConfirmationForms.form1.buttons.updateButton.loading") : t("ConfirmationForms.form1.buttons.updateButton.text")}
           </button>
         </div>
       </form>

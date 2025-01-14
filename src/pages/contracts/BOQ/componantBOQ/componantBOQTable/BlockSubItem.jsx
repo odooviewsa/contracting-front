@@ -1,7 +1,7 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import PropTypes from "prop-types";
 import BlockWorkItem from "./BlockWorkItem";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import Menu from "./ModalSubItem/Menu";
 import { useTranslation } from "react-i18next";
@@ -20,16 +20,34 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
       }
     });
   };
+  // Total subitem
+  const [totalSubItem, setTotalSubItem] = useState(0);
+  useEffect(() => {
+    if (subitem) {
+      let totalArray = [];
+      subitem.workItems?.map((workitem) => {
+        const { total } = workitem.workDetails;
+        totalArray.push(total);
+      });
+      setTotalSubItem(totalArray.reduce((ele, value) => ele + value));
+    }
+  }, [subitem]);
+
   return (
     <div className="flex flex-col">
       <div
         className={`p-3 flex items-center justify-between cursor-pointer gap-12 bg-bgWhite`}
         onClick={toggleItem}
       >
-        <div className="flex items-center gap-4 text-colorTextValueItem transform translate-x-7 ">
-          <div className="flex flex-col">
-            <h4 className="text-black">{t("ContractsForms.BOQ.table.allItems.sub.text")}</h4>
-            <p className="text-[0.8rem]">{subitem?.subItemName}</p>
+        <div className="flex-1 flex items-center gap-4 text-colorTextValueItem transform translate-x-7 ">
+          <div className="flex-1 flex items-center justify-between">
+            <div className="flex flex-col">
+              <h4 className="text-black">
+                {t("ContractsForms.BOQ.table.allItems.sub.text")}
+              </h4>
+              <p className="text-[0.8rem]">{subitem?.subItemName}</p>
+            </div>
+            <p className="text-sm ltr:mr-8 rtl:ml-8">Total: {totalSubItem}</p>
           </div>
         </div>
         <div

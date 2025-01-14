@@ -6,7 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { useTranslation } from "react-i18next";
-export default function TableWorkItem({ dispalyDate, refetch }) {
+export default function TableWorkItem({
+  dispalyDate,
+  isNegativeActive,
+  refetch,
+}) {
   // Language
   const { t } = useTranslation();
   const nav = useNavigate();
@@ -66,7 +70,6 @@ export default function TableWorkItem({ dispalyDate, refetch }) {
       })
       .finally(() => setLoading(null));
   }
-  console.log(t("ConfirmationForms.BOQ.table.columns.workItem"));
   const colums = [
     {
       header: t("ConfirmationForms.BOQ.table.columns.workItem"),
@@ -132,6 +135,7 @@ export default function TableWorkItem({ dispalyDate, refetch }) {
       display: true,
     },
   ];
+  console.log(isNegativeActive)
   return (
     <div>
       <ToastContainer />
@@ -203,6 +207,7 @@ export default function TableWorkItem({ dispalyDate, refetch }) {
                 >
                   <input
                     type="number"
+                    min={isNegativeActive ? "" : 0}
                     className={`outline-none border px-1 ${
                       !currentValueColumWorkConfirmation["Current Work QTY"]
                         ? "hidden"
@@ -368,7 +373,7 @@ export default function TableWorkItem({ dispalyDate, refetch }) {
               );
             }}
           >
-            Previous
+            {t("ConfirmationForms.form1.buttons.previousButton")}
           </button>
           <button
             type="button"
@@ -380,7 +385,7 @@ export default function TableWorkItem({ dispalyDate, refetch }) {
               );
             }}
           >
-            Next
+            {t("ConfirmationForms.form1.buttons.nextButton.text")}
           </button>
         </div>
       </div>

@@ -14,7 +14,8 @@ const ConfirmationForm = () => {
   const [isWithContract, setIsWithContract] = useState(false);
   const [isInvoicingActive, setIsInvoicingActive] = useState(false);
   const [isCompletionActive, setIsCompletionActive] = useState(false);
-  const [imformationContract, setInformationContract] = useState([{}]);
+  const [isNegativeActive, setIsNegativeActive] = useState(false);
+  const [informationContract, setInformationContract] = useState([{}]);
   const [codeContract, setCodeContract] = useState(null);
   const nav = useNavigate();
   const user = useSelector((state) => state?.user);
@@ -42,12 +43,13 @@ const ConfirmationForm = () => {
   async function onSubmit(data) {
     const formData = {
       ...data,
-      projectName: imformationContract[0]?.project?._id,
-      contractType: imformationContract[0]?.contractType,
-      partner: imformationContract[0]?.partner?._id,
+      projectName: informationContract[0]?.project?._id,
+      contractType: informationContract[0]?.contractType,
+      partner: informationContract[0]?.partner?._id,
       contractId: codeContract,
       activateInvoicingByPercentage: isInvoicingActive,
       completionPercentage: isCompletionActive,
+      negativeActive: isNegativeActive,
       status: "Estimation",
     };
     if (!formData?.contractId)
@@ -68,6 +70,8 @@ const ConfirmationForm = () => {
       });
   }
 
+  console.log(informationContract);
+  console.log(data);
   return (
     <div className="  bg-white rounded-md">
       <ToastContainer />
@@ -78,14 +82,14 @@ const ConfirmationForm = () => {
         {/* Contract Type */}
         <div>
           <label className="block text-lg font-medium mb-3">
-            {t("ConfirmationForms.form1.contractType")}{" "}
+            {t("ConfirmationForms.form1.contractType")}
             <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             placeholder={t("ConfirmationForms.form1.contractTypePlaceholder")}
             readOnly
-            value={imformationContract?.[0]?.contractType || ""}
+            value={informationContract?.[0]?.contractType || ""}
           />
         </div>
 
@@ -140,21 +144,21 @@ const ConfirmationForm = () => {
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             placeholder={t("ConfirmationForms.form1.projectNamePlaceholder")}
             readOnly
-            value={imformationContract?.[0]?.project?.projectName || ""}
+            value={informationContract?.[0]?.project?.projectName || ""}
           />
         </div>
 
         {/* Partner */}
         <div>
           <label className="block text-lg font-medium mb-3" htmlFor="partner">
-            {t("ConfirmationForms.form1.")}{" "}
+            {t("ConfirmationForms.form1.partner")}{" "}
             <span className="text-red-500">*</span>
           </label>
           <input
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             placeholder={t("ConfirmationForms.form1.partnerPlaceholder")}
             readOnly
-            value={imformationContract?.[0]?.partner?.partnerName || ""}
+            value={informationContract?.[0]?.partner?.partnerName || ""}
           />
         </div>
 
@@ -173,9 +177,9 @@ const ConfirmationForm = () => {
               validate: (value) => {
                 const inputDate = new Date(value);
                 const contractStart = new Date(
-                  imformationContract?.[0]?.startDate
+                  informationContract?.[0]?.startDate
                 );
-                const contractEnd = new Date(imformationContract?.[0]?.endDate);
+                const contractEnd = new Date(informationContract?.[0]?.endDate);
 
                 if (inputDate < contractStart || inputDate > contractEnd) {
                   return `Start Date must be between ${contractStart.toLocaleDateString()} and ${contractEnd.toLocaleDateString()}`;
@@ -204,9 +208,9 @@ const ConfirmationForm = () => {
               validate: (value) => {
                 const inputDate = new Date(value);
                 const contractStart = new Date(
-                  imformationContract?.[0]?.startDate
+                  informationContract?.[0]?.startDate
                 );
-                const contractEnd = new Date(imformationContract?.[0]?.endDate);
+                const contractEnd = new Date(informationContract?.[0]?.endDate);
                 const startDate = new Date(getValues("startDate"));
 
                 if (inputDate < contractStart || inputDate > contractEnd) {
@@ -314,6 +318,19 @@ const ConfirmationForm = () => {
             )}
             <span className="text-lg">
               {t("ConfirmationForms.form1.toggles.completion")}
+            </span>
+          </div>
+          <div
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => setIsNegativeActive(!isNegativeActive)}
+          >
+            {isNegativeActive ? (
+              <FaToggleOn className="text-blue-500 text-3xl" />
+            ) : (
+              <FaToggleOff className="text-gray-400 text-3xl" />
+            )}
+            <span className="text-lg">
+              {t("ConfirmationForms.form1.toggles.negative")}
             </span>
           </div>
         </div>

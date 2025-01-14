@@ -1,14 +1,14 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import BlockSubItem from "./BlockSubItem";
 import PropTypes from "prop-types";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import Menu from "./ModalMainItem/Menu";
 import { useTranslation } from "react-i18next";
 
 export default function BlockMainItem({ mainItem }) {
   // Language
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
   const [openMore, setOpenMore] = useState(false);
   const toggleItem = () => {
@@ -20,6 +20,21 @@ export default function BlockMainItem({ mainItem }) {
       }
     });
   };
+  // Total subitem
+  const [totalMainItem, setTotalMainItem] = useState(0);
+
+  useEffect(() => {
+    if (mainItem) {
+      let totalArray = [];
+      mainItem.subItems.map((subItem) =>
+        subItem.workItems?.map((workitem) => {
+          const { total } = workitem.workDetails;
+          totalArray.push(total);
+        })
+      );
+      setTotalMainItem(totalArray.reduce((ele, value) => ele + value));
+    }
+  }, [mainItem]);
   return (
     <div className="flex flex-col">
       {/* // main item */}
@@ -27,11 +42,14 @@ export default function BlockMainItem({ mainItem }) {
         className="p-3 flex items-center justify-between gap-5 cursor-pointer"
         onClick={toggleItem}
       >
-        <div className="flex items-center gap-4 text-colorTextValueItem ">
+        <div className="flex-1 flex items-center justify-between gap-4 text-colorTextValueItem ">
           <div className="flex flex-col">
-            <h4 className="text-black">{t("ContractsForms.BOQ.table.allItems.main.text")}</h4>
+            <h4 className="text-black">
+              {t("ContractsForms.BOQ.table.allItems.main.text")}
+            </h4>
             <p className="text-[0.8rem]">{mainItem?.itemName}</p>
           </div>
+          <p className="text-sm ltr:mr-8 rtl:ml-8">Total: {totalMainItem}</p>
         </div>
         <div
           className="cursor-pointer flex items-center gap-2 text-colorTextValueItem relative text-[0.9rem]"
