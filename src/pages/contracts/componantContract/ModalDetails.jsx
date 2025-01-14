@@ -17,7 +17,7 @@ export default function ModalDetails({ contract, setOpenDeletePopup }) {
   const user = useSelector((state) => state?.user);
 
   return (
-    <div className="absolute top-5 -left-12 flex flex-col bg-white w-44 z-50 rounded-lg border border-gray-300">
+    <div className="absolute top-5 ltr:-left-12 rtl:-right-12 flex flex-col bg-white w-44 z-50 rounded-lg border border-gray-300">
       <div
         className="flex gap-1 items-center hover:bg-blue-300 p-2 text-[0.8rem] border-b border-gray-300 hover:text-blue-700"
         onClick={() => navigate(`/${user?.companyName}/estimation`)}

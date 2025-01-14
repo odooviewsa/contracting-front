@@ -7,7 +7,7 @@ import { useContext, useEffect } from "react";
 import { ContextBOQ } from "../../../../../../context/BOQContext";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-export default function ModalUpdateWorkItem({ refetch }) {
+export default function ModalUpdateWorkItem({ refetch, dataContract }) {
   // Language
   const { t } = useTranslation();
   const { openModalUpdateWorkItemId, setOpenModalUpdateWorkItemId } =
@@ -25,7 +25,9 @@ export default function ModalUpdateWorkItem({ refetch }) {
       .then((result) => {
         if (result?.status === 200) {
           setOpenModalUpdateWorkItemId(null);
-          toast.success(t("ContractsForms.BOQ.updateWorkItem.messages.success"));
+          toast.success(
+            t("ContractsForms.BOQ.updateWorkItem.messages.success")
+          );
           refetch();
         }
       })
@@ -42,26 +44,23 @@ export default function ModalUpdateWorkItem({ refetch }) {
         "assignedQuantity",
         openModalUpdateWorkItemId.workDetails.assignedQuantity
       );
-      setValue(
-        "previousQuantity",
-        openModalUpdateWorkItemId.workDetails.previousQuantity
-      );
-      setValue(
-        "remainingQuantity",
-        openModalUpdateWorkItemId.workDetails.remainingQuantity
-      );
-      setValue(
-        "financialCategory",
-        openModalUpdateWorkItemId.workDetails.financialCategory
-      );
       setValue("price", openModalUpdateWorkItemId.workDetails.price);
+      setValue("startDate", openModalUpdateWorkItemId.workDetails.startDate);
+      setValue("endDate", openModalUpdateWorkItemId.workDetails.endDate);
+      setValue(
+        "workItemType",
+        openModalUpdateWorkItemId.workDetails.workItemType
+      );
     }
   }, [openModalUpdateWorkItemId, setValue]);
+  console.log(openModalUpdateWorkItemId);
   return (
     <div className=" fixed top-0 left-0  w-full flex justify-center bg-bgOverlay items-center h-full  p-5 z-50">
       <div className="bg-white rounded-lg shadow p-3 md:w-[70%] w-full max-h-[90vh] scrollbar overflow-auto text-textLabalForm">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-900 ">{t("ContractsForms.BOQ.updateWorkItem.title")}</h3>
+          <h3 className="font-semibold text-gray-900 ">
+            {t("ContractsForms.BOQ.updateWorkItem.title")}
+          </h3>
           <div
             className="p-1 ms-3 rounded-full bg-red-300 text-red-500 cursor-pointer"
             onClick={() => setOpenModalUpdateWorkItemId(null)}
@@ -75,29 +74,62 @@ export default function ModalUpdateWorkItem({ refetch }) {
         >
           {/* // item name */}
           <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] gap-5">
-            {t("ContractsForms.BOQ.updateWorkItem.fields", {returnObjects: true}).map((input, index) => (
-              <div className="flex flex-col gap-2" key={index}>
-                <label htmlFor="" className="text-[0.9rem]">
-                  {input.label}
-                </label>
-                <input
-                  type={input.type}
-                  className="bg-bgInput py-1 px-2 rounded-md outline-none"
-                  placeholder={`enter ${input.label}`}
-                  name={input.name}
-                  {...register(input.name, {
-                    required: `${input.name} is required`,
-                  })}
-                />
-                <p className="text-red-400 text-[0.8rem] -mb-3">
-                  {errors[input.name] && errors[input.name].message}
-                </p>
-              </div>
-            ))}
+            {t("ContractsForms.BOQ.updateWorkItem.fields", {
+              returnObjects: true,
+            }).map((input, index) =>
+              input.type === "select" ? (
+                <div className="flex flex-col gap-2" key={index}>
+                  <label htmlFor={input.name} className="text-[0.9rem]">
+                    {input.label}
+                  </label>
+                  <select
+                    type={input.type}
+                    className="bg-bgInput py-1 px-2 rounded-md outline-none"
+                    placeholder={input.placeholder}
+                    name={input.name}
+                    {...register(input.name, {
+                      required: input.errorMessage,
+                    })}
+                  >
+                    7
+                    {input.options.map((option, key) => (
+                      <option value={option.value} key={key}>
+                        {option.text}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-red-400 text-[0.8rem] -mb-3">
+                    {errors[input.name] && errors[input.name].message}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2" key={index}>
+                  <label htmlFor={input.name} className="text-[0.9rem]">
+                    {input.label}
+                  </label>
+                  <input
+                    type={input.type}
+                    className="bg-bgInput py-1 px-2 rounded-md outline-none"
+                    placeholder={input.placeholder}
+                    name={input.name}
+                    {...register(input.name, {
+                      required: input.errorMessage,
+                    })}
+                  />
+                  <p className="text-red-400 text-[0.8rem] -mb-3">
+                    {errors[input.name] && errors[input.name].message}
+                  </p>
+                </div>
+              )
+            )}
           </div>
           <div className="flex justify-end mt-5">
             <button className="text-white bg-primaryColor border text-[0.9rem] border-primaryColor px-12 py-1 rounded-md">
-              {isSubmitting ? <Loading /> : t("ContractsForms.BOQ.updateWorkItem.updateButton")}
+              {isSubmitting ? (
+                <Loading />
+              ) : (
+                t("ContractsForms.BOQ.updateWorkItem.updateButton")
+              )}
             </button>
           </div>
         </form>

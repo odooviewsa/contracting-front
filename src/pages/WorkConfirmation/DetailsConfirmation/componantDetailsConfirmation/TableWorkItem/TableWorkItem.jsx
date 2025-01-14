@@ -135,8 +135,7 @@ export default function TableWorkItem({
       display: true,
     },
   ];
-  console.log(isNegativeActive)
-  return (
+   return (
     <div>
       <ToastContainer />
       <div className="scrollbar min-h-[60vh] overflow-auto">

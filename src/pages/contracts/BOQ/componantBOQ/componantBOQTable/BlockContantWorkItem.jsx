@@ -13,18 +13,6 @@ export default function BlockContantWorkItem({ workItemDetails }) {
       value: `${workItemDetails?.assignedQuantity?.toLocaleString("en-US")}`,
     },
     {
-      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.previousQuantity"),
-      value: `${workItemDetails?.previousQuantity?.toLocaleString("en-US")}`,
-    },
-    {
-      header:t("ContractsForms.BOQ.table.allItems.contentWorkItems.remainingQuantity"),
-      value: `${workItemDetails?.remainingQuantity?.toLocaleString("en-US")}`,
-    },
-    {
-      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.financialCategory"),
-      value: `${workItemDetails?.financialCategory?.toLocaleString("en-US")}`,
-    },
-    {
       header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.price"),
       value: `${workItemDetails?.price?.toLocaleString("en-US")}`,
     },
@@ -37,7 +25,7 @@ export default function BlockContantWorkItem({ workItemDetails }) {
     <div
       className={`flex  gap-5 
         bg-bgWhite
-      justify-center`}
+      justify-center relative z-10`}
     >
       <div className="scrollbar max-h-[50vh] overflow-auto w-[80%]">
         <table>

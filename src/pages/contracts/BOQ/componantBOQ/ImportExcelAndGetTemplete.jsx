@@ -84,8 +84,11 @@ export default function ImportExcelAndGetTemplete({
               setCheckGetTemplete(false);
             }}
           >
-            <option value="" className="text-[0.8rem]">
-              Template
+            <option
+              value={t("ContractsForms.BOQ.excelAndTemplate.options.value")}
+              className="text-[0.8rem]"
+            >
+              {t("ContractsForms.BOQ.excelAndTemplate.options.text")}
             </option>
             {templateNames.map((name) => (
               <option key={name._id} value={name._id}>

@@ -12,19 +12,19 @@ function AddConfirmationSteps() {
   const { t } = useTranslation();
   const steps = [
     {
-      name: t("ConfirmationSetps.addConfirmation"),
+      name: t("ConfirmationSteps.addConfirmation"),
       icon: <MdOutlineNoteAdd />,
       path: "/",
     },
     {
       name: "firstProgressDahedLine",
     },
-    { name: t("ConfirmationSetps.boq"), icon: <IoListSharp />, path: "BOQ" },
+    { name: t("ConfirmationSteps.boq"), icon: <IoListSharp />, path: "BOQ" },
     {
       name: "secondProgressDahedLine",
     },
     {
-      name: t("ConfirmationSetps.deduction"),
+      name: t("ConfirmationSteps.deduction"),
       icon: <FiMinusCircle />,
       path: "deduction",
     },
@@ -32,7 +32,7 @@ function AddConfirmationSteps() {
       name: "thirdProgressDahedLine",
     },
     {
-      name: t("ConfirmationSetps.addition"),
+      name: t("ConfirmationSteps.addition"),
       icon: <FiPlusCircle />,
       path: "addition",
     },

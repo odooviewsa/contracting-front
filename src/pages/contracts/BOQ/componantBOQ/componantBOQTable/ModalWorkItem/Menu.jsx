@@ -11,16 +11,16 @@ export default function Menu({ workItem }) {
   const { setOpenModalUpdateWorkItemId, setOpenModalDeleteWorkItemId } =
     useContext(ContextBOQ);
   return (
-    <div className="absolute top-5 -left-16 flex flex-col bg-white w-28 rounded-lg border border-gray-300">
+    <div className="absolute top-5 -left-16 flex flex-col bg-white w-28 rounded-lg border border-gray-300 z-20">
       <div
-        className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700"
+        className="flex gap-1 items-center p-2 text-[0.8rem] border-b bg-white border-gray-300 hover:bg-blue-300 hover:text-blue-700"
         onClick={() => setOpenModalUpdateWorkItemId(workItem)}
       >
         <CiEdit size={18} />
         <p>{t("ContractsForms.BOQ.table.detailsButtons.editButton")}</p>
       </div>
       <div
-        className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700"
+        className="flex gap-1 items-center p-2 text-[0.8rem] border-b bg-white border-gray-300 hover:bg-blue-300 hover:text-blue-700"
         onClick={() => setOpenModalDeleteWorkItemId(workItem._id)}
       >
         <MdDelete size={18} />

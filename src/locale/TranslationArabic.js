@@ -850,15 +850,15 @@ const TranslationArabic = {
                 }
             },
             "filter": {
-                "columns": [
-                    "وحدة القياس",
-                    "الكمية المخصصة",
-                    "الكمية السابقة",
-                    "الكمية المتبقية",
-                    "التصنيف المالي",
-                    "السعر",
-                    "الإجمالي"
-                ],
+                "columns": {
+                    "text": "الأعمدة",
+                    "values": [
+                        "وحدة القياس",
+                        "الكمية المخصصة",
+                        "السعر",
+                        "الإجمالي"
+                    ]
+                },
                 "expand": "توسيع",
                 "reset": "إعادة تعيين",
                 "saveTemplateForm": {
@@ -867,20 +867,157 @@ const TranslationArabic = {
                         "name": "الاسم",
                         "description": "الوصف",
                         "category": "الفئة",
-                        "tags": "الوسوم",
+                        "tags": "العلامات",
                         "tagsButton": "إضافة",
                         "buttons": {
                             "cancelButton": "إلغاء",
                             "saveButton": "حفظ"
                         },
                         "messages": {
-                            "saveFailed": "فشل في حفظ القالب. حاول مرة أخرى.",
+                            "saveFailed": "فشل في حفظ القالب. الرجاء المحاولة مرة أخرى.",
                             "sameName": "قالب بنفس الاسم موجود بالفعل!",
                             "saveSuccess": "تم حفظ القالب بنجاح!"
                         }
                     }
                 }
+            },
+            "excelAndTemplate": {
+                "getTemplate": "استيراد الفئات من القالب",
+                "options": {
+                    "value": "",
+                    "text": "القالب"
+                },
+                "excelButton": "استيراد"
+            },
+            "taxAndDownPayment": {
+                "taxInput": {
+                    "text": "شامل الضريبة",
+                    "placeholder": "قيمة الضريبة"
+                },
+                "downPaymentInput": {
+                    "text": "الدفعة المقدمة",
+                    "placeholder": "قيمة الدفعة المقدمة"
+                },
+                "addButton": "إضافة"
+            },
+            "sureDelete": {
+                "text": "هل أنت متأكد!",
+                "backButton": "رجوع",
+                "deleteButton": {
+                    "text": "حذف",
+                    "loading": "جارٍ التحميل.."
+                }
+            },
+            "updateWorkItem": {
+                "title": "تحديث عنصر العمل",
+                "fields": [
+                    {
+                        "label": "العنصر الرئيسي",
+                        "type": "text",
+                        "name": "itemName",
+                        "errorMessage": "العنصر الرئيسي مطلوب",
+                        "placeholder": "أدخل العنصر الرئيسي"
+                    },
+                    {
+                        "label": "العنصر الفرعي",
+                        "type": "text",
+                        "name": "subItemName",
+                        "errorMessage": "العنصر الفرعي مطلوب",
+                        "placeholder": "أدخل العنصر الفرعي"
+                    },
+                    {
+                        "label": "بيان العمل",
+                        "type": "text",
+                        "name": "workItemName",
+                        "errorMessage": "بيان العمل مطلوب",
+                        "placeholder": "أدخل اسم بيان العمل"
+                    },
+                    {
+                        "label": "وحدة القياس",
+                        "type": "text",
+                        "name": "unitOfMeasure",
+                        "errorMessage": "وحدة القياس مطلوبة",
+                        "placeholder": "أدخل وحدة القياس"
+                    },
+                    {
+                        "label": "الكمية المخصصة",
+                        "type": "number",
+                        "name": "assignedQuantity",
+                        "errorMessage": "الكمية المخصصة مطلوبة",
+                        "placeholder": "أدخل الكمية المخصصة"
+                    },
+                    {
+                        "label": "السعر",
+                        "type": "number",
+                        "name": "price",
+                        "errorMessage": "السعر مطلوب",
+                        "placeholder": "أدخل السعر"
+                    },
+                    {
+                        "label": "تاريخ البداية",
+                        "name": "startDate",
+                        "type": "date",
+                        "errorMessage": "تاريخ البداية مطلوب"
+                    },
+                    {
+                        "label": "تاريخ النهاية",
+                        "name": "endDate",
+                        "type": "date",
+                        "errorMessage": "تاريخ النهاية مطلوب"
+                    },
+                    {
+                        "label": "نوع عنصر العمل",
+                        "name": "workItemType",
+                        "type": "select",
+                        "errorMessage": "نوع عنصر العمل مطلوب",
+                        "options": [
+                            {
+                                "value": "",
+                                "text": "اختر نوع عنصر العمل"
+                            },
+                            {
+                                "value": "supplyOnlyItem",
+                                "text": "عنصر توريد فقط"
+                            },
+                            {
+                                "value": "installationOnlyItem",
+                                "text": "عنصر تركيب فقط"
+                            },
+                            {
+                                "value": "supplyAndInstallationItem",
+                                "text": "عنصر توريد وتركيب"
+                            },
+                            {
+                                "value": "miscellaneousItem",
+                                "text": "عنصر متنوع"
+                            },
+                            {
+                                "value": "storageItem",
+                                "text": "عنصر تخزين"
+                            },
+                            {
+                                "value": "equipmentRentalItem",
+                                "text": "عنصر تأجير المعدات/الخدمات"
+                            },
+                            {
+                                "value": "otherItem",
+                                "text": "عنصر آخر"
+                            }
+                        ]
+                    },
+                    {
+                        "label": "الملاحظات",
+                        "name": "notes",
+                        "type": "textarea",
+                        "placeholder": "أدخل ملاحظاتك"
+                    }
+                ],
+                "updateButton": "تحديث العنصر",
+                "messages": {
+                    "success": "تم تحديث عنصر العمل بنجاح"
+                }
             }
+
         },
         "deduction": {
             "buttons": {
@@ -970,7 +1107,6 @@ const TranslationArabic = {
                 }
             }
         }
-
     },
     "EditContractForm": {
         "title": "تعديل العقد",
@@ -1236,7 +1372,8 @@ const TranslationArabic = {
             "typeOfProgressRequired": "نوع التقدم مطلوب",
             "toggles": {
                 "activate": "تفعيل الفوترة بالنسب %",
-                "completion": "تأكيد العمل بناءً على نسبة الإنجاز %"
+                "completion": "تأكيد العمل بناءً على نسبة الإنجاز %",
+                "negative": "تفعيل القيم السالبة"
             },
             "messages": {
                 "mustChooseContract": "يجب اختيار العقد"
@@ -1274,7 +1411,7 @@ const TranslationArabic = {
                     "loading": "جاري التحميل..."
                 }
             }
-        }
+        },
     },
     "EditBoqTemplateForm": {
         "text": "احفظ كقالب",

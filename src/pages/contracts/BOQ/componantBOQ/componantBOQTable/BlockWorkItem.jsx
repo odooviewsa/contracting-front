@@ -23,12 +23,14 @@ export default function BlockWorkItem({ workItem }) {
   return (
     <div className="flex flex-col mb-1 w-full">
       <div
-        className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform translate-x-14 w-[82%]`}
+        className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform ltr:translate-x-14  rtl:-translate-x-14 w-[82%]`}
         onClick={toggleItem}
       >
         <div className="flex items-center gap-4 text-colorTextValueItem ">
           <div className="flex flex-col">
-            <h4 className="text-black">{t("ContractsForms.BOQ.table.allItems.work.text")}</h4>
+            <h4 className="text-black">
+              {t("ContractsForms.BOQ.table.allItems.work.text")}
+            </h4>
             <p className="text-[0.8rem] ">{workItem?.workItemName}</p>
           </div>
         </div>

@@ -32,14 +32,14 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
       setTotalSubItem(totalArray.reduce((ele, value) => ele + value));
     }
   }, [subitem]);
-
+  console.log(subitem)
   return (
     <div className="flex flex-col">
       <div
         className={`p-3 flex items-center justify-between cursor-pointer gap-12 bg-bgWhite`}
         onClick={toggleItem}
       >
-        <div className="flex-1 flex items-center gap-4 text-colorTextValueItem transform translate-x-7 ">
+        <div className="flex-1 flex items-center gap-4 text-colorTextValueItem transform ltr:translate-x-7 rtl:-translate-x-7">
           <div className="flex-1 flex items-center justify-between">
             <div className="flex flex-col">
               <h4 className="text-black">
@@ -47,7 +47,7 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
               </h4>
               <p className="text-[0.8rem]">{subitem?.subItemName}</p>
             </div>
-            <p className="text-sm ltr:mr-8 rtl:ml-8">Total: {totalSubItem}</p>
+            <p className="text-sm ltr:mr-8 rtl:ml-8">{t("ContractsForms.BOQ.texts.total")}: {totalSubItem}</p>
           </div>
         </div>
         <div

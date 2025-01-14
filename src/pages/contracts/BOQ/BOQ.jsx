@@ -104,7 +104,7 @@ export default function BOQ() {
             dataContract={idTemplate ? fetchedSingleTemplate : data}
           />
         )}
-        {openModalUpdateWorkItemId && <ModalUpdateWorkItem refetch={refetch} />}
+        {openModalUpdateWorkItemId && <ModalUpdateWorkItem  dataContract={idTemplate ? fetchedSingleTemplate : data} refetch={refetch} />}
         {openModalDeleteWorkItemId && <SureDeleteWorkItem refetch={refetch} />}
         {openModalDeleteSubItemId && <SureDeleteSubItem refetch={refetch} />}
         {openModalDeleteMainItemId && <SureDeleteMainItem refetch={refetch} />}

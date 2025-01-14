@@ -35,6 +35,7 @@ export default function BlockMainItem({ mainItem }) {
       setTotalMainItem(totalArray.reduce((ele, value) => ele + value));
     }
   }, [mainItem]);
+  console.log(mainItem)
   return (
     <div className="flex flex-col">
       {/* // main item */}
@@ -49,7 +50,7 @@ export default function BlockMainItem({ mainItem }) {
             </h4>
             <p className="text-[0.8rem]">{mainItem?.itemName}</p>
           </div>
-          <p className="text-sm ltr:mr-8 rtl:ml-8">Total: {totalMainItem}</p>
+          <p className="text-sm ltr:mr-8 rtl:ml-8">{t("ContractsForms.BOQ.texts.total")}: {totalMainItem}</p>
         </div>
         <div
           className="cursor-pointer flex items-center gap-2 text-colorTextValueItem relative text-[0.9rem]"

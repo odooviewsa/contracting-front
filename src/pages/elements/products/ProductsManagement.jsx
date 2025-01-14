@@ -117,7 +117,7 @@ const ProductsManagement = () => {
   };
   return (
     <div style={styles.container}>
-      <div style={styles.actions}>
+      <div style={styles.actions} className="w-full flex items-center justify-between">
         <Link to="/" style={styles.backLink} aria-label="Go back to main menu">
           &larr; {t("ProductsPage.backButton")}
         </Link>
@@ -250,7 +250,6 @@ const styles = {
     fontSize: "16px",
     cursor: "pointer",
     borderRadius: "5px",
-    marginLeft: "auto",
   },
   filterContainer: {
     display: "flex",

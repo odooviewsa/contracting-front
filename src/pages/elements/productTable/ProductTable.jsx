@@ -39,7 +39,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
                 {/* Display supplier and id */}
                 <td>{product.supplier || "-"}</td>
                 <td>{product._id || "-"}</td>
-                <td>
+                <td className="flex gap-5">
                   <button
                     onClick={() => onEdit(product)}
                     style={styles.editButton}

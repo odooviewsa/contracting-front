@@ -55,7 +55,7 @@ function DetailsConfirmation() {
         />
         <TableWorkItem
           dispalyDate={dispalyDate}
-          isNegativeActive={work.data.data.negativeActive}
+          isNegativeActive={work?.data?.data?.negativeActive}
           refetch={refetch}
         />
       </div>

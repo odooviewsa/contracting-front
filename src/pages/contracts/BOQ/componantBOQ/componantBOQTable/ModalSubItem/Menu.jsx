@@ -7,7 +7,7 @@ export default function Menu({ subItem }) {
   const {  setOpenModalDeleteSubItemId } =
     useContext(ContextBOQ);
   return (
-    <div className="absolute top-5 -left-16 flex flex-col bg-white w-28 z-20 rounded-lg border border-gray-300">
+    <div className="absolute top-5 ltr:-left-16 rtl:left-16 flex flex-col bg-white w-28 z-20 rounded-lg border border-gray-300">
       <div
         className="flex gap-1 items-center p-2 text-[0.8rem] border-b border-gray-300 hover:bg-blue-300 hover:text-blue-700"
         onClick={() => setOpenModalDeleteSubItemId(subItem._id)}

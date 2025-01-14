@@ -70,8 +70,6 @@ const ConfirmationForm = () => {
       });
   }
 
-  console.log(informationContract);
-  console.log(data);
   return (
     <div className="  bg-white rounded-md">
       <ToastContainer />
@@ -94,9 +92,9 @@ const ConfirmationForm = () => {
         </div>
 
         {/* With Contract Toggle */}
-        <div className="flex md:flex-row flex-col  md:items-end gap-3  ">
+        <div className="flex md:flex-row flex-col md:mt-8  md:items-center gap-3  ">
           <div
-            className="flex items-center space-x-2 cursor-pointer w-60"
+            className="flex items-center cursor-pointer w-60"
             onClick={() => setIsWithContract(!isWithContract)}
           >
             {isWithContract ? (
@@ -104,7 +102,7 @@ const ConfirmationForm = () => {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-lg whitespace-nowrap ltr:ml-2 rtl:mr-2">
               {t("ConfirmationForms.form1.contractType")}
             </span>
           </div>
@@ -295,7 +293,7 @@ const ConfirmationForm = () => {
         {/* Toggles */}
         <div className=" flex flex-col gap-3">
           <div
-            className="flex items-center space-x-2 cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={() => setIsInvoicingActive(!isInvoicingActive)}
           >
             {isInvoicingActive ? (
@@ -303,12 +301,12 @@ const ConfirmationForm = () => {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg">
+            <span className="text-lg ltr:ml-2 rtl:mr-2">
               {t("ConfirmationForms.form1.toggles.activate")}
             </span>
           </div>
           <div
-            className="flex items-center space-x-2 cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={() => setIsCompletionActive(!isCompletionActive)}
           >
             {isCompletionActive ? (
@@ -316,12 +314,12 @@ const ConfirmationForm = () => {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg">
+            <span className="text-lg ltr:ml-2 rtl:mr-2">
               {t("ConfirmationForms.form1.toggles.completion")}
             </span>
           </div>
           <div
-            className="flex items-center space-x-2 cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={() => setIsNegativeActive(!isNegativeActive)}
           >
             {isNegativeActive ? (
@@ -329,7 +327,7 @@ const ConfirmationForm = () => {
             ) : (
               <FaToggleOff className="text-gray-400 text-3xl" />
             )}
-            <span className="text-lg">
+            <span className="text-lg ltr:ml-2 rtl:mr-2">
               {t("ConfirmationForms.form1.toggles.negative")}
             </span>
           </div>

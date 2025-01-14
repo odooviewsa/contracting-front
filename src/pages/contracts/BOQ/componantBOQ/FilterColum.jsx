@@ -14,7 +14,7 @@ export default function FilterColum() {
       [name]: !prevState[name],
     }));
   };
-  const nameColum = t("ContractsForms.BOQ.filter.columns", {
+  const nameColum = t("ContractsForms.BOQ.filter.columns.values", {
     returnObjects: true,
   });
 
@@ -40,7 +40,7 @@ export default function FilterColum() {
         onClick={() => setOpenColumValue((e) => !e)}
       >
         <FaBars size={20} />
-        <p>Columns</p>
+        <p>{t("ContractsForms.BOQ.filter.columns.text")}</p>
         {openColumValue ? (
           <FaCaretDown color="gray" size={20} />
         ) : (
@@ -48,7 +48,7 @@ export default function FilterColum() {
         )}
       </div>
       {openColumValue && (
-        <div className="absolute left-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white">
+        <div className="absolute ltr:left-0 rtl:right-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white">
           {nameColum?.map((value, i) => (
             <div
               key={i}

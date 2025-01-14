@@ -887,6 +887,10 @@ const TranslationEnglish = {
                                 text: "Select work item type",
                             },
                             {
+                                value: "supplyOnlyItem",
+                                text: "Supply Only Item",
+                            },
+                            {
                                 value: "installationOnlyItem",
                                 text: "Installation Only Item",
                             },
@@ -944,9 +948,6 @@ const TranslationEnglish = {
                     contentWorkItems: {
                         unitOfMeasure: "Unit Of Measure",
                         assignedQuantity: "Assigned Quantity",
-                        previousQuantity: "Previous Quantity",
-                        remainingQuantity: "Remaining Quantity",
-                        financialCategory: "Financial Category",
                         price: "Price",
                         total: "Total"
                     }
@@ -957,12 +958,15 @@ const TranslationEnglish = {
                 }
             },
             filter: {
-                columns: [
-                    "Unit Of Measure",
-                    "Assigned Quantity",
-                    "Price",
-                    "Total",
-                ],
+                "columns": {
+                    text: "Columns",
+                    values: [
+                        "Unit Of Measure",
+                        "Assigned Quantity",
+                        "Price",
+                        "Total",
+                    ]
+                },
                 expand: "Expand",
                 reset: "Reset",
                 saveTemplateForm: {
@@ -987,6 +991,10 @@ const TranslationEnglish = {
             },
             excelAndTemplate: {
                 getTemplate: "Get BOQ From Template",
+                options: {
+                    value: "",
+                    text: "Template"
+                },
                 excelButton: "Import"
             },
             taxAndDownPayment: {
@@ -1012,45 +1020,113 @@ const TranslationEnglish = {
                 title: "Update work item",
                 fields: [
                     {
+                        label: "Main Item",
+                        type: "text",
+                        name: "itemName",
+                        errorMessage: "Main item is required",
+                        placeholder: "Enter main item"
+                    },
+                    {
+                        label: "Sub Item",
+                        type: "text",
+                        name: "subItemName",
+                        errorMessage: "Sub item is required",
+                        placeholder: "Enter sub item"
+                    },
+                    {
                         label: "Work statement ",
                         type: "text",
                         name: "workItemName",
+                        errorMessage: "Work statement is required",
+                        placeholder: "Enter work item name"
                     },
                     {
                         label: "Unit Of Measure",
                         type: "text",
                         name: "unitOfMeasure",
+                        errorMessage: "Unit of measure is required",
+                        placeholder: "Enter unit of measure"
                     },
                     {
                         label: "Assigned Quantity",
                         type: "number",
                         name: "assignedQuantity",
-                    },
-                    {
-                        label: "Previous Quantity",
-                        type: "number",
-                        name: "previousQuantity",
-                    },
-                    {
-                        label: "Remaining Quantity",
-                        type: "number",
-                        name: "remainingQuantity",
-                    },
-                    {
-                        label: "Financial Category",
-                        type: "number",
-                        name: "financialCategory",
+                        errorMessage: "Assined quantity is required",
+                        placeholder: "Enter assigned quantity"
                     },
                     {
                         label: "Price",
                         type: "number",
                         name: "price",
+                        errorMessage: "Price is required",
+                        placeholder: "Enter price"
+                    },
+                    {
+                        label: "Start Date",
+                        name: "startDate",
+                        type: "date",
+                        errorMessage: "Start Date is required",
+                    },
+                    {
+                        label: "End Date",
+                        name: "endDate",
+                        type: "date",
+                        errorMessage: "End Date is required",
+                    },
+                    {
+                        label: "Work Item Type",
+                        name: "workItemType",
+                        type: "select",
+                        errorMessage: "Work item type is required",
+                        options: [
+                            {
+                                value: "",
+                                text: "Select work item type",
+                            },
+                            {
+                                value: "supplyOnlyItem",
+                                text: "Supply Only Item",
+                            },
+                            {
+                                value: "installationOnlyItem",
+                                text: "Installation Only Item",
+                            },
+                            {
+                                value: "supplyAndInstallationItem",
+                                text: "Supply and Installation Item",
+                            },
+                            {
+                                value: "miscellaneousItem",
+                                text: "Miscellaneous Item",
+                            },
+                            {
+                                value: "storageItem",
+                                text: "Storage Item",
+                            },
+                            {
+                                value: "equipmentRentalItem",
+                                text: "Equipment Rental/Service Item",
+                            },
+                            {
+                                value: "otherItem",
+                                text: "Other Item",
+                            },
+                        ]
+                    },
+                    {
+                        label: "Notes",
+                        name: "notes",
+                        type: "textarea",
+                        placeholder: "Enter your notes",
                     },
                 ],
                 updateButton: "Update Item",
                 messages: {
                     success: "Update work item successfully"
                 }
+            },
+            texts: {
+                total: "Total",
             }
         },
         deduction: {
@@ -1217,7 +1293,7 @@ const TranslationEnglish = {
         summary: "Summary"
     },
     // Confirmation Steps
-    "ConfirmationSetps": {
+    "ConfirmationSteps": {
         addConfirmation: "Add Confirmation",
         boq: "BOQ",
         deduction: "Deduction",
