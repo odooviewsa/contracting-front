@@ -16,10 +16,20 @@ import { GiExplosiveMaterials } from "react-icons/gi";
 import { FaProductHunt } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { HiUsers } from "react-icons/hi2";
+import { ImProfile } from "react-icons/im";
+const iconMap = {
+  HiUsers: HiUsers,
+  ImProfile: ImProfile,
+};
 export default function Sidebar({ setOpenSidebar, openSidebar }) {
   const { pathname } = useLocation();
   // Language
   const { t } = useTranslation();
+  // Open Menu
+  const [openMenu, setOpenMenu] = useState();
+
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -125,13 +135,33 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           <IoPeople size={20} />
           {openSidebar && <h1>{t("Sidebar.users")}</h1>}
         </Link>
-        <Link
-          to={`/${user?.companyName}/setting`}
-          className="flex items-center gap-2 text-grayColor p-3"
+        <p
+          onClick={() => setOpenMenu(!openMenu)}
+          className="flex items-center gap-2 text-grayColor p-3 cursor-pointer"
         >
           <IoIosSettings size={20} />
           {openSidebar && <h1>{t("Sidebar.setting")}</h1>}
-        </Link>
+        </p>
+        {/* Menu */}
+        {openMenu &&
+          t("SettingSideBar.links", {
+            returnObjects: true,
+            companyName: user?.companyName,
+          }).map((link, key) => {
+            const Icon = iconMap[link.icon];
+            return (
+              <Link
+                to={link.to}
+                className={`flex items-center gap-2 text-grayColor p-3 ${
+                  openSidebar && "ltr:ml-5 rtl:mr-5"
+                }`}
+                key={key}
+              >
+                {Icon && <Icon size={20} />}
+                {openSidebar && link.text}
+              </Link>
+            );
+          })}
         <Link
           to={"/"}
           className="flex items-center gap-2 text-red-500 p-3"

@@ -7,6 +7,7 @@ import {
     IoDocumentTextOutline,
 } from "react-icons/io5";
 
+
 const TranslationEnglish = {
     // User Tanet Page
     "UserTanetPage": {
@@ -1554,6 +1555,21 @@ const TranslationEnglish = {
             }
         }
 
+    },
+    // Setting
+    "SettingSideBar": {
+        links: [
+            {
+                to: "{{companyName}}/setting/users",
+                text: "Users",
+                icon: "HiUsers"
+            },
+            {
+                to: "{{companyName}}/setting/companyProfile",
+                text: "Company Profile",
+                icon: "ImProfile"
+            },
+        ]
     }
 }
 

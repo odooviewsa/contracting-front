@@ -45,6 +45,8 @@ import MaterialRequestLayout from "./pages/materialrequest/MaterialRequestLayout
 import MaterialRequestList from "./pages/materialrequest/MaterialRequestList";
 import "./i18n.js";
 import { useTranslation } from "react-i18next";
+import SettingLayout from "./pages/setting/settingLayout.jsx";
+import CompanyProfile from "./pages/companyProfile/companyProfile.jsx";
 
 function App() {
   // Multi Language
@@ -188,7 +190,17 @@ function App() {
         },
         {
           path: `:companyName/setting`,
-          element: <UserTanetPage />,
+          element: <SettingLayout />,
+          children: [
+            {
+              path: "users",
+              element: <UserTanetPage />
+            },
+            {
+              path: "companyProfile",
+              element: <CompanyProfile />
+            }
+          ]
         },
 
         {

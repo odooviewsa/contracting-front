@@ -1432,6 +1432,20 @@ const TranslationArabic = {
                 "loading": "جاري الانتظار..."
             }
         }
+    },
+    "SettingSideBar": {
+        "links": [
+            {
+                "to": "{{companyName}}/setting/users",
+                "text": "المستخدمون",
+                icon: "HiUsers"
+            },
+            {
+                "to": "{{companyName}}/setting/companyProfile",
+                "text": "ملف الشركة",
+                icon: "ImProfile"
+            }
+        ]
     }
 }
 
