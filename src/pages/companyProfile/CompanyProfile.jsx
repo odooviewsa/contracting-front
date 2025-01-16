@@ -97,7 +97,9 @@ const CompanyProfile = () => {
           setValue("website", res.data.website);
           setValue("taxId", res.data.taxId);
           setValue("companyId", res.data.companyId);
-          setLogo(`${url}/companyProfileImages/${res.data.logo}`);
+          if (res.data.logo) {
+            setLogo(`${url}/companyProfileImages/${res.data.logo}`);
+          }
         }
       } catch (error) {
         console.log(error.message);
