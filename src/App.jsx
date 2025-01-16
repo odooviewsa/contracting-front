@@ -185,10 +185,6 @@ function App() {
           element: <Partners />,
         },
         {
-          path: `:companyName/users`,
-          element: <UserTanetPage />,
-        },
-        {
           path: `:companyName/setting`,
           element: <SettingLayout />,
           children: [

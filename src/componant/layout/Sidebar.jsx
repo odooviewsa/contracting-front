@@ -17,10 +17,9 @@ import { FaProductHunt } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { HiUsers } from "react-icons/hi2";
 import { ImProfile } from "react-icons/im";
 const iconMap = {
-  HiUsers: HiUsers,
+  HiUsers: IoPeople,
   ImProfile: ImProfile,
 };
 export default function Sidebar({ setOpenSidebar, openSidebar }) {
@@ -39,7 +38,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
   }
   return (
     <div
-      className={`flex flex-col gap-2 p-2 md:p-0 ${
+      className={`flex flex-col gap-2 p-2 md:p-0 relative z-40 ${
         !openSidebar && "hidden md:block"
       }`}
     >
@@ -127,13 +126,6 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
         >
           <FaProductHunt size={20} />
           {openSidebar && <h1>{t("Sidebar.product")}</h1>}
-        </Link>
-        <Link
-          to={`/${user?.companyName}/users`}
-          className="flex items-center gap-2 text-grayColor p-3"
-        >
-          <IoPeople size={20} />
-          {openSidebar && <h1>{t("Sidebar.users")}</h1>}
         </Link>
         <p
           onClick={() => setOpenMenu(!openMenu)}

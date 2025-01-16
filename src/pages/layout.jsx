@@ -10,9 +10,9 @@ export default function Layout() {
   return (
     <div className="">
       <div
-        className={` transition-all sidebar fixed top-0 bottom-0  p-0  ${
+        className={`transition-all sidebar fixed top-0 bottom-0  p-0 z-40  ${
           openSidebar ? "lg:w-[300px]" : "w-[0px] md:w-[60px] lg:w-[60px]"
-        }  text-center bg-[#F1F2F7]  pt-2 md:pr-2  z-50`}
+        }  text-center bg-[#F1F2F7]  pt-2 md:pr-2`}
       >
         <Sidebar setOpenSidebar={setOpenSidebar} openSidebar={openSidebar} />
       </div>

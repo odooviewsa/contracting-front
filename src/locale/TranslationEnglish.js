@@ -1570,6 +1570,69 @@ const TranslationEnglish = {
                 icon: "ImProfile"
             },
         ]
+    },
+    // Company Profile
+    "CompanyProfile": {
+        form: {
+            fields: [
+                {
+                    id: "companyName",
+                    type: "text",
+                    placeholder: "Enter your company name",
+                    label: "Company Name",
+                    required: true,
+                    errorMessage: "Company name is required",
+                },
+                {
+                    id: "companySize",
+                    type: "select",
+                    label: "Company Name",
+                    required: true,
+                    errorMessage: "Company size is required",
+                    options: [
+                        "Select company size",
+                        "1-10 employees (Small startup)",
+                        "11-50 employees (Growing small business)",
+                        "51-200 employees (Medium-sized business)",
+                        "201-500 employees (Mid-large company)",
+                        "501-1,000 employees (Large company)",
+                        "1,001-5,000 employees (Enterprise level)",
+                    ]
+                },
+                {
+                    id: "companyType",
+                    type: "select",
+                    label: "Company Type",
+                    required: true,
+                    errorMessage: "Company type is required",
+                    options: ["Select company type", "Contractor", "Sub-Contractor"]
+                },
+                {
+                    id: "phone",
+                    type: "phone",
+                    placeholder: "Enter your phone",
+                    label: "Phone",
+                },
+                {
+                    id: "website",
+                    type: "link",
+                    placeholder: "Enter your website",
+                    label: "Website",
+                },
+                {
+                    id: "taxId",
+                    type: "text",
+                    placeholder: "Enter your company tax ID",
+                    label: "Tax ID",
+                },
+                {
+                    id: "companyId",
+                    type: "text",
+                    placeholder: "Enter your company ID",
+                    label: "Company ID",
+                },
+            ]
+        }
     }
 }
 
