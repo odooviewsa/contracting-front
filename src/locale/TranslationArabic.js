@@ -1446,7 +1446,105 @@ const TranslationArabic = {
                 icon: "ImProfile"
             }
         ]
+    },
+    "CompanyProfile": {
+        "form": {
+            "fields": [
+                {
+                    "id": "companyName",
+                    "type": "text",
+                    "placeholder": "أدخل اسم شركتك",
+                    "label": "اسم الشركة",
+                    "required": true,
+                    "errorMessage": "اسم الشركة مطلوب"
+                },
+                {
+                    "id": "companySize",
+                    "type": "select",
+                    "label": "حجم الشركة",
+                    "required": true,
+                    "errorMessage": "حجم الشركة مطلوب",
+                    "options": [
+                        {
+                            text: "حدد حجم الشركة",
+                            value: ""
+                        },
+                        {
+                            text: "من 1 إلى 10 موظفين (شركة ناشئة صغيرة)",
+                            value: "1-10 employees (Small startup)"
+                        },
+                        {
+                            text: "من 11 إلى 50 موظفًا (مشروع صغير نامي)",
+                            value: "11-50 employees (Growing small business)"
+                        },
+                        {
+                            text: "من 51 إلى 200 موظف (شركة متوسطة الحجم)",
+                            value: "51-200 employees (Medium-sized business)"
+                        },
+                        {
+                            text: "من 201 إلى 500 موظف (شركة متوسطة إلى كبيرة)",
+                            value: "201-500 employees (Mid-large company)"
+                        },
+                        {
+                            text: "من 501 إلى 1,000 موظف (شركة كبيرة)",
+                            value: "501-1,000 employees (Large company)"
+                        },
+                        {
+                            text: "من 1,001 إلى 5,000 موظف (مستوى المؤسسات)",
+                            value: "1,001-5,000 employees (Enterprise level)"
+                        }
+                    ]
+                },
+                {
+                    "id": "companyType",
+                    "type": "select",
+                    "label": "نوع الشركة",
+                    "required": true,
+                    "errorMessage": "نوع الشركة مطلوب",
+                    "options": [
+                        {
+                            text: "حدد نوع الشركة",
+                            value: ""
+                        }, {
+                            text: "مقاول",
+                            value: "Contractor"
+                        }, {
+                            text: "مقاول فرعي",
+                            value: "Sub-Contractor"
+                        }
+                    ]
+                },
+                {
+                    "id": "phone",
+                    "type": "phone",
+                    "placeholder": "أدخل رقم هاتفك",
+                    "label": "الهاتف"
+                },
+                {
+                    "id": "website",
+                    "type": "link",
+                    "placeholder": "أدخل موقعك الإلكتروني",
+                    "label": "الموقع الإلكتروني"
+                },
+                {
+                    "id": "taxId",
+                    "type": "text",
+                    "placeholder": "أدخل رقم تعريف ضريبة شركتك",
+                    "label": "رقم الضريبة"
+                },
+                {
+                    "id": "companyId",
+                    "type": "text",
+                    "placeholder": "أدخل رقم تعريف شركتك",
+                    "label": "رقم تعريف الشركة"
+                }
+            ]
+        },
+        buttons: {
+            updateButton: "تحديث"
+        }
     }
+
 }
 
 

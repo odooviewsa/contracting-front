@@ -1573,65 +1573,102 @@ const TranslationEnglish = {
     },
     // Company Profile
     "CompanyProfile": {
-        form: {
-            fields: [
+        "form": {
+            "fields": [
                 {
-                    id: "companyName",
-                    type: "text",
-                    placeholder: "Enter your company name",
-                    label: "Company Name",
-                    required: true,
-                    errorMessage: "Company name is required",
+                    "id": "companyName",
+                    "type": "text",
+                    "placeholder": "Enter your company name",
+                    "label": "Company Name",
+                    "required": true,
+                    "errorMessage": "Company name is required"
                 },
                 {
-                    id: "companySize",
-                    type: "select",
-                    label: "Company Name",
-                    required: true,
-                    errorMessage: "Company size is required",
-                    options: [
-                        "Select company size",
-                        "1-10 employees (Small startup)",
-                        "11-50 employees (Growing small business)",
-                        "51-200 employees (Medium-sized business)",
-                        "201-500 employees (Mid-large company)",
-                        "501-1,000 employees (Large company)",
-                        "1,001-5,000 employees (Enterprise level)",
+                    "id": "companySize",
+                    "type": "select",
+                    "label": "Company Size",
+                    "required": true,
+                    "errorMessage": "Company size is required",
+                    "options": [
+                        {
+                            "text": "Select company size",
+                            "value": ""
+                        },
+                        {
+                            "text": "1-10 employees (Small startup)",
+                            "value": "1-10 employees (Small startup)"
+                        },
+                        {
+                            "text": "11-50 employees (Growing small business)",
+                            "value": "11-50 employees (Growing small business)"
+                        },
+                        {
+                            "text": "51-200 employees (Medium-sized business)",
+                            "value": "51-200 employees (Medium-sized business)"
+                        },
+                        {
+                            "text": "201-500 employees (Mid-large company)",
+                            "value": "201-500 employees (Mid-large company)"
+                        },
+                        {
+                            "text": "501-1,000 employees (Large company)",
+                            "value": "501-1,000 employees (Large company)"
+                        },
+                        {
+                            "text": "1,001-5,000 employees (Enterprise level)",
+                            "value": "1,001-5,000 employees (Enterprise level)"
+                        }
                     ]
                 },
                 {
-                    id: "companyType",
-                    type: "select",
-                    label: "Company Type",
-                    required: true,
-                    errorMessage: "Company type is required",
-                    options: ["Select company type", "Contractor", "Sub-Contractor"]
+                    "id": "companyType",
+                    "type": "select",
+                    "label": "Company Type",
+                    "required": true,
+                    "errorMessage": "Company type is required",
+                    "options": [
+                        {
+                            "text": "Select company type",
+                            "value": ""
+                        },
+                        {
+                            "text": "Contractor",
+                            "value": "Contractor"
+                        },
+                        {
+                            "text": "Sub-Contractor",
+                            "value": "Sub-Contractor"
+                        }
+                    ]
                 },
                 {
-                    id: "phone",
-                    type: "phone",
-                    placeholder: "Enter your phone",
-                    label: "Phone",
+                    "id": "phone",
+                    "type": "phone",
+                    "placeholder": "Enter your phone number",
+                    "label": "Phone"
                 },
                 {
-                    id: "website",
-                    type: "link",
-                    placeholder: "Enter your website",
-                    label: "Website",
+                    "id": "website",
+                    "type": "link",
+                    "placeholder": "Enter your website",
+                    "label": "Website"
                 },
                 {
-                    id: "taxId",
-                    type: "text",
-                    placeholder: "Enter your company tax ID",
-                    label: "Tax ID",
+                    "id": "taxId",
+                    "type": "text",
+                    "placeholder": "Enter your company tax ID",
+                    "label": "Tax ID"
                 },
                 {
-                    id: "companyId",
-                    type: "text",
-                    placeholder: "Enter your company ID",
-                    label: "Company ID",
-                },
+                    "id": "companyId",
+                    "type": "text",
+                    "placeholder": "Enter your company ID",
+                    "label": "Company ID"
+                }
             ]
+        },
+        buttons: {
+            updateButton: "Update"
         }
     }
 }
