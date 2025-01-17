@@ -53,7 +53,7 @@ export default function BlockSureDeleteWork({
             }}
             className="border rounded-md py-2 px-5 font-semibold text-white bg-red-500"
           >
-            {isLoading ? t("ConfirmationForms.sureDelete.buttons.backButton") : t("ConfirmationForms.sureDelete.buttons.backButton.loading")}
+            {isLoading ? t("ConfirmationForms.sureDelete.buttons.deleteButton.loading") : t("ConfirmationForms.sureDelete.buttons.deleteButton.text")}
           </button>
         </div>
       </div>

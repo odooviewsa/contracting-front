@@ -179,7 +179,20 @@ const TranslationEnglish = {
                 required: true,
                 errorMessage: "Status is required",
                 type: "select",
-                options: ["Completed", "Planning", "in Progress"]
+                options: [
+                    {
+                        value: "in Progress",
+                        text: "in Progress"
+                    },
+                    {
+                        value: "Completed",
+                        text: "Completed"
+                    },
+                    {
+                        value: "Planning",
+                        text: "Planning"
+                    }
+                ]
             },
             {
                 "label": "Team Members",
@@ -1305,7 +1318,8 @@ const TranslationEnglish = {
         buttons: {
             createButton: "+ Create Work Confirmation",
             nextButton: "Next",
-            previousButton: "Previous"
+            previousButton: "Previous",
+            backButton: "Back"
         },
         searchBar: "Search work confirmation...",
         table: {

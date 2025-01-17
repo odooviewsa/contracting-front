@@ -5,7 +5,10 @@ import { axiosInstance } from "../../../axios/axios";
 import CurrentWorkConfirmationDetails from "../DetailsConfirmation/componantDetailsConfirmation/CurrentWorkConfirmationDetails";
 import ContractDetailsConfirmation from "../DetailsConfirmation/componantDetailsConfirmation/ContractDetailsConfirmation";
 import TaxDetailsConfirmation from "../DetailsConfirmation/componantDetailsConfirmation/TaxDetailsConfirmation";
+import { useTranslation } from "react-i18next";
 function SummaryWorkConfirmation() {
+  // Language
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { workId, contractId } = useParams();
@@ -39,7 +42,7 @@ function SummaryWorkConfirmation() {
               navigate(-1);
             }}
           >
-            Back
+            {t("ConfirmationPage.buttons.backButton")}
           </button>
         </div>
       </div>

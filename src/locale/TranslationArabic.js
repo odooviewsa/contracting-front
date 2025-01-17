@@ -165,7 +165,20 @@ const TranslationArabic = {
                 "required": true,
                 "errorMessage": "الحالة مطلوبة",
                 "type": "select",
-                "options": ["مكتمل", "تخطيط", "قيد التنفيذ"]
+                "options": [
+                    {
+                        value: "in Progress",
+                        text: "قيد التنفيذ"
+                    },
+                    {
+                        value: "Planning",
+                        text: "تخطيط"
+                    },
+                    {
+                        value: "Completed",
+                        text: "مكتمل"
+                    }
+                ]
             },
             {
                 "label": "أعضاء الفريق",
@@ -1190,7 +1203,8 @@ const TranslationArabic = {
         "buttons": {
             "createButton": "+ إنشاء تأكيد عمل",
             "nextButton": "التالي",
-            "previousButton": "السابق"
+            "previousButton": "السابق",
+            "backButton": "رجوع"
         },
         "searchBar": "ابحث عن تأكيد العمل...",
         "table": {
@@ -1383,7 +1397,8 @@ const TranslationArabic = {
                 "nextButton": {
                     "text": "التالي",
                     "loading": "جارٍ التحميل..."
-                }
+                },
+                "previousButton": "السابق",
             }
         }
     },

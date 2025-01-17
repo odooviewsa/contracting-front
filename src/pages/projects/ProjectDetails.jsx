@@ -6,10 +6,15 @@ import { axiosInstance } from "../../axios/axios";
 import { useSelector } from "react-redux";
 import Header from "../../componant/layout/Header";
 import { useTranslation } from "react-i18next";
+import TableAllContract from "../contracts/componantContract/TableAllContract";
 
 const ProjectDetails = () => {
   const [project, setProject] = useState(null);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [idContract, setIdContract] = useState(0);
+  const contractsPerPage = 10;
+  const [openModalDetails, setOpenModalDetails] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const user = useSelector((state) => state?.user);
@@ -18,7 +23,6 @@ const ProjectDetails = () => {
     const fetchProjectDetails = async () => {
       try {
         const response = await axiosInstance.get(`/api/projects/${id}`);
-        console.log(response.data.project);
         setProject(response.data.project);
       } catch (error) {
         setError(
@@ -39,11 +43,11 @@ const ProjectDetails = () => {
   if (!project) {
     return <div>Loading...</div>;
   }
-
+  // Contracts
   return (
     <div className="p-8 min-h-screen relative">
       {/* Breadcrumb */}
-      <div className="text-smmb-6">
+      <div className="text-sm mb-6">
         <Header first={"Projects"} second={" ProjectDetails "} />
       </div>
 
@@ -167,6 +171,25 @@ const ProjectDetails = () => {
         >
           {t("ProjectDetailsPage.backButton")}
         </button>
+      </div>
+      {/* Contracts */}
+      <div className="py-8">
+        <div className="flex flex-col-reverse  gap-2 md:flex-row justify-between md:items-center mb-4">
+          <h2 className="text-2xl font-bold text-primaryColor">
+            Contracts
+          </h2>
+        </div>
+        <TableAllContract
+        contracts={project.contracts}
+        setPage={setPage}
+        page={page}
+        totalPages={project.contracts.length}
+        openModalDetails={openModalDetails}
+        setOpenModalDetails={setOpenModalDetails}
+        setIdContract={setIdContract}
+        idContract={idContract}
+        contractsPerPage={contractsPerPage}
+        />
       </div>
     </div>
   );

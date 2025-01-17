@@ -52,7 +52,6 @@ export default function Contracts() {
 
   const contracts = data?.data?.contracts;
   const totalPages = data?.data?.totalPages;
-
   const handleSearch = (e) => {
     setSearchQuery(e.target.value || "");
   };
