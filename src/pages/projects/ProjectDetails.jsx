@@ -176,7 +176,7 @@ const ProjectDetails = () => {
       <div className="py-8">
         <div className="flex flex-col-reverse  gap-2 md:flex-row justify-between md:items-center mb-4">
           <h2 className="text-2xl font-bold text-primaryColor">
-            Contracts
+            {t("ProjectDetailsPage.contracts.headTitle")}
           </h2>
         </div>
         <TableAllContract

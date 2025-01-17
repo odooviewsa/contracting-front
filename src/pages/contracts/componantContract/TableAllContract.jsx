@@ -137,7 +137,11 @@ export default function TableAllContract({
 
       <div className="flex justify-between items-center">
         <div className="text-gray-600 mt-2">
-          Page {page} - contracts {start} to {end}
+          {t("ContractsPage.pagination.text", {
+            page,
+            currentPage: start,
+            totalPages: end,
+          })}
         </div>
         <div className="flex justify-end gap-4 mt-4">
           <button
@@ -146,7 +150,7 @@ export default function TableAllContract({
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page === 1}
           >
-            Previous
+            {t("ContractsPage.pagination.previousButton")}
           </button>
           <button
             type="button"
@@ -156,7 +160,7 @@ export default function TableAllContract({
             }
             disabled={page === totalPages}
           >
-            Next
+            {t("ContractsPage.pagination.nextButton")}
           </button>
         </div>
       </div>

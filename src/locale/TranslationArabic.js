@@ -333,7 +333,10 @@ const TranslationArabic = {
             "seeAll": "عرض الكل"
         },
         "projectOverview": "نظرة عامة على المشروع",
-        "scopeOfWork": "نطاق العمل"
+        "scopeOfWork": "نطاق العمل",
+        contracts: {
+            headTitle: "العقود"
+        }
     },
     // Delete Project
     "DeleteProject": {
@@ -720,6 +723,101 @@ const TranslationArabic = {
             "contractRequired": "العقد مطلوب"
         }
     },
+    "EstimatorPage": {
+        "header": {
+            "backButton": "الرجوع إلى القائمة الرئيسية",
+            "headTitle": "مقدر تكلفة بند BOQ",
+            "bulkUpload": {
+                "errorMessage": "يجب تطبيقه على كامل BOQ",
+                "excelSheetButton": "إضافة",
+                "bulkButton": "رفع جماعي",
+                "printButton": "طباعة"
+            }
+        },
+        "projectDetails": {
+            "headTitle": "تفاصيل المشروع",
+            "fields": {
+                "projectName": "اسم المشروع",
+                "applyOn": "التطبيق على",
+                "contractSelection": "اختيار العقد"
+            }
+        },
+        "extraFactors": {
+            "headTitle": "عوامل إضافية",
+            "fields": {
+                "riskFactor": "عامل المخاطرة (%)",
+                "riskFactorTooltip": "النسبة المئوية لتغطية المخاطر في حساب التكاليف",
+                "includeTax": "يشمل الضريبة",
+                "showSalesPrice": "عرض سعر المبيعات"
+            },
+            "taxButton": "إضافة ضريبة وأرباح"
+        },
+        "costSummary": {
+            "headTitle": "ملخص التكلفة",
+            "categories": [
+                {
+                    "text": "إجمالي تكلفة المواد",
+                    "color": "#4caf50"
+                },
+                {
+                    "text": "إجمالي تكلفة العمالة",
+                    "color": "#ff9800"
+                },
+                {
+                    "text": "إجمالي تكلفة المعدات",
+                    "color": "#2196f3"
+                },
+                {
+                    "text": "إجمالي تكلفة أخرى",
+                    "color": "#9c27b0"
+                }
+            ],
+            "overallTotal": "الإجمالي الكلي: ${{overallTotal}}"
+        },
+        "fourTabs": {
+            "categories": [
+                {
+                    "text": "المواد",
+                    "color": "#4caf50",
+                    value: "Material"
+                },
+                {
+                    "text": "العمالة",
+                    "color": "#ff9800",
+                    value: "Labor"
+                },
+                {
+                    "text": "المعدات",
+                    "color": "#2196f3",
+                    value: "Equipment"
+                },
+                {
+                    "text": "التكاليف الأخرى",
+                    "color": "#9c27b0",
+                    value: "Other Costs"
+                }
+            ],
+            "text": "التكاليف",
+            "table": {
+                "item": "البند",
+                "unitOfMeasure": "وحدة القياس",
+                "quantity": "الكمية",
+                "cost": "التكلفة",
+                "boqItem": "بند BOQ",
+                "profitMargin": "هامش الربح",
+                "includeTax": "يشمل الضريبة",
+                "totalCost": "إجمالي التكلفة",
+                "actions": "الإجراءات"
+            },
+            "addButton": "إضافة صف {{categoryText}}"
+        },
+        "addTab": {
+            "selectProduct": "اختر المنتج",
+            "selectName": "اختر الاسم",
+            "enterName": "أدخل الاسم",
+            "successMessage": "تمت الإضافة بنجاح"
+        }
+    },
     "ContractsPage": {
         "searchBar": "ابحث عن العقود...",
         "buttons": {
@@ -733,7 +831,13 @@ const TranslationArabic = {
             "createQuotation": "إنشاء عرض سعر",
             "attachDocument": "إرفاق مستند",
             "delete": "حذف"
+        },
+        "pagination": {
+            "nextButton": "التالي",
+            "previousButton": "السابق",
+            "text": "الصفحة {{page}} - العقود من {{currentPage}} إلى {{totalPages}}"
         }
+
 
     },
     "ContractsForms": {

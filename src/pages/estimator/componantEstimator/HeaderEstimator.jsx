@@ -7,8 +7,11 @@ import { axiosInstance } from "../../../axios/axios";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 export default function HeaderEstimator({ currentTab }) {
+  // Language
+  const { t } = useTranslation();
   const [excelSheet, setExcelSheet] = useState(null);
   const { id } = useParams();
   const location = useLocation();
@@ -46,8 +49,9 @@ export default function HeaderEstimator({ currentTab }) {
           href="/"
           underline="hover"
           sx={{ fontSize: 18, color: "#1976d2" }}
+          
         >
-          &larr; Back to Main Menu
+          &larr; {t("EstimatorPage.header.backButton")}
         </Link>
       </Box>
       <div className="flex justify-between md:items-center md:flex-row flex-col gap-3 mb-3">
@@ -59,9 +63,9 @@ export default function HeaderEstimator({ currentTab }) {
             fontSize: { xs: "1.5rem", sm: "2.125rem" },
           }}
         >
-          BOQ Item Cost Estimator
+          {t("EstimatorPage.header.headTitle")}
         </Typography>
-        <Box>
+        <Box className="space-x-2">
           {/* Bulk Upload */}
           <input
             type="file"
@@ -70,7 +74,9 @@ export default function HeaderEstimator({ currentTab }) {
             style={{ display: "none" }}
             onChange={(e) => {
               if (applyOn !== "Whole BOQ") {
-                return toast.error("you must apply on Whole BOQ");
+                return toast.error(
+                  t("EstimatorPage.header.bulkUpload.errorMessage")
+                );
               } else {
                 setExcelSheet(e.target.files[0]);
               }
@@ -82,11 +88,11 @@ export default function HeaderEstimator({ currentTab }) {
               component="span"
               sx={{
                 textTransform: "none",
-                marginRight: 2, // Add spacing if needed
               }}
               onClick={uploadFileExcel}
+              className="rtl:flex-row-reverse ltr:flex-row"
             >
-              Add
+              {t("EstimatorPage.header.bulkUpload.excelSheetButton")}
             </Button>
           )}
           <label htmlFor="file-upload">
@@ -96,10 +102,10 @@ export default function HeaderEstimator({ currentTab }) {
               component="span"
               sx={{
                 textTransform: "none",
-                marginRight: 2, // Add spacing if needed
               }}
+              className="rtl:flex-row-reverse ltr:flex-row"
             >
-              Bulk Upload
+              {t("EstimatorPage.header.bulkUpload.bulkButton")}
             </Button>
           </label>
 
@@ -112,8 +118,9 @@ export default function HeaderEstimator({ currentTab }) {
               borderRadius: 2,
               textTransform: "none",
             }}
+            className="rtl:flex-row-reverse ltr:flex-row"
           >
-            Print
+            {t("EstimatorPage.header.bulkUpload.printButton")}
           </Button>
         </Box>
       </div>

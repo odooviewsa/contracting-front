@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../../../axios/axios";
 import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 export default function AddTabFourEstimation({
   currentTab,
   refetch,
@@ -22,6 +23,8 @@ export default function AddTabFourEstimation({
   showProfitFromDatabase,
   showTaxFromDatabase,
 }) {
+  // Language
+  const {t} = useTranslation()
   const [valueFull, setValuFull] = useState({});
   const [workItems, setWorkItems] = useState([]);
   const [unitOfMeasure, setUnitOfMeasure] = useState("");
@@ -96,7 +99,7 @@ export default function AddTabFourEstimation({
               : item
           )
         );
-        toast.success("add Successfully");
+        toast.success(t("Estimator.addTab.successMessage"));
         refetch();
       }
     } catch (error) {
@@ -137,11 +140,11 @@ export default function AddTabFourEstimation({
             size="small"
             onChange={handlechange}
             name="materialName"
-            label="Select Product"
+            label={t("EstimatorPage.addTab.selectProduct")}
             variant="outlined"
           >
             <MenuItem value="" disabled>
-              Select Name
+              {t("EstimatorPage.addTab.selectName")}
             </MenuItem>
             {dataNameMaterial?.data?.map((option) => (
               <MenuItem key={option._id} value={option}>
@@ -159,7 +162,7 @@ export default function AddTabFourEstimation({
                 value: option.materialName,
               })) || []
             }
-            placeholder={`Enter name`}
+            placeholder={t("EstimatorPage.addTab.enterName")}
             name="materialName"
             onChange={(selectedOption) =>
               handlechange({

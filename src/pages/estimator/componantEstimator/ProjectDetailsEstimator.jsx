@@ -10,7 +10,10 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 export default function ProjectDetailsEstimator() {
+  // Language
+  const { t } = useTranslation();
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -41,7 +44,7 @@ export default function ProjectDetailsEstimator() {
         onClick={() => setDetailsExpanded(!detailsExpanded)}
       >
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          Project Details
+          {t("EstimatorPage.projectDetails.headTitle")}
         </Typography>
         {detailsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Box>
@@ -58,7 +61,7 @@ export default function ProjectDetailsEstimator() {
             {/* Project Name Field */}
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Project Name"
+                label={t("EstimatorPage.projectDetails.fields.projectName")}
                 variant="outlined"
                 fullWidth
                 size="small"
@@ -74,7 +77,7 @@ export default function ProjectDetailsEstimator() {
             {/* Apply On Dropdown */}
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Apply On"
+                label={t("EstimatorPage.projectDetails.fields.applyOn")}
                 variant="outlined"
                 fullWidth
                 value={applyOn || ""}
@@ -91,7 +94,9 @@ export default function ProjectDetailsEstimator() {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Contract Selection"
+                label={t(
+                  "EstimatorPage.projectDetails.fields.contractSelection"
+                )}
                 variant="outlined"
                 fullWidth
                 value={codeContract || ""}

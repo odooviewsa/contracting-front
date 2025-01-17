@@ -17,11 +17,14 @@ import { axiosInstance } from "../../../axios/axios";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 export default function ExtraFactors({
   riskFactory,
   setRiskFactory,
   currentTab,
 }) {
+  // Language
+  const {t} = useTranslation()
   const [factorsExpanded, setFactorsExpanded] = useState(false);
   const [showSalesPrice, setShowSalesPrice] = useState(false);
   const [profitMargin, setProfitMargin] = useState(0);
@@ -116,17 +119,17 @@ export default function ExtraFactors({
         onClick={() => setFactorsExpanded(!factorsExpanded)}
       >
         <Typography variant="h6" sx={{ fontWeight: "bold", color: "#333" }}>
-          Extra Factors
+          {t("EstimatorPage.extraFactors.headTitle")}
         </Typography>
         {factorsExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Box>
       <Collapse in={factorsExpanded} timeout="auto" unmountOnExit>
         <Box sx={{ padding: 2 }}>
-          <div className="flex gap-5 md:flex-row flex-col" >
+          <div className="flex gap-5 md:flex-row flex-col">
             <Grid item xs={12} sm={6} md={3}>
-              <Tooltip title="Percentage to account for risk in cost calculations">
+              <Tooltip title={t("EstimatorPage.extraFactors.fields.riskFactorTooltip")}>
                 <TextField
-                  label="Risk Factor (%)"
+                  label={t("EstimatorPage.extraFactors.fields.riskFactor")}
                   variant="outlined"
                   fullWidth
                   value={riskFactory}
@@ -138,7 +141,9 @@ export default function ExtraFactors({
               </Tooltip>
             </Grid>
             <div className="flex flex-wrap gap-5 items-center">
-              <Typography>Include Tax</Typography>
+              <Typography>
+                {t("EstimatorPage.extraFactors.fields.includeTax")}
+              </Typography>
               <Switch
                 checked={includeTax}
                 onChange={(e) => setIncludeTax(e.target.checked)}
@@ -146,7 +151,7 @@ export default function ExtraFactors({
 
               {includeTax && (
                 <TextField
-                  label="Includ Tax"
+                  label={t("EstimatorPage.extraFactors.fields.includeTax")}
                   variant="outlined"
                   value={valueIncludTax}
                   onChange={(e) =>
@@ -156,7 +161,9 @@ export default function ExtraFactors({
                 />
               )}
 
-              <Typography>Show Sales Price</Typography>
+              <Typography>
+                {t("EstimatorPage.extraFactors.fields.showSalesPrice")}
+              </Typography>
               <Switch
                 checked={showSalesPrice}
                 onChange={(e) => setShowSalesPrice(e.target.checked)}
@@ -164,7 +171,7 @@ export default function ExtraFactors({
 
               {showSalesPrice && (
                 <TextField
-                  label="Profit Margin (%)"
+                  label={t("EstimatorPage.extraFactors.fields.showSalesPrice")}
                   variant="outlined"
                   value={profitMargin}
                   onChange={(e) =>
@@ -174,7 +181,7 @@ export default function ExtraFactors({
                 />
               )}
               <Button variant="outlined" onClick={calculateIncldeTaxAndProfit}>
-                Add Tax, Profit
+                {t("EstimatorPage.extraFactors.taxButton")}
               </Button>
             </div>
           </div>

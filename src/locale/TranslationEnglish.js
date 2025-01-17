@@ -349,7 +349,9 @@ const TranslationEnglish = {
         },
         "projectOverview": "Project Overview",
         "scopeOfWork": "Scope of Work",
-
+        contracts: {
+            headTitle: "Contracts"
+        }
     },
     // Delete Project
     "DeleteProject": {
@@ -740,6 +742,102 @@ const TranslationEnglish = {
             "contractRequired": "Contract is required"
         }
     },
+    // Estimator Page
+    "EstimatorPage": {
+        header: {
+            backButton: " Back to Main Menu",
+            headTitle: "BOQ Item Cost Estimator",
+            bulkUpload: {
+                errorMessage: "you must apply on Whole BOQ",
+                excelSheetButton: "Add",
+                bulkButton: "Bulk Upload",
+                printButton: "Print"
+            }
+        },
+        projectDetails: {
+            headTitle: "Project Details",
+            fields: {
+                projectName: "Project Name",
+                applyOn: "Apply On",
+                contractSelection: "Contract Selection"
+            }
+        },
+        extraFactors: {
+            headTitle: "Extra Factors",
+            fields: {
+                riskFactor: "Risk Factor (%)",
+                riskFactorTooltip: "Percentage to account for risk in cost calculations",
+                includeTax: "Include Tax",
+                showSalesPrice: "Show Sales Price",
+            },
+            taxButton: "Add Tax, Profit"
+        },
+        costSummary: {
+            headTitle: "Cost Summary",
+            categories: [
+                { 
+                    text: "Total Material Cost",
+                    color: "#4caf50"
+                },
+                { 
+                    text: "Total Labor Cost",
+                    color: "#ff9800"
+                },
+                { 
+                    text: "Total Equipment Cost",
+                    color: "#2196f3"
+                },
+                { 
+                    text: "Total Other Costs Cost",
+                    color: "#9c27b0"
+                }
+            ],
+            overallTotal: "overall Total: ${{overallTotal}}"
+        },
+        fourTabs: {
+            categories: [
+                { 
+                    text: "Material",
+                    color: "#4caf50",
+                    value: "Material"
+                },
+                { 
+                    text: "Labor",
+                    color: "#ff9800",
+                    value: "Labor"
+                },
+                { 
+                    text: "Equipment",
+                    color: "#2196f3",
+                    value: "Equipment"
+                },
+                { 
+                    text: "Other Costs",
+                    color: "#9c27b0",
+                    value: "Other Costs"
+                }
+            ],
+            text: "Costs",
+            table: {
+                item: "Item",
+                unitOfMeasure: "Unit Of Measure",
+                quantity: "Quantity",
+                cost: "Cost",
+                boqItem: "BOQ Item",
+                profitMargin: "Profit Margin",
+                includeTax: "Include Tax",
+                totalCost: "Total Cost",
+                actions: "Actions"
+            },
+            addButton: "Add {{categoryText}} Row"
+        },
+        addTab: {
+            selectProduct: "Select Product",
+            selectName: "Select Name",
+            enterName: "Enter name",
+            successMessage: "Add Successfully"
+        }
+    },
     // Contracts Page
     "ContractsPage": {
         searchBar: "Search cotnracts...",
@@ -754,6 +852,11 @@ const TranslationEnglish = {
             createQuotation: "Create Quotation",
             attachDocument: "Attach Document",
             delete: "Delete"
+        },
+        pagination: {
+            nextButton: "Next",
+            previousButton: "Previous",
+            text: "Page {{page}} - contracts {{currentPage}} to {{totalPages}}"
         }
     },
     // Contracts Forms 

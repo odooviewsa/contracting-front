@@ -6,17 +6,12 @@ import { axiosInstance } from "../../../axios/axios";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 export default function CostSummary({ riskFactory }) {
+  // Language
+  const { t } = useTranslation();
   const [costSummaryExpanded, setCostSummaryExpanded] = useState(false);
-  const categories = ["Material", "Labor", "Equipment", "Other Costs"];
-
   const { id } = useParams();
-  const categoryColors = {
-    Material: "#4caf50",
-    Labor: "#ff9800",
-    Equipment: "#2196f3",
-    "Other Costs": "#9c27b0",
-  };
 
   const fetchFourCostSummery = async () => {
     const response = await axiosInstance.post(`/api/estimators/total/${id}`, {
@@ -47,7 +42,7 @@ export default function CostSummary({ riskFactory }) {
         onClick={() => setCostSummaryExpanded(!costSummaryExpanded)}
       >
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          Cost Summary
+          {t("EstimatorPage.costSummary.headTitle")}
         </Typography>
         {costSummaryExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Box>
@@ -56,20 +51,22 @@ export default function CostSummary({ riskFactory }) {
       <Collapse in={costSummaryExpanded} timeout="auto" unmountOnExit>
         <Box sx={{ padding: 2 }}>
           <Grid container spacing={2} mb={4}>
-            {categories.map((category) => (
-              <Grid item xs={12} sm={6} md={3} key={category}>
+            {t("EstimatorPage.costSummary.categories", {
+              returnObjects: true,
+            }).map((category, key) => (
+              <Grid item xs={12} sm={6} md={3} key={key}>
                 <Paper
                   elevation={3}
                   sx={{
                     padding: 2,
                     borderRadius: 2,
-                    backgroundColor: categoryColors[category],
+                    backgroundColor: category.color,
                     color: "white",
                     textAlign: "center",
-                    "&:hover": { backgroundColor: categoryColors[category] },
+                    "&:hover": { backgroundColor: category.color },
                   }}
                 >
-                  <Typography variant="h6">Total {category} Cost</Typography>
+                  <Typography variant="h6">{category.text}</Typography>
                   <Typography variant="h4">
                     $
                     {category === "Material"
@@ -87,7 +84,9 @@ export default function CostSummary({ riskFactory }) {
             ))}
           </Grid>
           <Typography variant="h5" sx={{ textAlign: "right", marginBottom: 2 }}>
-            Overall Total: ${data?.data?.overallTotal?.toLocaleString("en-US")}
+            {t("EstimatorPage.costSummary.overallTotal", {
+              overallTotal: data?.data?.overallTotal?.toLocaleString("en-US"),
+            })}
           </Typography>
         </Box>
       </Collapse>
