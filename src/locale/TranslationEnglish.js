@@ -351,7 +351,10 @@ const TranslationEnglish = {
         "scopeOfWork": "Scope of Work",
         contracts: {
             headTitle: "Contracts"
-        }
+        },
+        workConfirmation: {
+            headTitle: "Work Confirmation"
+        },
     },
     // Delete Project
     "DeleteProject": {
