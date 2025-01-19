@@ -35,7 +35,6 @@ export default function BlockMainItem({ mainItem }) {
       setTotalMainItem(totalArray.reduce((ele, value) => ele + value));
     }
   }, [mainItem]);
-  console.log(mainItem)
   return (
     <div className="flex flex-col">
       {/* // main item */}

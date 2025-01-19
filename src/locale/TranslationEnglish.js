@@ -1493,6 +1493,7 @@ const TranslationEnglish = {
             table: {
                 calculateButton: "Calculate",
                 searchBar: "Search work confirmation...",
+                columnsText: "Columns",
                 "columns": {
                     "workItem": "work item",
                     "unitOfMeasure": "Unit Of Measure",

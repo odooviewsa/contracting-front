@@ -103,8 +103,6 @@ function BoqTemplateTable() {
     setShowPopup(true);
   };
 
-  console.log(templates);
-
   const handleTagAdd = () => {
     if (tagInput.trim()) {
       setFormData((prev) => ({

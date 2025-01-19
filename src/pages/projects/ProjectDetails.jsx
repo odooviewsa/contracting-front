@@ -81,7 +81,6 @@ const ProjectDetails = () => {
     queryFn: () => fetchWorkConfirmations(pageWork),
     keepPreviousData: true,
   });
-  console.log(workConfirmationData)
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">

@@ -52,6 +52,8 @@ function DetailsConfirmation() {
       <div className="mt-10 flex flex-col gap-3">
         <PartHeaderTableWork
           setSearchWorkConfirmation={setSearchWorkConfirmation}
+          dispalyDate={dispalyDate}
+
         />
         <TableWorkItem
           dispalyDate={dispalyDate}

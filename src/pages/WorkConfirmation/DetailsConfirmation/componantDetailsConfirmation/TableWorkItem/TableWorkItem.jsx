@@ -99,8 +99,7 @@ export default function TableWorkItem({
     },
     {
       header: t("ConfirmationForms.BOQ.table.columns.currentWork"),
-      display:
-        dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
+      display: dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
       header: t("ConfirmationForms.BOQ.table.columns.totalQuantity"),
@@ -135,7 +134,15 @@ export default function TableWorkItem({
       display: true,
     },
   ];
-   return (
+  console.log(
+    colums.filter(
+      (e) => currentValueColumWorkConfirmation[e?.header] && e?.display
+    )
+  );
+  console.log(colums);
+  console.log(currentValueColumWorkConfirmation);
+  console.log(dispalyDate);
+  return (
     <div>
       <ToastContainer />
       <div className="scrollbar min-h-[60vh] overflow-auto">
@@ -196,7 +203,7 @@ export default function TableWorkItem({
                 >
                   {e?.previousQuantity?.toLocaleString("en-US")}
                 </td>
-                {/* // current quantity */}
+                {/* TODO: // current quantity */}
                 <td
                   className={`border-none ${
                     !currentValueColumWorkConfirmation["Current Work %"]
@@ -226,7 +233,7 @@ export default function TableWorkItem({
                     }
                   />
                 </td>
-                {/* // special of percentage  */}
+                {/* TODO: // special of percentage  */}
                 {dispalyDate?.data?.data?.typeOfProgress ===
                   "Percentage per Line" && (
                   <td
