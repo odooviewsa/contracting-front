@@ -134,14 +134,6 @@ export default function TableWorkItem({
       display: true,
     },
   ];
-  console.log(
-    colums.filter(
-      (e) => currentValueColumWorkConfirmation[e?.header] && e?.display
-    )
-  );
-  console.log(colums);
-  console.log(currentValueColumWorkConfirmation);
-  console.log(dispalyDate);
   return (
     <div>
       <ToastContainer />

@@ -13,6 +13,8 @@ import {
   Snackbar,
   Alert,
   CssBaseline,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { motion } from "framer-motion";
@@ -33,6 +35,8 @@ import { axiosInstance } from "../../axios/axios";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { useTranslation } from "react-i18next";
+import PrintIcon from "@mui/icons-material/Print";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 const MaterialRequest = () => {
   const [project, setProject] = useState("");
@@ -262,11 +266,64 @@ const MaterialRequest = () => {
     fetchUserProjects();
   }, []);
   const animatedComponents = makeAnimated();
-
+  const requestSequence = "MR-2024-001";
+  const summaryData = t("MaterialRequestPage.cards", { returnObjects: true });
+  const handlePrint = () => {
+    window.print();
+  };
   return (
     <>
       <CssBaseline />
       <Container>
+        <div>
+          <Grid container justifyContent="flex-end" sx={{ mt: 3 }}>
+            <Tooltip title={t("MaterialRequestPage.tooltips.refresh")}>
+              <IconButton color="primary">
+                <RefreshIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t("MaterialRequestPage.tooltips.print")}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePrint}
+                startIcon={<PrintIcon />}
+              >
+                {t("MaterialRequestPage.buttons.printButton")}
+              </Button>
+            </Tooltip>
+          </Grid>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            animate={{ scale: 1.1 }}
+            sx={{ mt: 2 }}
+          >
+            {t("MaterialRequestPage.title")} {requestSequence}
+          </Typography>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            {summaryData.map((data, index) => (
+              <Grid item xs={4} key={index}>
+                <Card
+                  sx={{
+                    backgroundColor: data.color,
+                    color: "white",
+                    borderRadius: 2,
+                    boxShadow: 3,
+                  }}
+                >
+                  <CardContent>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {data.label}
+                    </Typography>
+                    <Typography variant="h4">{data.value}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
         <Snackbar
           open={openSnackbar.open}
           autoHideDuration={3000}
@@ -522,7 +579,7 @@ const MaterialRequest = () => {
             {t("MaterialRequestForm.buttons.addLineButton")}
           </Button>
           <Button variant="contained" color="success" sx={{ borderRadius: 2 }}>
-          {t("MaterialRequestForm.buttons.bulkButton")}
+            {t("MaterialRequestForm.buttons.bulkButton")}
           </Button>
         </Grid>
         <Typography variant="h6" gutterBottom>
@@ -567,7 +624,7 @@ const MaterialRequest = () => {
               }}
             >
               <Typography id="modal-modal-title" variant="h6" component="h2">
-              {t("ProductsList.title")}
+                {t("ProductsList.title")}
               </Typography>
               <ProductsList onSelect={handleSelectItem} />
             </Box>
