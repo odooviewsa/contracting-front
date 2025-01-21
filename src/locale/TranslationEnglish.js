@@ -778,19 +778,19 @@ const TranslationEnglish = {
         costSummary: {
             headTitle: "Cost Summary",
             categories: [
-                { 
+                {
                     text: "Total Material Cost",
                     color: "#4caf50"
                 },
-                { 
+                {
                     text: "Total Labor Cost",
                     color: "#ff9800"
                 },
-                { 
+                {
                     text: "Total Equipment Cost",
                     color: "#2196f3"
                 },
-                { 
+                {
                     text: "Total Other Costs Cost",
                     color: "#9c27b0"
                 }
@@ -799,22 +799,22 @@ const TranslationEnglish = {
         },
         fourTabs: {
             categories: [
-                { 
+                {
                     text: "Material",
                     color: "#4caf50",
                     value: "Material"
                 },
-                { 
+                {
                     text: "Labor",
                     color: "#ff9800",
                     value: "Labor"
                 },
-                { 
+                {
                     text: "Equipment",
                     color: "#2196f3",
                     value: "Equipment"
                 },
-                { 
+                {
                     text: "Other Costs",
                     color: "#9c27b0",
                     value: "Other Costs"
@@ -911,36 +911,29 @@ const TranslationEnglish = {
             "typeOfProgressOptions": [
                 {
                     value: "",
-                    text: "choose"
+                    text: "Select"
                 },
                 {
-                    value: "In Progress",
-                    text: "Quantity"
+                    value: "Percentage per Line",
+                    text: "Percentage per Line"
                 },
                 {
-                    value: "Completed",
-                    text: "Percentage Per Line"
-                },
-                {
-                    value: "Suspended",
-                    text: "Percentage Applied to Total of Line"
-                },
-                {
-                    value: "Suspended",
-                    text: "Financial Progress"
-                },
-                {
-                    value: "Suspended",
-                    text: "Time-Based Progress"
+                    value: "Quantity per Line",
+                    text: "Quantity per Line"
                 },
             ],
             "description": "Description",
             "descriptionRequired": "Description is required.",
+            "businessGuarantee": "Business Guarantee",
+            "businessGuaranteePlaceholder": "Enter Business Guarantee",
+            businessGuaranteeErrorMessageMax: "The maximum value is 100%",
+            businessGuaranteeErrorMessageMin: "The minimum value is 0%",
+            businessGuaranteeActive: "Active Business Guarantee %"
         },
         BOQ: {
             form: {
                 title: "+AddItem",
-                addButton: "Add Item",
+                addButton: "Add Item", 
                 fields: [
                     {
                         label: "Main Item",
@@ -974,8 +967,8 @@ const TranslationEnglish = {
                         label: "Assigned Quantity",
                         type: "number",
                         name: "assignedQuantity",
-                        errorMessage: "Assined quantity is required",
-                        placeholder: "Enter "
+                        errorMessage: "Assigned quantity is required",
+                        placeholder: "Enter assigned quantity"
                     },
                     {
                         label: "Price",
@@ -1371,27 +1364,15 @@ const TranslationEnglish = {
             "typeOfProgressOptions": [
                 {
                     value: "",
-                    text: "choose"
+                    text: "Select"
                 },
                 {
-                    value: "In Progress",
-                    text: "Quantity"
+                    value: "Percentage per Line",
+                    text: "Percentage per Line"
                 },
                 {
-                    value: "Completed",
-                    text: "Percentage Per Line"
-                },
-                {
-                    value: "Suspended",
-                    text: "Percentage Applied to Total of Line"
-                },
-                {
-                    value: "Suspended",
-                    text: "Financial Progress"
-                },
-                {
-                    value: "Suspended",
-                    text: "Time-Based Progress"
+                    value: "Quantity per Line",
+                    text: "Quantity per Line"
                 },
             ],
             "consultant": "Consultant",

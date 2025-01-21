@@ -76,10 +76,8 @@ export default function FourTabsEstimator({ currentTab, setCurrentTab }) {
   });
 
   const handleTabChange = (event, newValue) => {
-    console.log(newValue)
     setCurrentTab(newValue);
   };
-
   return (
     <>
       <ToastContainer />

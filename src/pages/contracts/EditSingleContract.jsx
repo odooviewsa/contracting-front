@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { FaToggleOff, FaToggleOn } from "react-icons/fa";
 function EditSingleContract() {
   // Language
   const { t } = useTranslation();
@@ -13,6 +14,9 @@ function EditSingleContract() {
   const [consultants, setConsultants] = useState([]);
   const [projects, setProjects] = useState([]);
   const [partners, setPartners] = useState([]);
+  const [isBusinessGuaranteeActive, setIsBusinessGuaranteeActive] =
+    useState(false);
+
   const user = useSelector((state) => state?.user);
   const {
     register,
@@ -111,7 +115,8 @@ function EditSingleContract() {
             {/* Contract Type */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.contractType")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.contractType")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("contractType", {
@@ -138,7 +143,8 @@ function EditSingleContract() {
             {/* Project */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.project")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.project")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("project", {
@@ -159,7 +165,8 @@ function EditSingleContract() {
             {/* Partner */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.partner")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.partner")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("partner", {
@@ -180,7 +187,8 @@ function EditSingleContract() {
             {/* Start Date */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.startDate")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.startDate")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -200,7 +208,8 @@ function EditSingleContract() {
             {/* Type of Progress */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.typeOfProgress")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.typeOfProgress")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("typeOfProgress", {
@@ -226,7 +235,8 @@ function EditSingleContract() {
             </div>
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.consultant")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.consultant")}{" "}
+                <span className="text-red-500">*</span>
               </label>
 
               <select
@@ -250,11 +260,14 @@ function EditSingleContract() {
             {/* End Date */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.endDate")} <span className="text-red-500">*</span>
+                {t("EditContractForm.fields.endDate")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
-                {...register("endDate", { required: t("EditContractForm.fields.endDateRequired") })}
+                {...register("endDate", {
+                  required: t("EditContractForm.fields.endDateRequired"),
+                })}
                 className={`py-[8px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full ${
                   errors.endDate ? "border-red-500" : ""
                 }`}
@@ -263,10 +276,65 @@ function EditSingleContract() {
                 <p className="text-red-500 text-sm">{errors.endDate.message}</p>
               )}
             </div>
+            {/* Business Guarantee */}
+            <div className="flex flex-col gap-2 col-span-1">
+              <div className=" flex flex-col gap-3">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() =>
+                    setIsBusinessGuaranteeActive(!isBusinessGuaranteeActive)
+                  }
+                >
+                  {isBusinessGuaranteeActive ? (
+                    <FaToggleOn className="text-blue-500 text-3xl" />
+                  ) : (
+                    <FaToggleOff className="text-gray-400 text-3xl" />
+                  )}
+                  <span className="text-lg ltr:ml-2 rtl:mr-2">
+                    {t("ContractsForms.form1.businessGuaranteeActive")}
+                  </span>
+                </div>
+              </div>
+              {isBusinessGuaranteeActive && (
+                <div className="col-span-1">
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    {t("ContractsForms.form1.businessGuarantee")}
+                  </label>
+                  <input
+                    type="number"
+                    placeholder={t(
+                      "ContractsForms.form1.businessGuaranteePlaceholder"
+                    )}
+                    {...register("businessGuarantee", {
+                      max: {
+                        value: 100,
+                        message: t(
+                          "ContractsForms.form1.businessGuaranteeErrorMessageMax"
+                        ),
+                      },
+                      min: {
+                        value: 0,
+                        message: t(
+                          "ContractsForms.form1.businessGuaranteeErrorMessageMin"
+                        ),
+                      },
+                    })}
+                    className={`py-[6px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+                          
+                            `}
+                  />
+                  {errors.businessGuarantee && (
+                    <p className="text-red-400 text-sm">
+                      {errors.businessGuarantee.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
             {/* Description */}
             <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("EditContractForm.fields.description")}
+                {t("EditContractForm.fields.description")}
               </label>
               <textarea
                 {...register("description")}

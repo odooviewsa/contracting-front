@@ -891,28 +891,22 @@ const TranslationArabic = {
                     "text": "اختر"
                 },
                 {
-                    "value": "In Progress",
-                    "text": "الكمية"
-                },
-                {
-                    "value": "Completed",
+                    "value": "Percentage per Line",
                     "text": "النسبة لكل بند"
                 },
                 {
-                    "value": "Suspended",
-                    "text": "النسبة المطبقة على المجموع الكلي للبند"
-                },
-                {
-                    "value": "Suspended",
-                    "text": "التقدم المالي"
-                },
-                {
-                    "value": "Suspended",
-                    "text": "التقدم الزمني"
+                    "value": "Quantity per Line",
+                    "text": "الكمية لكل بند"
                 }
             ],
             "description": "الوصف",
-            "descriptionRequired": "الوصف مطلوب."
+            "descriptionRequired": "الوصف مطلوب.",
+            "businessGuarantee": "ضمان العمل",
+            "businessGuaranteePlaceholder": "أدخل ضمان العمل",
+            "businessGuaranteeErrorMessageMax": "القيمة القصوى هي 100%",
+            "businessGuaranteeErrorMessageMin": "القيمة الدنيا هي 0%",
+            "businessGuaranteeActive": "نسبة ضمان العمل النشطة"
+
         },
         "BOQ": {
             "form": {
@@ -1260,24 +1254,12 @@ const TranslationArabic = {
                     "text": "اختر"
                 },
                 {
-                    "value": "In Progress",
-                    "text": "الكمية"
-                },
-                {
-                    "value": "Completed",
+                    "value": "Percentage per Line",
                     "text": "النسبة لكل بند"
                 },
                 {
-                    "value": "Suspended",
-                    "text": "النسبة المطبقة على إجمالي البند"
-                },
-                {
-                    "value": "Suspended",
-                    "text": "التقدم المالي"
-                },
-                {
-                    "value": "Suspended",
-                    "text": "التقدم حسب الوقت"
+                    "value": "Quantity per Line",
+                    "text": "الكمية لكل بند"
                 }
             ],
             "consultant": "المستشار",
@@ -1375,6 +1357,7 @@ const TranslationArabic = {
             "table": {
                 "calculateButton": "احسب",
                 "searchBar": "ابحث عن تأكيد العمل...",
+                columnsText: "الأعمدة",
                 "columns": {
                     "workItem": "عنصر العمل",
                     "unitOfMeasure": "وحدة القياس",

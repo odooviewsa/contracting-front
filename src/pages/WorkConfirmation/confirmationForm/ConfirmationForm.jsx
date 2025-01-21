@@ -69,7 +69,7 @@ const ConfirmationForm = () => {
         toast.error(error?.response?.data?.message);
       });
   }
-
+  console.log(informationContract?.[0]);
   return (
     <div className="  bg-white rounded-md">
       <ToastContainer />
@@ -272,6 +272,7 @@ const ConfirmationForm = () => {
           </label>
           <select
             id="typeOfProgress"
+            value={informationContract?.[0]?.typeOfProgress || ""}
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("typeOfProgress", {
               required: t("ConfirmationForms.form1.typeOfProgressRequired"),

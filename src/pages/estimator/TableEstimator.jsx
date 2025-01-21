@@ -67,9 +67,11 @@ export default function TableEstimator() {
                 <table>
                   <thead>
                     <tr className="bg-primaryColor text-white">
-                        {t("EstimationPage.table", {returnObjects: true}).map((item,key) => (
+                      {t("EstimationPage.table", { returnObjects: true }).map(
+                        (item, key) => (
                           <th key={key}>{item}</th>
-                        ))}
+                        )
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -83,20 +85,20 @@ export default function TableEstimator() {
                           )
                         }
                       >
-                        <td className="text-blue-600 thContract">
+                        <td className="text-blue-600 thContract !text-start">
                           {work?.name}
                         </td>
-                        <td className="text-blue-600 thContract">
+                        <td className="text-blue-600 thContract !text-start">
                           {work?.projectName?.projectName}
                         </td>
-                        <td className="text-blue-600 thContract">
+                        <td className="text-blue-600 thContract !text-start">
                           {work?.contract?.code}
                         </td>
-                        <td className="text-blue-600 thContract">
+                        <td className="text-blue-600 thContract !text-start">
                           {work?.applyOn}
                         </td>
                         <td
-                          className="text-red-700 cursor-pointer  thContract flex justify-center items-center"
+                          className="text-red-700 cursor-pointer thContract flex items-center"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSureDelete(work?._id);

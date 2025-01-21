@@ -35,7 +35,6 @@ function TableBoqTemplate({ idTemplate, setCheckFetchData, setOpenFormBOQ }) {
       setCheckFetchData(false);
     }
   }
-
   return (
     <div>
       <TableBOQ

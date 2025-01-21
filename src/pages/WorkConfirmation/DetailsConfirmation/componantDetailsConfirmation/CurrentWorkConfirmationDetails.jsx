@@ -15,6 +15,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
   const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const ref = useRef();
+  const [guaranteeDeduction, setGuaranteeDeduction] = useState(0);
 
   const updateHeight = () => {
     if (ref.current) {
@@ -29,6 +30,13 @@ export default function CurrentWorkConfirmationDetails({ data }) {
       window.removeEventListener("resize", updateHeight);
     };
   }, []);
+  // Calculate Guarantee Deduction
+  useEffect(() => {
+    const calcSumTotalAmount = data?.workItems.reduce(
+      (e, r) => e.totalAmount + r.totalAmount
+    );
+    setGuaranteeDeduction(calcSumTotalAmount?.toFixed(2));
+  }, [data?.workItems]);
 
   return (
     <motion.div
@@ -66,12 +74,16 @@ export default function CurrentWorkConfirmationDetails({ data }) {
             icon: <img src={money1} alt="victor" className="w-full h-full" />,
           },
           {
-            label: t("ConfirmationForms.BOQ.currentWork.data.guaranteeDeduction"),
-            value: "$0.00",
+            label: t(
+              "ConfirmationForms.BOQ.currentWork.data.guaranteeDeduction"
+            ),
+            value: `$${guaranteeDeduction}`,
             icon: <img src={block} alt="victor" className="w-full h-full" />,
           },
           {
-            label: t("ConfirmationForms.BOQ.currentWork.data.totalOtherDeductions"),
+            label: t(
+              "ConfirmationForms.BOQ.currentWork.data.totalOtherDeductions"
+            ),
             value: data?.totalDeduction,
             icon: <img src={close} alt="victor" className="w-full h-full" />,
           },

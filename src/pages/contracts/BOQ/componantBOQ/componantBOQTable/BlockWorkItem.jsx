@@ -1,15 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import PropTypes from "prop-types";
 import BlockContantWorkItem from "./BlockContantWorkItem";
 import Menu from "./ModalWorkItem/Menu";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { useTranslation } from "react-i18next";
+import { axiosInstance } from "../../../../../axios/axios";
 
 export default function BlockWorkItem({ workItem }) {
   // Language
   const { t } = useTranslation();
   const [openMore, setOpenMore] = useState(false);
+  const [materials, setMaterials] = useState();
   const { idOnlyOpen, setIdOnlyOpen } = useContext(ContextBOQ);
   const toggleItem = () => {
     setIdOnlyOpen((prevIds) => {
@@ -20,6 +22,23 @@ export default function BlockWorkItem({ workItem }) {
       }
     });
   };
+  // Fetch materials
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/materials/${workItem._id}/boq`
+        );
+        if (res.data) {
+          setMaterials(res?.data);
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchMaterials();
+  }, [workItem._id]);
+
   return (
     <div className="flex flex-col mb-1 w-full">
       <div
@@ -47,7 +66,10 @@ export default function BlockWorkItem({ workItem }) {
         </div>
       </div>
       {idOnlyOpen?.includes(workItem?._id) && (
-        <BlockContantWorkItem workItemDetails={workItem?.workDetails} />
+        <BlockContantWorkItem
+          workItemDetails={workItem?.workDetails}
+          materials={materials}
+        />
       )}
     </div>
   );

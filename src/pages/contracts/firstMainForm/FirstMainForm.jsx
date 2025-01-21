@@ -7,11 +7,13 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { FaToggleOff, FaToggleOn } from "react-icons/fa";
 
 function ContractForm() {
   const [projects, setProjects] = useState([]);
   const [partners, setPartners] = useState([]);
   const [consultants, setConsultants] = useState([]);
+  const [isBusinessGuaranteeActive, setIsBusinessGuaranteeActive] = useState(false);
   const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
   // Language
@@ -135,7 +137,6 @@ function ContractForm() {
                 <p className="text-red-400 text-sm">{errors.code.message}</p>
               )}
             </div>
-
             {/* Contract Type */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -164,7 +165,6 @@ function ContractForm() {
                 </p>
               )}
             </div>
-
             {/* Project */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -192,7 +192,6 @@ function ContractForm() {
                 </p>
               )}
             </div>
-
             {/* Partner */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -306,7 +305,8 @@ function ContractForm() {
             {/* Type of Progress */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("ContractsForms.form1.typeOfProgress")} <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.typeOfProgress")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <select
                 {...register("typeOfProgress", {
@@ -333,7 +333,8 @@ function ContractForm() {
             {/* Description */}
             <div className="col-span-1">
               <label className="block mb-2 text-sm font-medium text-gray-700">
-              {t("ContractsForms.form1.description")} <span className="text-red-500">*</span>
+                {t("ContractsForms.form1.description")}{" "}
+                <span className="text-red-500">*</span>
               </label>
               <textarea
                 {...register("description", {
@@ -347,6 +348,61 @@ function ContractForm() {
                 <p className="text-red-400 text-sm">
                   {errors.description.message}
                 </p>
+              )}
+            </div>
+            {/* Business Guarantee */}
+            <div className="flex flex-col gap-2">
+              <div className=" flex flex-col gap-3">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() =>
+                    setIsBusinessGuaranteeActive(!isBusinessGuaranteeActive)
+                  }
+                >
+                  {isBusinessGuaranteeActive ? (
+                    <FaToggleOn className="text-blue-500 text-3xl" />
+                  ) : (
+                    <FaToggleOff className="text-gray-400 text-3xl" />
+                  )}
+                  <span className="text-lg ltr:ml-2 rtl:mr-2">
+                    {t("ContractsForms.form1.businessGuaranteeActive")}
+                  </span>
+                </div>
+              </div>
+              {isBusinessGuaranteeActive && (
+                <div className="col-span-1">
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    {t("ContractsForms.form1.businessGuarantee")}
+                  </label>
+                  <input
+                    type="number"
+                    placeholder={t(
+                      "ContractsForms.form1.businessGuaranteePlaceholder"
+                    )}
+                    {...register("businessGuarantee", {
+                      max: {
+                        value: 100,
+                        message: t(
+                          "ContractsForms.form1.businessGuaranteeErrorMessageMax"
+                        ),
+                      },
+                      min: {
+                        value: 0,
+                        message: t(
+                          "ContractsForms.form1.businessGuaranteeErrorMessageMin"
+                        ),
+                      },
+                    })}
+                    className={`py-[6px] px-2 border border-gray-300 outline-none rounded-md focus:border-blue-300 w-full 
+              
+                `}
+                  />
+                  {errors.businessGuarantee && (
+                    <p className="text-red-400 text-sm">
+                      {errors.businessGuarantee.message}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </div>

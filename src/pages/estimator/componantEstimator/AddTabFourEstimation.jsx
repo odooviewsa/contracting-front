@@ -99,7 +99,7 @@ export default function AddTabFourEstimation({
               : item
           )
         );
-        toast.success(t("Estimator.addTab.successMessage"));
+        toast.success(t("EstimatorPage.addTab.successMessage"));
         refetch();
       }
     } catch (error) {

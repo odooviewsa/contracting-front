@@ -99,7 +99,8 @@ export default function TableWorkItem({
     },
     {
       header: t("ConfirmationForms.BOQ.table.columns.currentWork"),
-      display: dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
+      display:
+        dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
       header: t("ConfirmationForms.BOQ.table.columns.totalQuantity"),
@@ -215,7 +216,10 @@ export default function TableWorkItem({
                       handleChangeCurrentQuantity(e.target.value, i)
                     }
                     value={
-                      e?.currentQuantity
+                      dispalyDate?.data?.data?.workConfirmationType === "final"
+                        ? e?.workItemId?.workDetails?.assignedQuantity -
+                          e?.previousQuantity
+                        : e?.currentQuantity
                         ? dispalyDate?.data?.data?.typeOfProgress ===
                           "Percentage per Line"
                           ? (e?.currentQuantity * 100) /
@@ -225,7 +229,7 @@ export default function TableWorkItem({
                     }
                   />
                 </td>
-                {/* TODO: // special of percentage  */}
+                {/* // special of percentage  */}
                 {dispalyDate?.data?.data?.typeOfProgress ===
                   "Percentage per Line" && (
                   <td

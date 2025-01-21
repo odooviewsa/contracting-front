@@ -32,7 +32,6 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
       setTotalSubItem(totalArray.reduce((ele, value) => ele + value));
     }
   }, [subitem]);
-  console.log(subitem)
   return (
     <div className="flex flex-col">
       <div
@@ -47,7 +46,9 @@ export default function BlockSubItem({ indexSubItem, subitem }) {
               </h4>
               <p className="text-[0.8rem]">{subitem?.subItemName}</p>
             </div>
-            <p className="text-sm ltr:mr-8 rtl:ml-8">{t("ContractsForms.BOQ.texts.total")}: {totalSubItem}</p>
+            <p className="text-sm ltr:mr-8 rtl:ml-8">
+              {t("ContractsForms.BOQ.texts.total")}: {totalSubItem}
+            </p>
           </div>
         </div>
         <div
