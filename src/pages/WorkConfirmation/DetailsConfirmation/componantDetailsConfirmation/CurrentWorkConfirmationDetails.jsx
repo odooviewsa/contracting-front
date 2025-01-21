@@ -30,14 +30,15 @@ export default function CurrentWorkConfirmationDetails({ data }) {
       window.removeEventListener("resize", updateHeight);
     };
   }, []);
-  // Calculate Guarantee Deduction
   useEffect(() => {
-    const calcSumTotalAmount = data?.workItems.reduce(
-      (e, r) => e.totalAmount + r.totalAmount
+    const calcSumTotalAmount = data?.workItems?.reduce(
+      (acc, item) =>
+        acc +
+        ((item.totalAmount || 0) * data?.contractId?.businessGuarantee) / 100,
+      0 // Initial value for the accumulator
     );
-    setGuaranteeDeduction(calcSumTotalAmount?.toFixed(2));
-  }, [data?.workItems]);
-
+    setGuaranteeDeduction(calcSumTotalAmount || 0); // Fallback to 0 if undefined
+  }, [data?.contractId?.businessGuarantee, data?.workItems]);
   return (
     <motion.div
       ref={ref}

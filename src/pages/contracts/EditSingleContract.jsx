@@ -33,7 +33,10 @@ function EditSingleContract() {
     setValue("project", previeousData?.project?._id);
     setValue("partner", previeousData?.partner?._id);
     setValue("consultant", previeousData?.consultant?._id);
-
+    setValue("businessGuarantee", previeousData?.businessGuarantee);
+    if (previeousData?.businessGuarantee) {
+      setIsBusinessGuaranteeActive(true);
+    }
     const formattedStartDate = new Date(previeousData?.startDate)
       .toISOString()
       .split("T")[0];
