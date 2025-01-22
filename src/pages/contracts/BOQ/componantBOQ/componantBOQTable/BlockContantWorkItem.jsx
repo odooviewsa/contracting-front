@@ -88,7 +88,7 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
           </tbody>
         </table>
         <div className="py-4 flex flex-col gap-8">
-          {materials.filter((item) => item.category === "Material").length >
+          {materials?.filter((item) => item.category === "Material").length >
             0 && (
             <CollapsedMenu label="Materials" totalCost={totalCosts.Material}>
               <TableWorkContent
@@ -103,7 +103,7 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
               />
             </CollapsedMenu>
           )}
-          {materials.filter((item) => item.category === "Labor").length >
+          {materials?.filter((item) => item.category === "Labor").length >
             0 && (
             <CollapsedMenu label="Labors" totalCost={totalCosts.Labor}>
               <TableWorkContent
@@ -119,7 +119,7 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
               />
             </CollapsedMenu>
           )}
-          {materials.filter((item) => item.category === "Equipment").length >
+          {materials?.filter((item) => item.category === "Equipment").length >
             0 && (
             <CollapsedMenu label="Equipments" totalCost={totalCosts.Equipment}>
               <TableWorkContent
@@ -135,7 +135,7 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
               />
             </CollapsedMenu>
           )}
-          {materials.filter((item) => item.category === "OtherCosts").length >
+          {materials?.filter((item) => item.category === "OtherCosts").length >
             0 && (
             <CollapsedMenu
               label="Other Costs"

@@ -16,7 +16,7 @@ const CollapsedMenu = ({ className = "", totalCost = 0, label, children }) => {
           />
           {label}
         </div>
-        <p className="text-sm text-colorTextValueItem">Total Cost: {totalCost}</p>
+        <p className="text-sm text-colorTextValueItem">Total {label}: {totalCost}</p>
       </div>
       {isContentOpen && <div>{children}</div>}
     </div>

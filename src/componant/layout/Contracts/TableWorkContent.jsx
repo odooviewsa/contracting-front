@@ -4,7 +4,6 @@ const TableWorkContent = ({
   labels,
   category = "Material",
 }) => {
-  console.log(data?.length)
   return (
     <table className={`ltr:ml-6 rtl:mr-6 bg-white rounded-md${className}`}>
       <tr>

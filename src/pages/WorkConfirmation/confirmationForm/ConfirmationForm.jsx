@@ -38,6 +38,7 @@ const ConfirmationForm = () => {
     handleSubmit,
     register,
     getValues,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
   async function onSubmit(data) {
@@ -69,7 +70,16 @@ const ConfirmationForm = () => {
         toast.error(error?.response?.data?.message);
       });
   }
-  console.log(informationContract?.[0]);
+  useEffect(() => {
+    if (informationContract) {
+      setValue(
+        "typeOfProgress",
+        informationContract?.[0]?.typeOfProgress || ""
+      );
+    }
+  }, [informationContract, setValue]);
+
+  console.log(informationContract);
   return (
     <div className="  bg-white rounded-md">
       <ToastContainer />
@@ -272,7 +282,6 @@ const ConfirmationForm = () => {
           </label>
           <select
             id="typeOfProgress"
-            value={informationContract?.[0]?.typeOfProgress || ""}
             className="w-full border border-gray-300 p-3 rounded focus:outline-blue-500 text-lg"
             {...register("typeOfProgress", {
               required: t("ConfirmationForms.form1.typeOfProgressRequired"),

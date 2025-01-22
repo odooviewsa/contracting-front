@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../../../../axios/axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { ContextBOQ } from "../../../../../context/BOQContext";
@@ -25,6 +25,24 @@ export default function TableWorkItem({
   const [valueInputInvoicePercentage, setValueInputInvoicePercentage] =
     useState({});
   const { contractId, workId } = useParams();
+  useEffect(() => {
+    if (
+      dispalyDate?.data?.data?.workItems &&
+      dispalyDate?.data?.data?.workConfirmationType === "final"
+    ) {
+      const initialQuantities = dispalyDate.data.data.workItems.reduce(
+        (acc, item, index) => ({
+          ...acc,
+          [index]:
+            item?.workItemId?.workDetails?.assignedQuantity -
+              item?.previousQuantity || 0,
+        }),
+        {}
+      );
+      setValueInputCurrentQuantity(initialQuantities);
+    }
+  }, [dispalyDate]);
+
   // handleChangeCurrentQuantity
   const handleChangeCurrentQuantity = (value, index) => {
     setValueInputCurrentQuantity((prev) => ({
@@ -135,6 +153,8 @@ export default function TableWorkItem({
       display: true,
     },
   ];
+  console.log(valueInputCurrentQuantity);
+
   return (
     <div>
       <ToastContainer />
@@ -196,7 +216,7 @@ export default function TableWorkItem({
                 >
                   {e?.previousQuantity?.toLocaleString("en-US")}
                 </td>
-                {/* TODO: // current quantity */}
+                {/* // current quantity */}
                 <td
                   className={`border-none ${
                     !currentValueColumWorkConfirmation["Current Work %"]
@@ -226,6 +246,9 @@ export default function TableWorkItem({
                             e?.workItemId?.workDetails?.assignedQuantity
                           : e?.currentQuantity
                         : valueInputCurrentQuantity[i]
+                    }
+                    disabled={
+                      dispalyDate?.data?.data?.workConfirmationType === "final"
                     }
                   />
                 </td>
