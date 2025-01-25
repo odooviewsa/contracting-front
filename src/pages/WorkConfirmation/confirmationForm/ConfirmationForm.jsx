@@ -78,8 +78,6 @@ const ConfirmationForm = () => {
       );
     }
   }, [informationContract, setValue]);
-
-  console.log(informationContract);
   return (
     <div className="  bg-white rounded-md">
       <ToastContainer />

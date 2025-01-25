@@ -9,13 +9,15 @@ const Input = ({
   register,
   errors,
   options,
+  disabled,
 }) => {
   return (
     <div className={`flex flex-col gap-2 w-full ${groupClassName}`}>
       <label htmlFor={id}>{label}</label>
       {options ? (
         <select
-          className={`bg-slate-100 p-3 rounded-lg outline-none ${className}`}
+          disabled={disabled}
+          className={`bg-slate-100 p-3 rounded-lg outline-none disabled:bg-gray-300 disabled:cursor-not-allowed ${className}`}
           {...register}
         >
           {options.map((option, key) => (
@@ -29,7 +31,8 @@ const Input = ({
           id={id}
           type={type}
           placeholder={placeholder}
-          className={`bg-slate-100 p-3 rounded-lg outline-none ${className}`}
+          className={`bg-slate-100 p-3 rounded-lg outline-none disabled:bg-gray-300 disabled:cursor-not-allowed ${className}`}
+          disabled={disabled}
           {...register}
         />
       )}

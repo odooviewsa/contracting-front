@@ -106,3 +106,17 @@ td {
   box-shadow: 0px 1px 15px -6px rgba(0, 0, 0, 0.75);
 }
 
+@layer base {
+  h3.lead {
+    @apply text-xl font-semibold text-primaryColor;
+  }
+  h4.lead {
+    @apply text-lg font-semibold text-primaryColor;
+  }
+  h5.lead {
+    @apply font-semibold text-primaryColor;
+  }
+  p.textBlur {
+    @apply text-base text-grayColor;
+  }
+}

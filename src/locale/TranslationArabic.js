@@ -1558,7 +1558,8 @@ const TranslationArabic = {
                     "placeholder": "أدخل اسم شركتك",
                     "label": "اسم الشركة",
                     "required": true,
-                    "errorMessage": "اسم الشركة مطلوب"
+                    "errorMessage": "اسم الشركة مطلوب",
+                    disabled: true
                 },
                 {
                     "id": "companySize",

@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { useTranslation } from "react-i18next";
+import { IoChevronDownOutline } from "react-icons/io5";
+import DetailsWorkLine from "./DetailsWorkLine";
 export default function TableWorkItem({
   dispalyDate,
   isNegativeActive,
@@ -25,6 +27,8 @@ export default function TableWorkItem({
   const [valueInputInvoicePercentage, setValueInputInvoicePercentage] =
     useState({});
   const { contractId, workId } = useParams();
+  // Open Line Details
+  const [lineDetails, setLineDetails] = useState(null);
   useEffect(() => {
     if (
       dispalyDate?.data?.data?.workItems &&
@@ -153,7 +157,7 @@ export default function TableWorkItem({
       display: true,
     },
   ];
-  console.log(valueInputCurrentQuantity);
+  console.log(dispalyDate);
 
   return (
     <div>
@@ -176,214 +180,230 @@ export default function TableWorkItem({
           </thead>
           <tbody>
             {dispalyDate?.data?.data?.workItems?.map((e, i) => (
-              <tr className="cursor-pointer text-primaryColor" key={i}>
-                <td
-                  className={`border-none ${
-                    !currentValueColumWorkConfirmation["work item"]
-                      ? "hidden"
-                      : ""
-                  }`}
+              <>
+                <tr
+                  key={i}
+                  onClick={() => setLineDetails(e)}
+                  className="text-primaryColor relative cursor-pointer"
                 >
-                  {e?.workItemId?.workItemName}
-                </td>
-                <td
-                  className={`border-none ${
-                    !currentValueColumWorkConfirmation["Unit Of Measure"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.workItemId?.workDetails?.unitOfMeasure}
-                </td>
-                <td
-                  className={`border-none   ${
-                    !currentValueColumWorkConfirmation["Contract Quantity"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.workItemId?.workDetails?.assignedQuantity?.toLocaleString(
-                    "en-US"
-                  )}
-                </td>
-                {/* // previeous quantity */}
-                <td
-                  className={`border-none    ${
-                    !currentValueColumWorkConfirmation["Previous Quantity"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.previousQuantity?.toLocaleString("en-US")}
-                </td>
-                {/* // current quantity */}
-                <td
-                  className={`border-none ${
-                    !currentValueColumWorkConfirmation["Current Work %"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  <input
-                    type="number"
-                    min={isNegativeActive ? "" : 0}
-                    className={`outline-none border px-1 ${
-                      !currentValueColumWorkConfirmation["Current Work QTY"]
-                        ? "hidden"
-                        : ""
-                    }`}
-                    onChange={(e) =>
-                      handleChangeCurrentQuantity(e.target.value, i)
-                    }
-                    value={
-                      dispalyDate?.data?.data?.workConfirmationType === "final"
-                        ? e?.workItemId?.workDetails?.assignedQuantity -
-                          e?.previousQuantity
-                        : e?.currentQuantity
-                        ? dispalyDate?.data?.data?.typeOfProgress ===
-                          "Percentage per Line"
-                          ? (e?.currentQuantity * 100) /
-                            e?.workItemId?.workDetails?.assignedQuantity
-                          : e?.currentQuantity
-                        : valueInputCurrentQuantity[i]
-                    }
-                    disabled={
-                      dispalyDate?.data?.data?.workConfirmationType === "final"
-                    }
-                  />
-                </td>
-                {/* // special of percentage  */}
-                {dispalyDate?.data?.data?.typeOfProgress ===
-                  "Percentage per Line" && (
                   <td
-                    className={`${
-                      !currentValueColumWorkConfirmation["Current Work"]
+                    className={`border-none ${
+                      !currentValueColumWorkConfirmation["work item"]
                         ? "hidden"
                         : ""
                     }`}
                   >
-                    {e?.currentQuantity || 0}
+                    {e?.workItemId?.workItemName}
                   </td>
-                )}
-                {/* // total quantity  */}
-                <td
-                  className={`border-none   ${
-                    !currentValueColumWorkConfirmation["Total Quantity"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.totalQuantity?.toLocaleString("en-US")}
-                </td>
-                {/* // price  */}
-                <td
-                  className={`border-none   ${
-                    !currentValueColumWorkConfirmation["Price"] ? "hidden" : ""
-                  }`}
-                >
-                  {e?.workItemId?.workDetails?.price?.toLocaleString("en-US")}
-                </td>
-                {/* /getTotalAmount/ */}
-                <td
-                  className={`border-none   ${
-                    !currentValueColumWorkConfirmation["Total Amount"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.totalAmount?.toLocaleString("en-US")}
-                </td>
-
-                {/* /completionPercentage/ */}
-                {dispalyDate?.data?.data?.completionPercentage && (
+                  <td
+                    className={`border-none ${
+                      !currentValueColumWorkConfirmation["Unit Of Measure"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.workItemId?.workDetails?.unitOfMeasure}
+                  </td>
                   <td
                     className={`border-none   ${
-                      !currentValueColumWorkConfirmation["Completion %"]
+                      !currentValueColumWorkConfirmation["Contract Quantity"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.workItemId?.workDetails?.assignedQuantity?.toLocaleString(
+                      "en-US"
+                    )}
+                  </td>
+                  {/* // previeous quantity */}
+                  <td
+                    className={`border-none    ${
+                      !currentValueColumWorkConfirmation["Previous Quantity"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.previousQuantity?.toLocaleString("en-US")}
+                  </td>
+                  {/* // current quantity */}
+                  <td
+                    className={`border-none ${
+                      !currentValueColumWorkConfirmation["Current Work %"]
                         ? "hidden"
                         : ""
                     }`}
                   >
                     <input
                       type="number"
-                      className="outline-none border px-1"
-                      value={
-                        valueInputCompletionPercentage[i] ??
-                        e?.workItemId?.workDetails?.completion ??
-                        100
-                      }
+                      min={isNegativeActive ? "" : 0}
+                      className={`outline-none border px-1 ${
+                        !currentValueColumWorkConfirmation["Current Work QTY"]
+                          ? "hidden"
+                          : ""
+                      }`}
                       onChange={(e) =>
-                        handleChangeCompletion(e.target.value, i)
+                        handleChangeCurrentQuantity(e.target.value, i)
+                      }
+                      value={
+                        dispalyDate?.data?.data?.workConfirmationType ===
+                        "final"
+                          ? e?.workItemId?.workDetails?.assignedQuantity -
+                            e?.previousQuantity
+                          : e?.currentQuantity
+                          ? dispalyDate?.data?.data?.typeOfProgress ===
+                            "Percentage per Line"
+                            ? (e?.currentQuantity * 100) /
+                              e?.workItemId?.workDetails?.assignedQuantity
+                            : e?.currentQuantity
+                          : valueInputCurrentQuantity[i]
+                      }
+                      disabled={
+                        dispalyDate?.data?.data?.workConfirmationType ===
+                        "final"
                       }
                     />
                   </td>
-                )}
-                {/* /activateInvoicingByPercentage/ */}
-                {dispalyDate?.data?.data?.activateInvoicingByPercentage && (
+                  {/* // special of percentage  */}
+                  {dispalyDate?.data?.data?.typeOfProgress ===
+                    "Percentage per Line" && (
+                    <td
+                      className={`${
+                        !currentValueColumWorkConfirmation["Current Work"]
+                          ? "hidden"
+                          : ""
+                      }`}
+                    >
+                      {e?.currentQuantity || 0}
+                    </td>
+                  )}
+                  {/* // total quantity  */}
                   <td
                     className={`border-none   ${
-                      !currentValueColumWorkConfirmation["Invoicing %"]
+                      !currentValueColumWorkConfirmation["Total Quantity"]
                         ? "hidden"
                         : ""
                     }`}
                   >
-                    <input
-                      type="number"
-                      className="outline-none border px-1"
-                      value={
-                        valueInputInvoicePercentage[i] ??
-                        e?.workItemId?.workDetails?.invoicing ??
-                        100
-                      }
-                      onChange={(e) => handleChangeInvoice(e.target.value, i)}
-                    />
+                    {e?.totalQuantity?.toLocaleString("en-US")}
                   </td>
-                )}
-                {/* // Net Amount  */}
-                <td
-                  className={`border-none   ${
-                    !currentValueColumWorkConfirmation["Net Amount"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.netAmount?.toLocaleString("en-US") || 0}
-                </td>
-                {/* // getDuoAmount */}
-                <td
-                  className={`border-none   ${
-                    !currentValueColumWorkConfirmation["Duo Amount"]
-                      ? "hidden"
-                      : ""
-                  }`}
-                >
-                  {e?.dueAmount?.toLocaleString("en-US") || 0}
-                </td>
-                {/* // calculate  */}
-                <td>
-                  <button
-                    className={`text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor ${
-                      !currentValueColumWorkConfirmation["Calculate"]
+                  {/* // price  */}
+                  <td
+                    className={`border-none   ${
+                      !currentValueColumWorkConfirmation["Price"]
                         ? "hidden"
                         : ""
                     }`}
-                    onClick={() =>
-                      handleSubmitCalculate(
-                        e?.workItemId?._id,
-                        e?.workItemId?.workDetails?.assignedQuantity,
-                        i
-                      )
-                    }
                   >
-                    {loading === e?.workItemId?._id
-                      ? "Loading..."
-                      : "Calculate"}
-                  </button>
-                </td>
-              </tr>
+                    {e?.workItemId?.workDetails?.price?.toLocaleString("en-US")}
+                  </td>
+                  {/* /getTotalAmount/ */}
+                  <td
+                    className={`border-none   ${
+                      !currentValueColumWorkConfirmation["Total Amount"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.totalAmount?.toLocaleString("en-US")}
+                  </td>
+                  {/* /completionPercentage/ */}
+                  {dispalyDate?.data?.data?.completionPercentage && (
+                    <td
+                      className={`border-none   ${
+                        !currentValueColumWorkConfirmation["Completion %"]
+                          ? "hidden"
+                          : ""
+                      }`}
+                    >
+                      <input
+                        type="number"
+                        className="outline-none border px-1"
+                        value={
+                          valueInputCompletionPercentage[i] ??
+                          e?.workItemId?.workDetails?.completion ??
+                          100
+                        }
+                        onChange={(e) =>
+                          handleChangeCompletion(e.target.value, i)
+                        }
+                      />
+                    </td>
+                  )}
+                  {/* /activateInvoicingByPercentage/ */}
+                  {dispalyDate?.data?.data?.activateInvoicingByPercentage && (
+                    <td
+                      className={`border-none   ${
+                        !currentValueColumWorkConfirmation["Invoicing %"]
+                          ? "hidden"
+                          : ""
+                      }`}
+                    >
+                      <input
+                        type="number"
+                        className="outline-none border px-1"
+                        value={
+                          valueInputInvoicePercentage[i] ??
+                          e?.workItemId?.workDetails?.invoicing ??
+                          100
+                        }
+                        onChange={(e) => handleChangeInvoice(e.target.value, i)}
+                      />
+                    </td>
+                  )}
+                  {/* // Net Amount  */}
+                  <td
+                    className={`border-none   ${
+                      !currentValueColumWorkConfirmation["Net Amount"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.netAmount?.toLocaleString("en-US") || 0}
+                  </td>
+                  {/* // getDuoAmount */}
+                  <td
+                    className={`border-none   ${
+                      !currentValueColumWorkConfirmation["Duo Amount"]
+                        ? "hidden"
+                        : ""
+                    }`}
+                  >
+                    {e?.dueAmount?.toLocaleString("en-US") || 0}
+                  </td>
+                  {/* // calculate  */}
+                  <td className="flex justify-between items-center">
+                    <button
+                      className={`text-white border border-primaryColor px-3 pt-1 pb-2 rounded-md bg-primaryColor ${
+                        !currentValueColumWorkConfirmation["Calculate"]
+                          ? "hidden"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        handleSubmitCalculate(
+                          e?.workItemId?._id,
+                          e?.workItemId?.workDetails?.assignedQuantity,
+                          i
+                        )
+                      }
+                    >
+                      {loading === e?.workItemId?._id
+                        ? "Loading..."
+                        : "Calculate"}
+                    </button>
+                  </td>
+                </tr>
+              </>
             ))}
           </tbody>
         </table>
       </div>
+      {lineDetails && (
+        <DetailsWorkLine
+          setLineDetails={setLineDetails}
+          workConfirmation={dispalyDate?.data?.data}
+          workItem={lineDetails}
+        />
+      )}
       <div className="flex justify-end items-center">
         {/* <div className="text-gray-600 mt-2">page 1 of 5 </div> */}
 

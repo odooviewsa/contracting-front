@@ -1683,7 +1683,8 @@ const TranslationEnglish = {
                     "placeholder": "Enter your company name",
                     "label": "Company Name",
                     "required": true,
-                    "errorMessage": "Company name is required"
+                    "errorMessage": "Company name is required",
+                    disabled: true
                 },
                 {
                     "id": "companySize",

@@ -38,8 +38,6 @@ const CompanyProfile = () => {
       formData.append("taxId", values.taxId);
       formData.append("companyId", values.companyId);
 
-      console.log([...formData.entries()]); // Debugging: Check the entire FormData
-
       const res = await axiosInstance.put(
         `/api/companyProfile/${companyProfileData._id}`,
         formData,
@@ -150,6 +148,7 @@ const CompanyProfile = () => {
           {t("CompanyProfile.form.fields", { returnObjects: true }).map(
             (field, key) => (
               <Input
+                disabled={field.disabled ? true : false}
                 id={field.id}
                 type={field.type}
                 placeholder={field.placeholder}

@@ -51,18 +51,18 @@ import CompanyProfile from "./pages/companyProfile/companyProfile.jsx";
 function App() {
   // Multi Language
   const { i18n } = useTranslation();
-  
+
   useEffect(() => {
     window.document.dir = i18n.dir();
-    
+
     const languageChangeHandler = () => {
       window.document.dir = i18n.dir();
     };
 
-    i18n.on('languageChanged', languageChangeHandler);
+    i18n.on("languageChanged", languageChangeHandler);
 
     return () => {
-      i18n.off('languageChanged', languageChangeHandler);
+      i18n.off("languageChanged", languageChangeHandler);
     };
   }, [i18n, i18n.language]);
   const user = useSelector((state) => state?.user);
@@ -190,13 +190,13 @@ function App() {
           children: [
             {
               path: "users",
-              element: <UserTanetPage />
+              element: <UserTanetPage />,
             },
             {
               path: "companyProfile",
-              element: <CompanyProfile />
-            }
-          ]
+              element: <CompanyProfile />,
+            },
+          ],
         },
 
         {
@@ -267,7 +267,13 @@ function App() {
       ],
     },
   ]);
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
   return (
     <>
       <ToastContainer />
