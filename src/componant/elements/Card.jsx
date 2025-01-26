@@ -1,7 +1,14 @@
 import { IoTrashOutline } from "react-icons/io5";
 
-const Card = ({ handleDelete, title, subText, type, icon, className = "" }) => {
-
+const Card = ({
+  handleDelete,
+  title,
+  subText,
+  type,
+  icon,
+  isLoading,
+  className = "",
+}) => {
   return (
     <div
       className={`group flex items-center justify-between rounded border p-2 relative ${className}`}
@@ -18,13 +25,16 @@ const Card = ({ handleDelete, title, subText, type, icon, className = "" }) => {
           {type}
         </div>
       )}
-      <div className="absolute right-0 bg-red-300 rounded p-1 mx-4 group-hover:opacity-100 opacity-0 transition-all duration-700">
+      <button
+        disabled={isLoading}
+        className="absolute right-0 bg-red-300 rounded p-1 mx-4 group-hover:opacity-100 opacity-0 transition-all duration-700"
+      >
         <IoTrashOutline
           size={18}
           className="text-red-900 cursor-pointer"
           onClick={handleDelete}
         />
-      </div>
+      </button>
     </div>
   );
 };

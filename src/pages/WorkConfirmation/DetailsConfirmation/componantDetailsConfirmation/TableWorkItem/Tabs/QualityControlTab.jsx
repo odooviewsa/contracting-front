@@ -6,27 +6,26 @@ import { useForm } from "react-hook-form";
 import Button from "../../../../../../componant/elements/Button";
 import { axiosInstance } from "../../../../../../axios/axios";
 // import { useQuery } from "@tanstack/react-query";
-
-const QualityControlTab = ({ workItem, workConfirmationId }) => {
+import Loading from "../../../../../../componant/Loading";
+const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
   const [isQCPointForm, setIsQCPointForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
-  // const { data: QC_Points, isLoading, isError } = useQuery({
-  //   queryKey: ["QC_Points"],
-  //   queryFn: async () =>
-  //     await axiosInstance.get(
-  //       `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details`
-  //     ),
-  // });
   const onSubmit = async (data) => {
-    await axiosInstance.put(
+    setIsLoading(true);
+    let res = await axiosInstance.put(
       `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details`,
       data
     );
-    setIsQCPointForm(false);
+    if (res.statusText === "OK") {
+      refetch();
+      setIsLoading(false);
+      setIsQCPointForm(false);
+    }
   };
   return (
     <TabBody
@@ -41,22 +40,34 @@ const QualityControlTab = ({ workItem, workConfirmationId }) => {
       }
     >
       <div className="flex flex-col gap-4">
-        {workItem?.QC_Point?.length > 0 ? (
-          workItem?.QC_Point?.map((QC_Point) => (
-            <Card
-              handleDelete={async () => {
-                await axiosInstance.delete(
-                  `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details?qcPointId=${QC_Point._id}`
-                );
-              }}
-              key={QC_Point._id}
-              title={QC_Point.title}
-              date={QC_Point.date}
-              type={QC_Point.passed && "Passed"}
-            />
-          ))
+        {!isLoading ? (
+          workItem?.QC_Point?.length > 0 ? (
+            workItem?.QC_Point?.map((QC_Point) => (
+              <Card
+                handleDelete={async () => {
+                  setIsLoading(true);
+                  let res = await axiosInstance.delete(
+                    `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details?qcPointId=${QC_Point._id}`
+                  );
+                  if (res.status === 204) {
+                    refetch();
+                    setIsLoading(false);
+                  }
+                }}
+                key={QC_Point._id}
+                title={QC_Point.title}
+                date={QC_Point.date}
+                type={QC_Point.passed && "Passed"}
+                isLoading={isLoading}
+              />
+            ))
+          ) : (
+            <p>No QC Points</p>
+          )
         ) : (
-          <p>No QC Points</p>
+          <div className="flex items-center justify-center h-44">
+            <Loading />
+          </div>
         )}
       </div>
       {/* Form */}
@@ -67,7 +78,7 @@ const QualityControlTab = ({ workItem, workConfirmationId }) => {
             className="bg-white w-1/2 h-fit rounded p-4 flex flex-col gap-4"
           >
             <div className="flex items-center justify-between">
-              <h3>QC Point</h3>
+              <h3 className="lead">QC Point</h3>
               <button className="cursor-pointer">
                 <IoCloseOutline
                   size={18}
@@ -94,7 +105,15 @@ const QualityControlTab = ({ workItem, workConfirmationId }) => {
               <input type="checkbox" id={"passed"} {...register("passed")} />
               <label htmlFor="passed">Is Passed?</label>
             </div>
-            <Button type="submit">Add</Button>
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className={`flex items-center justify-center ${
+                isLoading && "cursor-not-allowed"
+              }`}
+            >
+              {isLoading ? <Loading /> : "Add"}
+            </Button>
           </form>
         </div>
       )}

@@ -6,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { ContextBOQ } from "../../../../../context/BOQContext";
 import { useTranslation } from "react-i18next";
-import { IoChevronDownOutline } from "react-icons/io5";
 import DetailsWorkLine from "./DetailsWorkLine";
 export default function TableWorkItem({
   dispalyDate,
@@ -157,8 +156,6 @@ export default function TableWorkItem({
       display: true,
     },
   ];
-  console.log(dispalyDate);
-
   return (
     <div>
       <ToastContainer />
@@ -183,10 +180,10 @@ export default function TableWorkItem({
               <>
                 <tr
                   key={i}
-                  onClick={() => setLineDetails(e)}
                   className="text-primaryColor relative cursor-pointer"
                 >
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none ${
                       !currentValueColumWorkConfirmation["work item"]
                         ? "hidden"
@@ -196,6 +193,7 @@ export default function TableWorkItem({
                     {e?.workItemId?.workItemName}
                   </td>
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none ${
                       !currentValueColumWorkConfirmation["Unit Of Measure"]
                         ? "hidden"
@@ -205,6 +203,7 @@ export default function TableWorkItem({
                     {e?.workItemId?.workDetails?.unitOfMeasure}
                   </td>
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none   ${
                       !currentValueColumWorkConfirmation["Contract Quantity"]
                         ? "hidden"
@@ -217,6 +216,7 @@ export default function TableWorkItem({
                   </td>
                   {/* // previeous quantity */}
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none    ${
                       !currentValueColumWorkConfirmation["Previous Quantity"]
                         ? "hidden"
@@ -267,6 +267,7 @@ export default function TableWorkItem({
                   {dispalyDate?.data?.data?.typeOfProgress ===
                     "Percentage per Line" && (
                     <td
+                      onClick={() => setLineDetails(e?._id)}
                       className={`${
                         !currentValueColumWorkConfirmation["Current Work"]
                           ? "hidden"
@@ -278,6 +279,7 @@ export default function TableWorkItem({
                   )}
                   {/* // total quantity  */}
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none   ${
                       !currentValueColumWorkConfirmation["Total Quantity"]
                         ? "hidden"
@@ -288,6 +290,7 @@ export default function TableWorkItem({
                   </td>
                   {/* // price  */}
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none   ${
                       !currentValueColumWorkConfirmation["Price"]
                         ? "hidden"
@@ -298,6 +301,7 @@ export default function TableWorkItem({
                   </td>
                   {/* /getTotalAmount/ */}
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none   ${
                       !currentValueColumWorkConfirmation["Total Amount"]
                         ? "hidden"
@@ -352,6 +356,7 @@ export default function TableWorkItem({
                   )}
                   {/* // Net Amount  */}
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none   ${
                       !currentValueColumWorkConfirmation["Net Amount"]
                         ? "hidden"
@@ -362,6 +367,7 @@ export default function TableWorkItem({
                   </td>
                   {/* // getDuoAmount */}
                   <td
+                    onClick={() => setLineDetails(e?._id)}
                     className={`border-none   ${
                       !currentValueColumWorkConfirmation["Duo Amount"]
                         ? "hidden"
@@ -402,6 +408,7 @@ export default function TableWorkItem({
           setLineDetails={setLineDetails}
           workConfirmation={dispalyDate?.data?.data}
           workItem={lineDetails}
+          refetch={refetch}
         />
       )}
       <div className="flex justify-end items-center">

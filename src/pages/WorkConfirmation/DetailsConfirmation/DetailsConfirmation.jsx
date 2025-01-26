@@ -16,7 +16,7 @@ function DetailsConfirmation() {
   function getSingleWorkConfirmation() {
     return axiosInstance.get(`/api/workConfirmation/${workId}`);
   }
-  const { data: work, refetch } = useQuery({
+  const { data: work, refetch, isLoading } = useQuery({
     queryKey: ["getSingleWorkConfirmation", workId],
     queryFn: getSingleWorkConfirmation,
   });
@@ -59,6 +59,7 @@ function DetailsConfirmation() {
           dispalyDate={dispalyDate}
           isNegativeActive={work?.data?.data?.negativeActive}
           refetch={refetch}
+          isLoading={isLoading}
         />
       </div>
     </div>

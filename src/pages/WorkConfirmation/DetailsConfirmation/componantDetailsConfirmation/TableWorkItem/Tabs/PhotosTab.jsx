@@ -1,11 +1,12 @@
 import { IoCloudUploadOutline, IoTrashOutline } from "react-icons/io5";
 import TabBody from "./TabBody";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { axiosInstance, url } from "../../../../../../axios/axios";
+import Loading from "../../../../../../componant/Loading";
 
-const PhotosTab = ({ workItem, workConfirmationId }) => {
+const PhotosTab = ({ workItem, workConfirmationId, refetch }) => {
   const fileInputRef = useRef(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
@@ -19,11 +20,17 @@ const PhotosTab = ({ workItem, workConfirmationId }) => {
         "Some files were not accepted. Only image files are allowed."
       );
     }
+    if (files.length > 5) {
+      return alert(
+        "You can only upload a maximum of 5 files at a time. Please try again."
+      );
+    }
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("images", file);
     });
-    await axiosInstance.put(
+    setIsLoading(true);
+    let res = await axiosInstance.put(
       `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details`,
       formData,
       {
@@ -32,11 +39,20 @@ const PhotosTab = ({ workItem, workConfirmationId }) => {
         },
       }
     );
+    if (res.statusText === "OK") {
+      refetch();
+      setIsLoading(false);
+    }
   };
   const handleRemoveImage = async (image) => {
-    await axiosInstance.delete(
+    setIsLoading(true);
+    let res = await axiosInstance.delete(
       `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details?image=${image}`
     );
+    if (res.status === 204) {
+      refetch();
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,8 +61,11 @@ const PhotosTab = ({ workItem, workConfirmationId }) => {
       button={
         <div>
           <button
-            className="flex items-center gap-2 text-blue-500"
+            className={`flex items-center gap-2 text-blue-500 ${
+              isLoading && "cursor-not-allowed"
+            }`}
             onClick={handleButtonClick}
+            disabled={isLoading}
           >
             <IoCloudUploadOutline size={24} /> Upload Photo
           </button>
@@ -63,32 +82,38 @@ const PhotosTab = ({ workItem, workConfirmationId }) => {
         </div>
       }
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {workItem?.images.length > 0 ? (
-          workItem?.images.map((image, key) => {
-            return (
-              <div
-                key={key}
-                className="overflow-hidden rounded-md flex items-center justify-center h-[13rem] relative"
-              >
-                <img
-                  src={`${url}/uploads/${image}`}
-                  alt={`image-${image}`}
-                  className="h-full w-full object-cover"
-                />
-                <button
-                  className="bg-red-400/40 size-full absolute flex items-center justify-center opacity-0 hover:opacity-100 transition-all"
-                  onClick={() => handleRemoveImage(image)}
+      {!isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {workItem?.images.length > 0 ? (
+            workItem?.images.map((image, key) => {
+              return (
+                <div
+                  key={key}
+                  className="overflow-hidden rounded-md flex items-center justify-center h-[13rem] relative"
                 >
-                  <IoTrashOutline size={24} className="text-red-800" />
-                </button>
-              </div>
-            );
-          })
-        ) : (
-          <p>No photos</p>
-        )}
-      </div>
+                  <img
+                    src={`${url}/uploads/${image}`}
+                    alt={`image-${image}`}
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    className="bg-red-400/40 size-full absolute flex items-center justify-center opacity-0 hover:opacity-100 transition-all"
+                    onClick={() => handleRemoveImage(image)}
+                  >
+                    <IoTrashOutline size={24} className="text-red-800" />
+                  </button>
+                </div>
+              );
+            })
+          ) : (
+            <p>No photos</p>
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center justify-center w-full h-44">
+          <Loading />
+        </div>
+      )}
     </TabBody>
   );
 };
