@@ -1307,7 +1307,11 @@ const TranslationArabic = {
                 "الحالة",
                 "التفاصيل"
             ],
-            "noFound": "لم يتم العثور على أي تأكيد عمل"
+            "noFound": "لم يتم العثور على أي تأكيد عمل",
+            calcButton: {
+                loading: "تحميل...",
+                text: "حساب"
+            }
         },
         "detailsModel": {
             "editButton": "تعديل",

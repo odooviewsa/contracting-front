@@ -393,8 +393,8 @@ export default function TableWorkItem({
                       }
                     >
                       {loading === e?.workItemId?._id
-                        ? "Loading..."
-                        : "Calculate"}
+                        ? t("ConfirmationPage.table.calcButton.loading")
+                        : t("ConfirmationPage.table.calcButton.text")}
                     </button>
                   </td>
                 </tr>

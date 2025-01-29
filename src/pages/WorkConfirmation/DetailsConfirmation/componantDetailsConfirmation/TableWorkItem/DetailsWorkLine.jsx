@@ -57,7 +57,7 @@ const DetailsWorkLine = ({
       icon: <IoCheckmarkCircleOutline size={24} />,
       iconColor: "text-green-500",
       text: t("DetailsWorkLine.line.widgets.qcPoints"),
-      value: currentWorkItem?.QC_Point.length,
+      value: currentWorkItem?.workItemId?.QC_Point.length,
     },
     {
       icon: <IoWarningOutline size={24} />,
@@ -69,13 +69,13 @@ const DetailsWorkLine = ({
       icon: <IoCameraOutline size={24} />,
       iconColor: "text-blue-500",
       text: t("DetailsWorkLine.line.widgets.photos"),
-      value: currentWorkItem?.images.length,
+      value: currentWorkItem?.workItemId?.images.length,
     },
     {
       icon: <IoDocumentOutline size={24} />,
       iconColor: "text-purple-500",
       text: t("DetailsWorkLine.line.widgets.documents"),
-      value: currentWorkItem?.documents.length,
+      value: currentWorkItem?.workItemId?.documents.length,
     },
   ];
   return (

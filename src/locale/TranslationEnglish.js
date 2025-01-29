@@ -1423,7 +1423,11 @@ const TranslationEnglish = {
                 "Status",
                 "Details"
             ],
-            noFound: "No Work Confirmation Found"
+            noFound: "No Work Confirmation Found",
+            calcButton: {
+                loading: "Loading...",
+                text:"Calculate"
+            }
         },
         detailsModel: {
             editButton: "Edit",
