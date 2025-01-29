@@ -4,17 +4,21 @@ import Card from "../../../../../../componant/elements/Card";
 import { useRef, useState } from "react";
 import { axiosInstance, url } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
-const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
+const DocumentsTab = ({ workItem, refetch }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  // Translation
+  const { t } = useTranslation();
 
   const handleButtonClick = () => {
-    fileInputRef.current.click(); // Programmatically click the hidden input
+    fileInputRef.current.click();
   };
 
   const handleFileChange = async (event) => {
-    const files = Array.from(event.target.files); // Handle multiple files
+    const files = Array.from(event.target.files);
     const validFiles = files.filter(
       (file) =>
         [
@@ -25,13 +29,17 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
     );
 
     if (validFiles.length !== files.length) {
-      return alert(
-        "Some files were not accepted. Only PDF and Excel files under 5 MB are allowed."
+      return toast.error(
+        t("DetailsWorkLine.line.tabs.docs.alerts", {
+          returnObjects: true,
+        })[0]
       );
     }
     if (files.length > 3) {
-      return alert(
-        "You can only upload a maximum of 3 files at a time. Please try again."
+      return toast.error(
+        t("DetailsWorkLine.line.tabs.docs.alerts", {
+          returnObjects: true,
+        })[1]
       );
     }
     const formData = new FormData();
@@ -52,6 +60,9 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
       refetch();
       setIsLoading(false);
       formData.delete("documents");
+      toast.success(
+        t("DetailsWorkLine.line.tabs.docs.success", { returnObjects: true })[0]
+      );
     }
   };
 
@@ -84,20 +95,25 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error("Error downloading document:", error);
-      alert("Failed to download the document. Please try again.");
+      toast.error(
+        t("DetailsWorkLine.line.tabs.docs.alerts", {
+          returnObjects: true,
+        })[2]
+      );
     }
   };
 
   return (
     <TabBody
-      title="Documents"
+      title={t("DetailsWorkLine.line.tabs.docs.text")}
       button={
         <div>
           <button
             className="flex items-center gap-2 text-blue-500"
             onClick={handleButtonClick}
           >
-            <IoAddOutline size={24} /> Add Document
+            <IoAddOutline size={24} />{" "}
+            {t("DetailsWorkLine.line.tabs.docs.addButton")}
           </button>
 
           {/* Hidden file input */}
@@ -126,6 +142,11 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
                   if (res.status === 204) {
                     refetch();
                     setIsLoading(false);
+                    toast.success(
+                      t("DetailsWorkLine.line.tabs.docs.success", {
+                        returnObjects: true,
+                      })[1]
+                    );
                   }
                 }}
                 title={doc.title}
@@ -138,7 +159,7 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
               />
             ))
           ) : (
-            <p>No Documents</p>
+            <p>{t("DetailsWorkLine.line.tabs.docs.noFoundMessage")}</p>
           )}
         </div>
       ) : (

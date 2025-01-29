@@ -933,7 +933,7 @@ const TranslationEnglish = {
         BOQ: {
             form: {
                 title: "+AddItem",
-                addButton: "Add Item", 
+                addButton: "Add Item",
                 fields: [
                     {
                         label: "Main Item",
@@ -1773,6 +1773,70 @@ const TranslationEnglish = {
         buttons: {
             updateButton: "Update"
         }
+    },
+    // Details Work Line
+    "DetailsWorkLine": {
+        "line": {
+            title: "Overall Progress",
+            alertMessage: "Please calculate the progress to view the overall progress",
+            widgets: {
+                qcPoints: "QC Points",
+                ncrs: "NCRs",
+                photos: "Photos",
+                documents: "Documents"
+            },
+            lastUpdate: "Last updated: {{date}}",
+            tabs: {
+                progress: {
+                    title: "Progress Analysis",
+                    text: "Actual Progress"
+                },
+                quality: {
+                    title: "Quality Control",
+                    addButton: "Add QC Point",
+                    text: "Quality Control Points",
+                    noFoundMessage: "No QC Points",
+                    form: {
+                        formTitle: "Add New QC Point",
+                        titleLabel: "QC Point",
+                        titlePlaceholder: "Enter QC Point",
+                        titleMessage: "QC Point is required",
+                        passedLabel: "Passed",
+                        button: "Add"
+                    }
+                },
+                photos: {
+                    title: "Photos",
+                    text: "Site Photos",
+                    addButton: "Upload Photo",
+                    noFoundMessage: "No Photos",
+                    alerts: [
+                        "Some files were not accepted. Only image files are allowed.",
+                        "You can only upload a maximum of 5 files at a time. Please try again.",
+                        "Failed to download the image. Please try again."
+                    ],
+                    success: [
+                        "Photo uploaded successfully",
+                        "Photo deleted successfully",
+                    ]
+                },
+                docs: {
+                    title: "Docs",
+                    text: "Documents",
+                    addButton: "Add Document",
+                    noFoundMessage: "No Documents",
+                    alerts: [
+                        "Some files were not accepted. Only document files are allowed.",
+                        "You can only upload a maximum of 3 files at a time. Please try again.",
+                        "Failed to download the document. Please try again."
+                    ],
+                    success: [
+                        "Document uploaded successfully",
+                        "Document deleted successfully",
+                    ]
+                }
+            }
+        },
     }
 }
 

@@ -8,12 +8,15 @@ import TabBody from "./TabBody";
 import { useRef, useState } from "react";
 import { axiosInstance, url } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 const PhotosTab = ({ workItem, refetch }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openView, setOpenView] = useState({ open: false, image: "" });
-
+  // Translation
+  const { t } = useTranslation();
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
@@ -23,13 +26,13 @@ const PhotosTab = ({ workItem, refetch }) => {
     const validFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (validFiles.length !== files.length) {
-      return alert(
-        "Some files were not accepted. Only image files are allowed."
+      return toast.error(
+        t("DetailsWorkLine.line.tabs.photos.alerts", { returnObjects: true })[0]
       );
     }
     if (files.length > 5) {
-      return alert(
-        "You can only upload a maximum of 5 files at a time. Please try again."
+      return toast.error(
+        t("DetailsWorkLine.line.tabs.photos.alerts", { returnObjects: true })[1]
       );
     }
     const formData = new FormData();
@@ -50,6 +53,11 @@ const PhotosTab = ({ workItem, refetch }) => {
       refetch();
       setIsLoading(false);
       formData.delete("images");
+      toast.success(
+        t("DetailsWorkLine.line.tabs.photos.success", {
+          returnObjects: true,
+        })[0]
+      );
     }
   };
 
@@ -61,6 +69,11 @@ const PhotosTab = ({ workItem, refetch }) => {
     if (res.status === 204) {
       refetch();
       setIsLoading(false);
+      toast.success(
+        t("DetailsWorkLine.line.tabs.photos.success", {
+          returnObjects: true,
+        })[1]
+      );
     }
   };
 
@@ -92,13 +105,15 @@ const PhotosTab = ({ workItem, refetch }) => {
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error("Error downloading image:", error);
-      alert("Failed to download the image. Please try again.");
+      toast.error(
+        t("DetailsWorkLine.line.tabs.photos.alerts", { returnObjects: true })[2]
+      );
     }
   };
 
   return (
     <TabBody
-      title="Site Photos"
+      title={t("DetailsWorkLine.line.tabs.photos.text")}
       button={
         <div>
           <button
@@ -108,7 +123,8 @@ const PhotosTab = ({ workItem, refetch }) => {
             onClick={handleButtonClick}
             disabled={isLoading}
           >
-            <IoCloudUploadOutline size={24} /> Upload Photo
+            <IoCloudUploadOutline size={24} />{" "}
+            {t("DetailsWorkLine.line.tabs.photos.addButton")}
           </button>
 
           {/* Hidden file input */}
@@ -161,7 +177,7 @@ const PhotosTab = ({ workItem, refetch }) => {
               );
             })
           ) : (
-            <p>No photos</p>
+            <p>{t("DetailsWorkLine.line.tabs.photos.noFoundMessage")}</p>
           )}
         </div>
       ) : (

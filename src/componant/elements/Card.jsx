@@ -22,11 +22,11 @@ const Card = ({
         </div>
       </div>
       {type && (
-        <div className="bg-green-200 text-green-600 py-1 px-2 rounded font-medium text-sm group-hover:translate-x-[-40px] transition-all duration-500">
+        <div className="bg-green-200 text-green-600 py-1 px-2 rounded font-medium text-sm group-hover:ltr:translate-x-[-40px] group-hover:rtl:translate-x-[40px] transition-all duration-500">
           {type}
         </div>
       )}
-      <div className="absolute right-0 group-hover:opacity-100 opacity-0 transition-all duration-700 h-fit flex items-center justify-center gap-2 mx-4">
+      <div className="absolute ltr:right-0 rtl:left-0 group-hover:opacity-100 opacity-0 transition-all duration-700 h-fit flex items-center justify-center gap-2 mx-4">
         {handleDownload && (
           <button onClick={handleDownload} className="bg-blue-200 p-1 rounded">
             <IoDownloadOutline

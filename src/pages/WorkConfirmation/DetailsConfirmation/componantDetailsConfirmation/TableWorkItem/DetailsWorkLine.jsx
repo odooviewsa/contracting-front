@@ -13,6 +13,7 @@ import QualityControlTab from "./Tabs/QualityControlTab";
 import PhotosTab from "./Tabs/PhotosTab";
 import DocumentsTab from "./Tabs/DocumentsTab";
 import { Alert } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const DetailsWorkLine = ({
   workItem,
@@ -20,80 +21,65 @@ const DetailsWorkLine = ({
   setLineDetails,
   refetch,
 }) => {
+  // Translation
+  const { t } = useTranslation();
   const currentWorkItem = workConfirmation?.workItems.filter(
     (item) => item._id === workItem
   )[0];
   const tabs = [
     {
-      title: "Progress Analysis",
+      title: t("DetailsWorkLine.line.tabs.progress.title"),
       content: (
         <ProgressAnalysisTab
           workConfirmation={workConfirmation}
           workItem={currentWorkItem}
+          text={t("DetailsWorkLine.line.tabs.progress.text")}
         />
       ),
     },
     {
-      title: "Quality Control",
+      title: t("DetailsWorkLine.line.tabs.quality.title"),
       content: (
-        <QualityControlTab
-          workConfirmationId={workConfirmation._id}
-          workItem={currentWorkItem}
-          refetch={refetch}
-        />
+        <QualityControlTab workItem={currentWorkItem} refetch={refetch} />
       ),
     },
     {
-      title: "Photos",
-      content: (
-        <PhotosTab
-          workConfirmationId={workConfirmation._id}
-          workItem={currentWorkItem}
-          refetch={refetch}
-        />
-      ),
+      title: t("DetailsWorkLine.line.tabs.photos.title"),
+      content: <PhotosTab workItem={currentWorkItem} refetch={refetch} />,
     },
     {
-      title: "Docs",
-      content: (
-        <DocumentsTab
-          workConfirmationId={workConfirmation._id}
-          workItem={currentWorkItem}
-          refetch={refetch}
-        />
-      ),
+      title: t("DetailsWorkLine.line.tabs.docs.title"),
+      content: <DocumentsTab workItem={currentWorkItem} refetch={refetch} />,
     },
   ];
   const widgets = [
     {
       icon: <IoCheckmarkCircleOutline size={24} />,
       iconColor: "text-green-500",
-      text: "QC Points",
+      text: t("DetailsWorkLine.line.widgets.qcPoints"),
       value: currentWorkItem?.QC_Point.length,
     },
     {
       icon: <IoWarningOutline size={24} />,
       iconColor: "text-red-500",
-      text: "NCRs",
+      text: t("DetailsWorkLine.line.widgets.ncrs"),
       value: "1",
     },
     {
       icon: <IoCameraOutline size={24} />,
       iconColor: "text-blue-500",
-      text: "Photos",
+      text: t("DetailsWorkLine.line.widgets.photos"),
       value: currentWorkItem?.images.length,
     },
     {
       icon: <IoDocumentOutline size={24} />,
       iconColor: "text-purple-500",
-      text: "Documents",
+      text: t("DetailsWorkLine.line.widgets.documents"),
       value: currentWorkItem?.documents.length,
     },
   ];
   return (
-    <div
-      className="bg-black/60 fixed flex items-center justify-center top-0 left-0 h-screen w-full z-40"
-    >
+    <div className="bg-black/60 fixed flex items-center justify-center top-0 left-0 h-screen w-full z-40">
       <div className="py-4 w-[80vw] h-[80vh] bg-white rounded flex flex-col gap-8 p-8 lg:p-10 overflow-y-auto scrollbar relative z-50">
         <div className="absolute top-4 rtl:right-4 ltr:left-4 cursor-pointer">
           <IoCloseOutline onClick={() => setLineDetails(null)} size={18} />
@@ -101,12 +87,8 @@ const DetailsWorkLine = ({
         {currentWorkItem?.isCalculated ? (
           <div className="flex flex-col gap-4">
             <div className="w-full flex flex-col md:flex-row justify-between items-start gap-y-2 md:items-center">
-              <h3 className="lead">Overall Progress</h3>
+              <h3 className="lead">{t("DetailsWorkLine.line.title")}</h3>
               <div className="flex gap-4">
-                <p className="textBlur">
-                  Efficiency:{" "}
-                  <span className="text-yellow-500 font-medium">86.5%</span>
-                </p>
                 <p>
                   <span className="text-blue-500 font-medium">
                     {(
@@ -140,7 +122,7 @@ const DetailsWorkLine = ({
           </div>
         ) : (
           <Alert severity="warning">
-            Please calculate the progress to view the overall progress
+            {t("DetailsWorkLine.line.alertMessage")}
           </Alert>
         )}
 
@@ -151,12 +133,13 @@ const DetailsWorkLine = ({
         </div>
         <p className="textBlur flex gap-2 items-center">
           <IoTimeOutline size={18} />
-          Last updated: {new Date(workConfirmation?.updatedAt).getFullYear()}-
-          {new Date(workConfirmation?.updatedAt).getMonth() + 1}-
-          {String(new Date(workConfirmation?.updatedAt).getDate()).padStart(
-            2,
-            "0"
-          )}
+          {t("DetailsWorkLine.line.lastUpdate", {
+            date: `${new Date(workConfirmation?.updatedAt).getFullYear()}-${
+              new Date(workConfirmation?.updatedAt).getMonth() + 1
+            }-${String(
+              new Date(workConfirmation?.updatedAt).getDate()
+            ).padStart(2, "0")}`,
+          })}
         </p>
         <Tabs items={tabs} />
       </div>

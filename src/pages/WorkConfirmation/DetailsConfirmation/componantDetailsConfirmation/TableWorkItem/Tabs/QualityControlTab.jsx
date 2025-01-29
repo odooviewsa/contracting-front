@@ -7,7 +7,10 @@ import Button from "../../../../../../componant/elements/Button";
 import { axiosInstance } from "../../../../../../axios/axios";
 // import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../../../componant/Loading";
-const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
+import { useTranslation } from "react-i18next";
+const QualityControlTab = ({ workItem, refetch }) => {
+  // Translation
+  const { t } = useTranslation();
   const [isQCPointForm, setIsQCPointForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -26,18 +29,19 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
       refetch();
       setIsLoading(false);
       setIsQCPointForm(false);
-      reset()
+      reset();
     }
   };
   return (
     <TabBody
-      title="Quality Control Points"
+      title={t("DetailsWorkLine.line.tabs.quality.text")}
       button={
         <button
           onClick={() => setIsQCPointForm(true)}
           className="flex items-center gap-2 text-blue-500"
         >
-          <IoAddOutline size={24} /> Add QC Point
+          <IoAddOutline size={24} />{" "}
+          {t("DetailsWorkLine.line.tabs.quality.addButton")}
         </button>
       }
     >
@@ -64,7 +68,7 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
               />
             ))
           ) : (
-            <p>No QC Points</p>
+            <p>{t("DetailsWorkLine.line.tabs.quality.noFoundMessage")}</p>
           )
         ) : (
           <div className="flex items-center justify-center h-44">
@@ -80,7 +84,9 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
             className="bg-white w-1/2 h-fit rounded p-4 flex flex-col gap-4"
           >
             <div className="flex items-center justify-between">
-              <h3 className="lead">QC Point</h3>
+              <h3 className="lead">
+                {t("DetailsWorkLine.line.tabs.quality.form.formTitle")}
+              </h3>
               <button className="cursor-pointer">
                 <IoCloseOutline
                   size={18}
@@ -89,14 +95,20 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
               </button>
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="title">QC Point</label>
+              <label htmlFor="title">
+                {t("DetailsWorkLine.line.tabs.quality.form.titleLabel")}
+              </label>
               <input
                 type="text"
                 id={"title"}
                 {...register("title", {
-                  required: "QC Point is required",
+                  required: t(
+                    "DetailsWorkLine.line.tabs.quality.form.titlePlaceholder"
+                  ),
                 })}
-                placeholder="Enter your QC Point"
+                placeholder={t(
+                  "DetailsWorkLine.line.tabs.quality.form.titleMessage"
+                )}
                 className="border px-4 py-2"
               />
               {errors.title && (
@@ -105,7 +117,9 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
             </div>
             <div className="flex flex-row gap-2 items-center">
               <input type="checkbox" id={"passed"} {...register("passed")} />
-              <label htmlFor="passed">Is Passed?</label>
+              <label htmlFor="passed">
+                {t("DetailsWorkLine.line.tabs.quality.form.passedLabel")}
+              </label>
             </div>
             <Button
               disabled={isLoading}
@@ -114,7 +128,11 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
                 isLoading && "cursor-not-allowed"
               }`}
             >
-              {isLoading ? <Loading /> : "Add"}
+              {isLoading ? (
+                <Loading />
+              ) : (
+                t("DetailsWorkLine.line.tabs.quality.form.button")
+              )}
             </Button>
           </form>
         </div>

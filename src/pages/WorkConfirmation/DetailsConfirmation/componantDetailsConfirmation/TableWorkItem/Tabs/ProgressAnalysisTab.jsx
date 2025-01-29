@@ -1,4 +1,5 @@
 import { Line } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 const options = {
   responsive: true,
@@ -9,7 +10,7 @@ const options = {
   stacked: false,
 };
 
-const ProgressAnalysisTab = ({ workItem, workConfirmation }) => {
+const ProgressAnalysisTab = ({ workItem, workConfirmation, text }) => {
   const startDate = new Date(workConfirmation?.startDate);
   const endDate = new Date(workConfirmation?.endDate);
 
@@ -19,18 +20,18 @@ const ProgressAnalysisTab = ({ workItem, workConfirmation }) => {
   const diffInWeeks = Math.ceil(diffInDays / 7);
   const diffInMonths = Math.ceil(diffInDays / 30);
   const diffInYears = Math.ceil(diffInDays / 365);
-
+  const { i18n } = useTranslation();
   let labels = [];
   let progressData = [];
 
   if (diffInDays <= 1) {
     for (let i = 0; i < diffInHours; i++) {
-      labels.push(`Hour ${i + 1}`);
+      labels.push(`${i18n.dir() === "rtl" ? "الساعة": "Hour"} ${i + 1}`);
       progressData.push(workItem.totalQuantity * ((i + 1) / diffInHours));
     }
   } else if (diffInDays <= 7) {
     for (let i = 0; i < diffInDays; i++) {
-      labels.push(`Day ${i + 1}`);
+      labels.push(`${i18n.dir() === "rtl" ? "اليوم" : "Day"} ${i + 1}`);
       progressData.push(workItem.totalQuantity * ((i + 1) / diffInDays));
     }
   } else if (diffInDays <= 30) {
@@ -45,15 +46,18 @@ const ProgressAnalysisTab = ({ workItem, workConfirmation }) => {
     for (let i = 0; i < diffInMonths; i++) {
       const monthIndex = (currentMonth + i) % 12;
       const year = currentYear + Math.floor((currentMonth + i) / 12);
-      const monthName = new Date(year, monthIndex).toLocaleString("en-US", {
-        month: "long",
-      });
+      const monthName = new Date(year, monthIndex).toLocaleString(
+        i18n.dir() === "rtl" ? "ar-EG" : "en-US",
+        {
+          month: "long",
+        }
+      );
       labels.push(`${monthName} ${year}`);
       progressData.push(workItem.totalQuantity * ((i + 1) / diffInMonths));
     }
   } else {
     for (let i = 0; i < diffInYears; i++) {
-      labels.push(`Year ${i + 1}`);
+      labels.push(`${i18n.dir() === "rtl" ? "السنة" :"Year"} ${i + 1}`);
       progressData.push(workItem.totalQuantity * ((i + 1) / diffInYears));
     }
   }
@@ -62,7 +66,7 @@ const ProgressAnalysisTab = ({ workItem, workConfirmation }) => {
     labels,
     datasets: [
       {
-        label: "Actual Progress",
+        label: text,
         data: progressData,
         borderColor: "rgb(37, 99, 235)",
         backgroundColor: "rgb(59, 130, 246)",
