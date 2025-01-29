@@ -1,3 +1,4 @@
+import { IoIosDocument } from "react-icons/io";
 import {
     IoPersonOutline,
     IoMailOutline,
@@ -5,6 +6,9 @@ import {
     IoLocationOutline,
     IoBusinessOutline,
     IoDocumentTextOutline,
+    IoCalendarOutline,
+    IoDownloadOutline,
+    IoPrintOutline,
 } from "react-icons/io5";
 
 
@@ -1329,6 +1333,51 @@ const TranslationEnglish = {
                     totalTax: "Total Tax Amount",
                 }
             }
+        },
+        summaryReports: {
+            title: "Total Works Summary Report",
+            buttons: [
+                {
+                    text: "Excel",
+                    icon: IoIosDocument,
+                    bgColor: "#00C951",
+                    type: "excel"
+                },
+                {
+                    text: "PDF",
+                    icon: IoDownloadOutline,
+                    bgColor: "#E7000B",
+                    type: "pdf"
+
+                },
+                {
+                    text: "Print",
+                    icon: IoPrintOutline,
+                    bgColor: "#6a7282",
+                    type: "print"
+                },
+            ],
+            subTitles: [
+                {
+                    text: "Commercial Peace Tower",
+                    icon: IoDocumentTextOutline
+                },
+                {
+                    text: "{{date}}",
+                    icon: IoCalendarOutline
+                }
+            ],
+            details: [
+                {
+                    text: "Contract No: {{contractNo}}",
+                },
+                {
+                    text: "Contract Value: {{contractValue}}",
+                },
+                {
+                    text: "Contract Duration: {{contractDuration}}",
+                },
+            ],
         }
     },
     // Edit Contract Form
@@ -1391,7 +1440,8 @@ const TranslationEnglish = {
         boq: "BOQ",
         deduction: "Deduction",
         addition: "Addition",
-        summary: "Summary"
+        summary: "Summary",
+        summaryReports: "Reports"
     },
     // Confirmation Steps
     "ConfirmationSteps": {
@@ -1426,7 +1476,7 @@ const TranslationEnglish = {
             noFound: "No Work Confirmation Found",
             calcButton: {
                 loading: "Loading...",
-                text:"Calculate"
+                text: "Calculate"
             }
         },
         detailsModel: {
@@ -1841,7 +1891,8 @@ const TranslationEnglish = {
                 }
             }
         },
-    }
+    },
+
 }
 
 export default TranslationEnglish

@@ -1,13 +1,20 @@
 import { Link } from "react-router-dom";
 
-const Button = ({ type, href, className = "", disabled, children }) => {
-  let style = `bg-primaryColor text-white rounded-md px-6 py-2 ${className}`;
+const Button = ({
+  type,
+  href,
+  className = "",
+  styleHtml,
+  disabled,
+  children,
+}) => {
+  let style = `bg-primaryColor text-white rounded-md px-6 py-2 text-sm font-medium ${className}`;
   return href ? (
-    <Link to={href} className={style}>
+    <Link style={styleHtml} to={href} className={style}>
       {children}
     </Link>
   ) : (
-    <button disabled={disabled} type={type} className={style}>
+    <button style={styleHtml} disabled={disabled} type={type} className={style}>
       {children}
     </button>
   );

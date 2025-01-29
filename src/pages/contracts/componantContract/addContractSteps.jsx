@@ -45,6 +45,14 @@ export default function NavigationSteps() {
       icon: <BiSticker />,
       path: "summary",
     },
+    {
+      name: "forthProgressDahedLine",
+    },
+    {
+      name: t("ContractSteps.summaryReports"),
+      icon: <BiSticker />,
+      path: "summaryReports",
+    },
   ];
   const location = useLocation();
   const [totalIndex, setTotalIndex] = useState(0);
@@ -56,6 +64,7 @@ export default function NavigationSteps() {
     if (location?.pathname.includes("deduction")) setTotalIndex(4);
     if (location?.pathname.includes("addition")) setTotalIndex(6);
     if (location?.pathname.includes("summary")) setTotalIndex(8);
+    if (location?.pathname.includes("summaryReports")) setTotalIndex(10);
   }, [location?.pathname]);
   return (
     <div className="flex flex-row items-center justify-between  gap-2 sm:gap-8 md:gap-5   flex-nowrap  md:py-8">

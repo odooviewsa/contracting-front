@@ -47,6 +47,7 @@ import "./i18n.js";
 import { useTranslation } from "react-i18next";
 import SettingLayout from "./pages/setting/settingLayout.jsx";
 import CompanyProfile from "./pages/companyProfile/companyProfile.jsx";
+import Reports from "./pages/contracts/summaryReports/Reports.jsx";
 
 function App() {
   // Multi Language
@@ -177,6 +178,10 @@ function App() {
             {
               path: "summary/:id",
               element: <Summary />,
+            },
+            {
+              path: "summaryReports/:id",
+              element: <Reports />,
             },
           ],
         },
