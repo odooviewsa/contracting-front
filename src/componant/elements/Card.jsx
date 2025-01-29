@@ -1,4 +1,4 @@
-import { IoTrashOutline } from "react-icons/io5";
+import { IoDownloadOutline, IoTrashOutline } from "react-icons/io5";
 
 const Card = ({
   handleDelete,
@@ -8,6 +8,7 @@ const Card = ({
   icon,
   isLoading,
   className = "",
+  handleDownload,
 }) => {
   return (
     <div
@@ -25,16 +26,23 @@ const Card = ({
           {type}
         </div>
       )}
-      <button
-        disabled={isLoading}
-        className="absolute right-0 bg-red-300 rounded p-1 mx-4 group-hover:opacity-100 opacity-0 transition-all duration-700"
-      >
-        <IoTrashOutline
-          size={18}
-          className="text-red-900 cursor-pointer"
-          onClick={handleDelete}
-        />
-      </button>
+      <div className="absolute right-0 group-hover:opacity-100 opacity-0 transition-all duration-700 h-fit flex items-center justify-center gap-2 mx-4">
+        {handleDownload && (
+          <button onClick={handleDownload} className="bg-blue-200 p-1 rounded">
+            <IoDownloadOutline
+              size={18}
+              className="text-blue-500 cursor-pointer"
+            />
+          </button>
+        )}
+        <button disabled={isLoading} className="bg-red-300 rounded p-1">
+          <IoTrashOutline
+            size={18}
+            className="text-red-900 cursor-pointer"
+            onClick={handleDelete}
+          />
+        </button>
+      </div>
     </div>
   );
 };

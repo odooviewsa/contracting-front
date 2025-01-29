@@ -2,15 +2,17 @@ import { IoDocumentAttachOutline, IoAddOutline } from "react-icons/io5";
 import TabBody from "./TabBody";
 import Card from "../../../../../../componant/elements/Card";
 import { useRef, useState } from "react";
-import { axiosInstance } from "../../../../../../axios/axios";
+import { axiosInstance, url } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
 
 const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const handleButtonClick = () => {
     fileInputRef.current.click(); // Programmatically click the hidden input
   };
+
   const handleFileChange = async (event) => {
     const files = Array.from(event.target.files); // Handle multiple files
     const validFiles = files.filter(
@@ -38,7 +40,7 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
     });
     setIsLoading(true);
     let res = await axiosInstance.put(
-      `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details`,
+      `/api/work/${workItem?.workItemId._id}/details`,
       formData,
       {
         headers: {
@@ -49,8 +51,43 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
     if (res.statusText === "OK") {
       refetch();
       setIsLoading(false);
+      formData.delete("documents");
     }
   };
+
+  // Function to handle document download
+  const handleDownloadDocument = async (documentName) => {
+    try {
+      // Fetch the document as a blob
+      const response = await axiosInstance.get(
+        `${url}/uploads/${documentName}`,
+        {
+          responseType: "blob", // Remove the manual CORS header
+        }
+      );
+
+      // Check if the response is valid
+      if (!response.data || response.status !== 200) {
+        throw new Error("Failed to fetch the document.");
+      }
+
+      // Create a temporary link element
+      const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", documentName); // Set the filename for the download
+      document.body.appendChild(link);
+      link.click(); // Trigger the download
+
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Error downloading document:", error);
+      alert("Failed to download the document. Please try again.");
+    }
+  };
+
   return (
     <TabBody
       title="Documents"
@@ -77,14 +114,14 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
     >
       {!isLoading ? (
         <div className="flex flex-col gap-2">
-          {workItem?.documents?.length > 0 ? (
-            workItem?.documents?.map((doc, key) => (
+          {workItem?.workItemId?.documents?.length > 0 ? (
+            workItem?.workItemId?.documents?.map((doc, key) => (
               <Card
                 key={key}
                 handleDelete={async () => {
                   setIsLoading(true);
                   let res = await axiosInstance.delete(
-                    `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details?document=${doc._id}`
+                    `/api/work/${workItem?.workItemId._id}/details?document=${doc._id}`
                   );
                   if (res.status === 204) {
                     refetch();
@@ -97,6 +134,7 @@ const DocumentsTab = ({ workItem, workConfirmationId, refetch }) => {
                 ).toFixed(2)} MB`}
                 icon={<IoDocumentAttachOutline size={24} />}
                 isLoading={isLoading}
+                handleDownload={() => handleDownloadDocument(doc.title)} // Pass the download function
               />
             ))
           ) : (

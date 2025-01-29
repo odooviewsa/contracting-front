@@ -14,17 +14,19 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm();
   const onSubmit = async (data) => {
     setIsLoading(true);
     let res = await axiosInstance.put(
-      `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details`,
+      `/api/work/${workItem?.workItemId._id}/details`,
       data
     );
     if (res.statusText === "OK") {
       refetch();
       setIsLoading(false);
       setIsQCPointForm(false);
+      reset()
     }
   };
   return (
@@ -41,13 +43,13 @@ const QualityControlTab = ({ workItem, workConfirmationId, refetch }) => {
     >
       <div className="flex flex-col gap-4">
         {!isLoading ? (
-          workItem?.QC_Point?.length > 0 ? (
-            workItem?.QC_Point?.map((QC_Point) => (
+          workItem.workItemId?.QC_Point?.length > 0 ? (
+            workItem.workItemId?.QC_Point?.map((QC_Point) => (
               <Card
                 handleDelete={async () => {
                   setIsLoading(true);
                   let res = await axiosInstance.delete(
-                    `/api/workConfirmation/workConfirmation/${workConfirmationId}/${workItem?.workItemId._id}/details?qcPointId=${QC_Point._id}`
+                    `/api/work/${workItem?.workItemId._id}/details?qcPointId=${QC_Point._id}`
                   );
                   if (res.status === 204) {
                     refetch();

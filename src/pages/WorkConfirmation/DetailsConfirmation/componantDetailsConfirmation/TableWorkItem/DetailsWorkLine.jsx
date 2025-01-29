@@ -90,10 +90,11 @@ const DetailsWorkLine = ({
       value: currentWorkItem?.documents.length,
     },
   ];
-  console.log(currentWorkItem)
   return (
-    <div className="bg-black/60 fixed flex items-center justify-center top-0 left-0 h-screen w-full z-50">
-      <div className="py-4 w-[80vw] h-[80vh] bg-white rounded flex flex-col gap-8 p-8 lg:p-10 overflow-y-auto scrollbar relative">
+    <div
+      className="bg-black/60 fixed flex items-center justify-center top-0 left-0 h-screen w-full z-40"
+    >
+      <div className="py-4 w-[80vw] h-[80vh] bg-white rounded flex flex-col gap-8 p-8 lg:p-10 overflow-y-auto scrollbar relative z-50">
         <div className="absolute top-4 rtl:right-4 ltr:left-4 cursor-pointer">
           <IoCloseOutline onClick={() => setLineDetails(null)} size={18} />
         </div>
@@ -109,8 +110,9 @@ const DetailsWorkLine = ({
                 <p>
                   <span className="text-blue-500 font-medium">
                     {(
-                      (currentWorkItem?.currentQuantity /
-                        currentWorkItem?.totalQuantity) *
+                      (currentWorkItem?.totalQuantity /
+                        currentWorkItem?.workItemId.workDetails
+                          .assignedQuantity) *
                       100
                     ).toFixed(2)}
                     %
@@ -126,12 +128,13 @@ const DetailsWorkLine = ({
                 aria-valuemax="100"
                 style={{
                   width: `${
-                    (currentWorkItem?.currentQuantity /
-                      currentWorkItem?.totalQuantity) *
+                    (currentWorkItem?.totalQuantity /
+                      currentWorkItem?.workItemId.workDetails
+                        .assignedQuantity) *
                     100
                   }%`,
                 }}
-                className="flex h-full items-center justify-center bg-primaryColor  text-white rounded-3xl"
+                className="flex h-full items-center justify-center bg-green-500  text-white rounded-3xl"
               ></div>
             </div>
           </div>
@@ -150,7 +153,10 @@ const DetailsWorkLine = ({
           <IoTimeOutline size={18} />
           Last updated: {new Date(workConfirmation?.updatedAt).getFullYear()}-
           {new Date(workConfirmation?.updatedAt).getMonth() + 1}-
-          {String(new Date(workConfirmation?.updatedAt).getDate()).padStart(2, "0")}
+          {String(new Date(workConfirmation?.updatedAt).getDate()).padStart(
+            2,
+            "0"
+          )}
         </p>
         <Tabs items={tabs} />
       </div>
