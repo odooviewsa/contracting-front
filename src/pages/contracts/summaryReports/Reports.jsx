@@ -8,19 +8,30 @@ import Loading from "../../../componant/Loading.jsx";
 import { useEffect, useLayoutEffect, useState } from "react";
 import moment from "moment/moment.js";
 
+// Utility function to split array into chunks
+const chunkArray = (array, chunkSize) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
+};
+
 const Reports = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id: contractId } = useParams();
+
   // States Values
   const [worksValues, setWorksValues] = useState([]);
   const [deductions, setDeductions] = useState([]);
   const [additions, setAdditions] = useState([]);
   const [vatValues, setVatValues] = useState([]);
   const [businessGuaranteeValues, setBusinessGuaranteeValues] = useState([]);
-  const [netValues, setNetValues] = useState(null);
+  const [netValues, setNetValues] = useState([]);
   const [previousPaymentsValues, setPreviousPaymentsValues] = useState(["-"]);
-  const [dueAmountValues, setDueAmountValues] = useState(null);
+  const [dueAmountValues, setDueAmountValues] = useState([]);
+
   // States Values of sum
   const [allSumValues, setAllSumValues] = useState({
     works: 0,
@@ -31,6 +42,7 @@ const Reports = () => {
     net: 0,
     dueAmount: 0,
   });
+
   // Work Confirmations data
   const { data, isLoading } = useQuery({
     queryKey: "getWorkConfirmationByContractId",
@@ -39,11 +51,12 @@ const Reports = () => {
         `/api/workConfirmation/${contractId}/contract`
       );
       if (res.status !== 200) {
-        toast.error("");
+        toast.error("Failed to fetch work confirmations");
       }
       return res.data;
     },
   });
+
   // Contract Data
   const { data: contract, isLoadingContract } = useQuery({
     queryKey: "GetContractById",
@@ -54,6 +67,7 @@ const Reports = () => {
       }
     },
   });
+
   // Calculate the arguments
   useLayoutEffect(() => {
     if (data && data.length > 0 && contract) {
@@ -84,16 +98,17 @@ const Reports = () => {
           (additionsList[index] || 0)
       );
       setNetValues(netArray);
+
       // Compute previous payments (shift net values)
       let previousPayments = ["-", ...netArray.slice(0, -1)];
       setPreviousPaymentsValues(previousPayments);
 
-      setDueAmountValues([...netArray]); // If needed, update due amounts
-
-      // Compute total previous payments
-      const totalPreviousPayments = previousPayments
-        .filter((val) => val !== "-")
-        .reduce((acc, val) => acc + val, 0);
+      // Compute due amounts
+      const dueAmounts = netArray.map((value, index) => {
+        if (index === 0) return value;
+        return value - previousPayments[index];
+      });
+      setDueAmountValues(dueAmounts);
 
       // Compute total for all rows
       setAllSumValues({
@@ -103,11 +118,14 @@ const Reports = () => {
         deductions: deductionsList.reduce((acc, val) => acc + val, 0),
         additions: additionsList.reduce((acc, val) => acc + val, 0),
         net: netArray.reduce((acc, val) => acc + val, 0),
-        dueAmount: totalPreviousPayments + netArray[netArray.length - 1],
+        dueAmount: dueAmounts.reduce((acc, val) => acc + val, 0),
       });
     }
   }, [data, contract]);
-  console.log(allSumValues);
+
+  // Split data into chunks of 4 work confirmations
+  const chunkedData = chunkArray(data || [], 4);
+
   return (
     <div>
       {data?.length > 0 ? (
@@ -174,100 +192,162 @@ const Reports = () => {
             </div>
           </div>
           {!isLoading ? (
-            <div className="rounded-lg bg-slate-100 border shadow-md">
-              <table>
-                <tr className="*:py-6 odd:bg-slate-200">
-                  <th>Description</th>
-                  {data?.map((item, i) => (
-                    <th key={item._id}>Work Confirmation #{i + 1}</th>
-                  ))}
-                  <th>Total</th>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>Works Value</strong>
-                  </td>
-                  {worksValues?.map((value, i) => (
-                    <td key={i}>{value} EGP</td>
-                  ))}
-                  <td>{allSumValues.works} EGP</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>VAT ({contract?.taxValue}%)</strong>
-                  </td>
-                  {vatValues?.map((value, i) => (
-                    <td key={i}>{value} EGP</td>
-                  ))}
-                  <td>{allSumValues.vat} EGP</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>
-                      Business Guarantee ({contract?.businessGuarantee}%)
-                    </strong>
-                  </td>
-                  {businessGuaranteeValues?.map((value, i) => (
-                    <td key={i}>({value} EGP)</td>
-                  ))}
-                  <td>({allSumValues.businessGuarantee} EGP)</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>Deductions</strong>
-                  </td>
-                  {deductions?.map((value, i) => (
-                    <td key={i}>({value} EGP)</td>
-                  ))}
-                  <td>({allSumValues.deductions} EGP)</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>Additions</strong>
-                  </td>
-                  {additions?.map((value, i) => (
-                    <td key={i}>{value} EGP</td>
-                  ))}
-                  <td>{allSumValues.additions} EGP</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>Net</strong>
-                  </td>
-                  {netValues?.map((value, i) => (
-                    <td key={i}>{value} EGP</td>
-                  ))}
-                  <td>{allSumValues.net} EGP</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>Previous Payments</strong>
-                  </td>
-                  {previousPaymentsValues?.map((value, i) => {
-                    if (i !== 0) {
-                      return (
-                        <td key={i}>
-                          ({value}
-                          {i !== 0 && " EGP"})
+            chunkedData.map((chunk, chunkIndex) => {
+              // Calculate totals for this chunk
+              const chunkTotals = {
+                works: chunk.reduce((acc, item) => acc + item.totalAmount, 0),
+                vat: chunk.reduce(
+                  (acc, item) =>
+                    acc + item.totalAmount * (contract.taxValue / 100),
+                  0
+                ),
+                businessGuarantee: chunk.reduce(
+                  (acc, item) =>
+                    acc + item.totalAmount * (contract.businessGuarantee / 100),
+                  0
+                ),
+                deductions: chunk.reduce(
+                  (acc, item) => acc + item.totalDeduction,
+                  0
+                ),
+                additions: chunk.reduce(
+                  (acc, item) => acc + item.totalAddition,
+                  0
+                ),
+                net: chunk.reduce(
+                  (acc, item, index) =>
+                    acc +
+                    item.totalAmount +
+                    item.totalAmount * (contract.taxValue / 100) -
+                    item.totalAmount * (contract.businessGuarantee / 100) -
+                    item.totalDeduction +
+                    item.totalAddition,
+                  0
+                ),
+              };
+
+              return (
+                <div
+                  key={chunkIndex}
+                  className="rounded-lg bg-slate-100 border shadow-md mb-6"
+                >
+                  <table className="w-full">
+                    <thead>
+                      <tr className="*:py-6 odd:bg-slate-200">
+                        <th>Description</th>
+                        {chunk.map((item, i) => (
+                          <th key={item._id}>
+                            Work Confirmation #{chunkIndex * 4 + i + 1}
+                          </th>
+                        ))}
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>Works Value</strong>
                         </td>
-                      );
-                    } else {
-                      return <td key={i}>{value}</td>;
-                    }
-                  })}
-                  <td>-</td>
-                </tr>
-                <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
-                  <td>
-                    <strong>Due Amount</strong>
-                  </td>
-                  {dueAmountValues?.map((value, i) => (
-                    <td key={i}>{value} EGP</td>
-                  ))}
-                  <td>{allSumValues.dueAmount} EGP</td>
-                </tr>
-              </table>
-            </div>
+                        {chunk.map((item, i) => (
+                          <td key={i}>{item.totalAmount} EGP</td>
+                        ))}
+                        <td>{chunkTotals.works} EGP</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>VAT ({contract?.taxValue}%)</strong>
+                        </td>
+                        {chunk.map((item, i) => (
+                          <td key={i}>
+                            {item.totalAmount * (contract.taxValue / 100)} EGP
+                          </td>
+                        ))}
+                        <td>{chunkTotals.vat} EGP</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>
+                            Business Guarantee ({contract?.businessGuarantee}%)
+                          </strong>
+                        </td>
+                        {chunk.map((item, i) => (
+                          <td key={i}>
+                            (
+                            {item.totalAmount *
+                              (contract.businessGuarantee / 100)}{" "}
+                            EGP)
+                          </td>
+                        ))}
+                        <td>({chunkTotals.businessGuarantee} EGP)</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>Deductions</strong>
+                        </td>
+                        {chunk.map((item, i) => (
+                          <td key={i}>({item.totalDeduction} EGP)</td>
+                        ))}
+                        <td>({chunkTotals.deductions} EGP)</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>Additions</strong>
+                        </td>
+                        {chunk.map((item, i) => (
+                          <td key={i}>{item.totalAddition} EGP</td>
+                        ))}
+                        <td>{chunkTotals.additions} EGP</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>Net</strong>
+                        </td>
+                        {chunk.map((item, i) => (
+                          <td key={i}>
+                            {item.totalAmount +
+                              item.totalAmount * (contract.taxValue / 100) -
+                              item.totalAmount *
+                                (contract.businessGuarantee / 100) -
+                              item.totalDeduction +
+                              item.totalAddition}{" "}
+                            EGP
+                          </td>
+                        ))}
+                        <td>{chunkTotals.net} EGP</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>Previous Payments</strong>
+                        </td>
+                        {chunk.map((item, i) => {
+                          if (i === 0) {
+                            return <td key={i}>-</td>;
+                          } else {
+                            return (
+                              <td key={i}>
+                                ({netValues[chunkIndex * 4 + i - 1]} EGP)
+                              </td>
+                            );
+                          }
+                        })}
+                        <td>-</td>
+                      </tr>
+                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                        <td>
+                          <strong>Due Amount</strong>
+                        </td>
+                        {chunk.map((item, i) => (
+                          <td key={i}>
+                            {dueAmountValues[chunkIndex * 4 + i]} EGP
+                          </td>
+                        ))}
+                        <td>{chunkTotals.net} EGP</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })
           ) : (
             <Loading />
           )}
