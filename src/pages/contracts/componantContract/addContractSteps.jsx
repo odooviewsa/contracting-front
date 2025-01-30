@@ -67,7 +67,7 @@ export default function NavigationSteps() {
     if (location?.pathname.includes("summaryReports")) setTotalIndex(10);
   }, [location?.pathname]);
   return (
-    <div className="flex flex-row items-center justify-between  gap-2 sm:gap-8 md:gap-5   flex-nowrap  md:py-8">
+    <div className="print:hidden flex flex-row items-center justify-between  gap-2 sm:gap-8 md:gap-5   flex-nowrap  md:py-8">
       {steps.map((step, index) =>
         step.name.includes("ProgressDahedLine") ? (
           <div

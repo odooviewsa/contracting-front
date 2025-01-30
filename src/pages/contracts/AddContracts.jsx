@@ -29,6 +29,10 @@ export default function AddContracts() {
                 `/${user?.companyName}/contracts/addContract/summary`
               )
             ? "Summary"
+            : pathname.includes(
+                `/${user?.companyName}/contracts/addContract/summaryReports`
+              )
+            ? "Summary Reports"
             : ""
         }
       />

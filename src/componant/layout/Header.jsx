@@ -14,7 +14,7 @@ function Header({ first, second }) {
     : -1;
   const navigate = useNavigate();
   return (
-    <div className="flex items-center gap-1 text-[0.9rem]">
+    <div className="print:hidden flex items-center gap-1 text-[0.9rem]">
       <h1
         onClick={() => navigate(url)}
         className="cursor-pointer text-gray-500"

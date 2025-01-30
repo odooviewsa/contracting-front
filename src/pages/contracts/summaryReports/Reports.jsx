@@ -5,8 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../../axios/axios";
 import { toast } from "react-toastify";
 import Loading from "../../../componant/Loading.jsx";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import moment from "moment/moment.js";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 
 // Utility function to split array into chunks
 const chunkArray = (array, chunkSize) => {
@@ -23,12 +26,6 @@ const Reports = () => {
   const { id: contractId } = useParams();
 
   // States Values
-  const [worksValues, setWorksValues] = useState([]);
-  const [deductions, setDeductions] = useState([]);
-  const [additions, setAdditions] = useState([]);
-  const [vatValues, setVatValues] = useState([]);
-  const [businessGuaranteeValues, setBusinessGuaranteeValues] = useState([]);
-  const [netValues, setNetValues] = useState([]);
   const [previousPaymentsValues, setPreviousPaymentsValues] = useState(["-"]);
   const [dueAmountValues, setDueAmountValues] = useState([]);
 
@@ -82,12 +79,6 @@ const Reports = () => {
       const deductionsList = data.map((item) => item.totalDeduction);
       const additionsList = data.map((item) => item.totalAddition);
 
-      setWorksValues(works);
-      setVatValues(vats);
-      setBusinessGuaranteeValues(guarantees);
-      setDeductions(deductionsList);
-      setAdditions(additionsList);
-
       // Compute net values
       const netArray = data.map(
         (item, index) =>
@@ -97,16 +88,19 @@ const Reports = () => {
           (deductionsList[index] || 0) +
           (additionsList[index] || 0)
       );
-      setNetValues(netArray);
 
-      // Compute previous payments (shift net values)
-      let previousPayments = ["-", ...netArray.slice(0, -1)];
-      setPreviousPaymentsValues(previousPayments);
+      // Compute cumulative previous payments
+      const cumulativePreviousPayments = netArray.reduce((acc, val, index) => {
+        if (index === 0) return [netArray[index]]; // First item has no previous payments
+        return [...acc, acc[index - 1] + netArray[index]];
+      }, []);
+
+      setPreviousPaymentsValues(["-", ...cumulativePreviousPayments]);
 
       // Compute due amounts
       const dueAmounts = netArray.map((value, index) => {
         if (index === 0) return value;
-        return value - previousPayments[index];
+        return value - cumulativePreviousPayments[index - 1];
       });
       setDueAmountValues(dueAmounts);
 
@@ -126,8 +120,143 @@ const Reports = () => {
   // Split data into chunks of 4 work confirmations
   const chunkedData = chunkArray(data || [], 4);
 
+  // Activate buttons
+  const handleButtonType = (type) => {
+    switch (type) {
+      case "print":
+        window.print(); // Print the page
+        break;
+      case "pdf":
+        exportToPDF(); // Export to PDF
+        break;
+      case "excel":
+        exportToExcel(); // Export to Excel
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Export to PDF
+  const exportToPDF = () => {
+    const input = document.getElementById("reports-content"); // Ensure the reports content has an ID
+
+    // Hide buttons before capturing
+    const buttons = document.querySelectorAll(".hide-on-pdf");
+    buttons.forEach((button) => (button.style.display = "none"));
+
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4"); // A4 size
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calculate height based on width
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("reports.pdf"); // Save the file as reports.pdf
+
+      // Show buttons after capturing
+      buttons.forEach((button) => (button.style.display = "flex")); // Ensure buttons return to flex-row
+    });
+  };
+
+  // Export to Excel
+  const exportToExcel = () => {
+    // Create a single table for all data
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    // Add header row
+    const headerRow = document.createElement("tr");
+    [
+      "Description",
+      ...data.map((_, i) => `Work Confirmation #${i + 1}`),
+      "Total",
+    ].forEach((text) => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    const previousExcel = previousPaymentsValues.slice(
+      0,
+      previousPaymentsValues.length - 1
+    );
+    // Add rows for each category
+    const categories = [
+      { label: "Works Value", values: data.map((item) => item.totalAmount) },
+      {
+        label: `VAT (${contract?.taxValue}%)`,
+        values: data.map(
+          (item) => item.totalAmount * (contract.taxValue / 100)
+        ),
+      },
+      {
+        label: `Business Guarantee (${contract?.businessGuarantee}%)`,
+        values: data.map(
+          (item) => item.totalAmount * (contract.businessGuarantee / 100)
+        ),
+      },
+      {
+        label: "Deductions",
+        values: data.map((item) => item.totalDeduction),
+      },
+      {
+        label: "Additions",
+        values: data.map((item) => item.totalAddition),
+      },
+      {
+        label: "Net",
+        values: data.map(
+          (item, index) =>
+            item.totalAmount +
+            item.totalAmount * (contract.taxValue / 100) -
+            item.totalAmount * (contract.businessGuarantee / 100) -
+            item.totalDeduction +
+            item.totalAddition
+        ),
+      },
+      {
+        label: "Previous Payments",
+        values: previousExcel,
+      },
+      {
+        label: "Due Amount",
+        values: dueAmountValues,
+      },
+    ];
+    categories.forEach((category) => {
+      const row = document.createElement("tr");
+      const tdLabel = document.createElement("td");
+      tdLabel.textContent = category.label;
+      row.appendChild(tdLabel);
+
+      category.values.forEach((value) => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        row.appendChild(td);
+      });
+
+      // Add total for each category
+      const tdTotal = document.createElement("td");
+      tdTotal.textContent = category.label !== "Previous Payments" ? category.values.reduce((acc, val) => acc + val, 0) : "-";
+      row.appendChild(tdTotal);
+
+      tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    // Convert table to worksheet
+    const ws = XLSX.utils.table_to_sheet(table);
+    const wb = XLSX.utils.book_new(); // Create a new workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); // Add worksheet to workbook
+    XLSX.writeFile(wb, "reports.xlsx"); // Save the file as reports.xlsx
+  };
+  console.log(previousPaymentsValues);
   return (
-    <div>
+    <div id="reports-content">
       {data?.length > 0 ? (
         <div className="flex flex-col items-stretch justify-start gap-4">
           <div className="rounded-lg bg-slate-100 border shadow-md p-6 flex flex-col gap-6">
@@ -153,7 +282,7 @@ const Reports = () => {
                   })}
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 hide-on-pdf">
                 {t("ContractsForms.summaryReports.buttons", {
                   returnObjects: true,
                 }).map((button, key) => {
@@ -162,11 +291,11 @@ const Reports = () => {
                     <Button
                       key={key}
                       type="button"
+                      onClick={() => handleButtonType(button.type)}
                       className={`text-white flex gap-1 items-center`}
                       styleHtml={{
                         backgroundColor: `${button.bgColor}`,
                       }}
-                      onClick={() => navigate(button.path)}
                     >
                       <Icon size={22} />
                       {button.text}
@@ -193,39 +322,6 @@ const Reports = () => {
           </div>
           {!isLoading ? (
             chunkedData.map((chunk, chunkIndex) => {
-              // Calculate totals for this chunk
-              const chunkTotals = {
-                works: chunk.reduce((acc, item) => acc + item.totalAmount, 0),
-                vat: chunk.reduce(
-                  (acc, item) =>
-                    acc + item.totalAmount * (contract.taxValue / 100),
-                  0
-                ),
-                businessGuarantee: chunk.reduce(
-                  (acc, item) =>
-                    acc + item.totalAmount * (contract.businessGuarantee / 100),
-                  0
-                ),
-                deductions: chunk.reduce(
-                  (acc, item) => acc + item.totalDeduction,
-                  0
-                ),
-                additions: chunk.reduce(
-                  (acc, item) => acc + item.totalAddition,
-                  0
-                ),
-                net: chunk.reduce(
-                  (acc, item, index) =>
-                    acc +
-                    item.totalAmount +
-                    item.totalAmount * (contract.taxValue / 100) -
-                    item.totalAmount * (contract.businessGuarantee / 100) -
-                    item.totalDeduction +
-                    item.totalAddition,
-                  0
-                ),
-              };
-
               return (
                 <div
                   key={chunkIndex}
@@ -240,20 +336,22 @@ const Reports = () => {
                             Work Confirmation #{chunkIndex * 4 + i + 1}
                           </th>
                         ))}
-                        <th>Total</th>
+                        <th>Total ({data.length} Items)</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Works Value */}
+                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
                         <td>
                           <strong>Works Value</strong>
                         </td>
                         {chunk.map((item, i) => (
                           <td key={i}>{item.totalAmount} EGP</td>
                         ))}
-                        <td>{chunkTotals.works} EGP</td>
+                        <td>{allSumValues.works} EGP</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Vat */}
+                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
                         <td>
                           <strong>VAT ({contract?.taxValue}%)</strong>
                         </td>
@@ -262,12 +360,14 @@ const Reports = () => {
                             {item.totalAmount * (contract.taxValue / 100)} EGP
                           </td>
                         ))}
-                        <td>{chunkTotals.vat} EGP</td>
+                        <td>{allSumValues.vat} EGP</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Business Guarantee */}
+                      <tr className="bg-red-100 *:py-6">
                         <td>
                           <strong>
-                            Business Guarantee ({contract?.businessGuarantee}%)
+                            Business Guarantee ({contract?.businessGuarantee}
+                            %)
                           </strong>
                         </td>
                         {chunk.map((item, i) => (
@@ -278,27 +378,30 @@ const Reports = () => {
                             EGP)
                           </td>
                         ))}
-                        <td>({chunkTotals.businessGuarantee} EGP)</td>
+                        <td>({allSumValues.businessGuarantee} EGP)</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Deductions */}
+                      <tr className="bg-red-100 *:py-6">
                         <td>
                           <strong>Deductions</strong>
                         </td>
                         {chunk.map((item, i) => (
                           <td key={i}>({item.totalDeduction} EGP)</td>
                         ))}
-                        <td>({chunkTotals.deductions} EGP)</td>
+                        <td>({allSumValues.deductions} EGP)</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Additions */}
+                      <tr className="bg-green-100 *:py-6">
                         <td>
                           <strong>Additions</strong>
                         </td>
                         {chunk.map((item, i) => (
                           <td key={i}>{item.totalAddition} EGP</td>
                         ))}
-                        <td>{chunkTotals.additions} EGP</td>
+                        <td>{allSumValues.additions} EGP</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Net */}
+                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
                         <td>
                           <strong>Net</strong>
                         </td>
@@ -313,26 +416,29 @@ const Reports = () => {
                             EGP
                           </td>
                         ))}
-                        <td>{chunkTotals.net} EGP</td>
+                        <td>{allSumValues.net} EGP</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Previous Payments */}
+                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
                         <td>
                           <strong>Previous Payments</strong>
                         </td>
                         {chunk.map((item, i) => {
-                          if (i === 0) {
+                          const paymentIndex = chunkIndex * 4 + i;
+                          if (paymentIndex === 0) {
                             return <td key={i}>-</td>;
                           } else {
                             return (
                               <td key={i}>
-                                ({netValues[chunkIndex * 4 + i - 1]} EGP)
+                                ({previousPaymentsValues[paymentIndex]} EGP)
                               </td>
                             );
                           }
                         })}
                         <td>-</td>
                       </tr>
-                      <tr className="odd:bg-slate-200 even:bg-slate-50 *:py-6">
+                      {/* Due Amount */}
+                      <tr className="bg-green-100 *:py-6">
                         <td>
                           <strong>Due Amount</strong>
                         </td>
@@ -341,7 +447,7 @@ const Reports = () => {
                             {dueAmountValues[chunkIndex * 4 + i]} EGP
                           </td>
                         ))}
-                        <td>{chunkTotals.net} EGP</td>
+                        <td>{allSumValues.dueAmount} EGP</td>
                       </tr>
                     </tbody>
                   </table>
@@ -356,7 +462,7 @@ const Reports = () => {
         <p>No Work Confirmation Found</p>
       )}
 
-      <div className="flex justify-end gap-4 mt-4">
+      <div className="flex justify-end gap-4 mt-4 hide-on-pdf">
         <button
           type="button"
           className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
