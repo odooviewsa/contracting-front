@@ -18,7 +18,7 @@ export default function Layout() {
       </div>
 
       <div
-        className={` transition-all  md:absolute ltr:right-0 rtl:left-0   ${
+        className={`transition-all  md:absolute ltr:right-0 rtl:left-0 ${
           openSidebar
             ? "md:-[calc(100vw-200px)] lg:w-[calc(100vw-300px)]"
             : "md:w-[calc(100vw-60px)]"

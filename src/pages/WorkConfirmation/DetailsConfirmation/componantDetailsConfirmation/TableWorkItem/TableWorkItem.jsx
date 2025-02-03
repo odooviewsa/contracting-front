@@ -93,66 +93,81 @@ export default function TableWorkItem({
   }
   const colums = [
     {
-      header: t("ConfirmationForms.BOQ.table.columns.workItem"),
+      header: "work item",
+      text: t("ConfirmationForms.BOQ.table.columns.workItem"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.unitOfMeasure"),
+      header: "Unit Of Measure",
+      text: t("ConfirmationForms.BOQ.table.columns.unitOfMeasure"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.contractQuantity"),
+      header: "Contract Quantity",
+      text: t("ConfirmationForms.BOQ.table.columns.contractQuantity"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.previousQuantity"),
+      header: "Previous Quantity",
+      text: t("ConfirmationForms.BOQ.table.columns.previousQuantity"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.currentWorkPercent"),
+      header: "Current Work %",
+      text: t("ConfirmationForms.BOQ.table.columns.currentWorkPercent"),
       display:
         dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.currentWorkQty"),
+      header: "Current Work QTY",
+      text: t("ConfirmationForms.BOQ.table.columns.currentWorkQty"),
       display:
         dispalyDate?.data?.data?.typeOfProgress !== "Percentage per Line",
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.currentWork"),
+      header: "Current Work",
+      text: t("ConfirmationForms.BOQ.table.columns.currentWork"),
       display:
         dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.totalQuantity"),
+      header: "Total Quantity",
+      text: t("ConfirmationForms.BOQ.table.columns.totalQuantity"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.price"),
+      header: "Price",
+      text: t("ConfirmationForms.BOQ.table.columns.price"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.totalAmount"),
+      header: "Total Amount",
+      text: t("ConfirmationForms.BOQ.table.columns.totalAmount"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.completionPercent"),
+      header: "Completion %",
+      text: t("ConfirmationForms.BOQ.table.columns.completionPercent"),
       display: dispalyDate?.data?.data?.completionPercentage === true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.invoicingPercent"),
+      header: "Invoicing %",
+      text: t("ConfirmationForms.BOQ.table.columns.invoicingPercent"),
       display: dispalyDate?.data?.data?.activateInvoicingByPercentage === true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.netAmount"),
+      header: "Net Amount",
+      text: t("ConfirmationForms.BOQ.table.columns.netAmount"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.duoAmount"),
+      header: "Duo Amount",
+      text: t("ConfirmationForms.BOQ.table.columns.duoAmount"),
       display: true,
     },
     {
-      header: t("ConfirmationForms.BOQ.table.columns.calculate"),
+      header: "Calculate",
+      text: t("ConfirmationForms.BOQ.table.columns.calculate"),
       display: true,
     },
   ];
@@ -170,7 +185,7 @@ export default function TableWorkItem({
                 )
                 .map((col, index) => (
                   <th key={index} className="border-none">
-                    {col?.header}
+                    {col?.text}
                   </th>
                 ))}
             </tr>
