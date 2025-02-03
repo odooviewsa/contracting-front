@@ -1,5 +1,8 @@
 import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
+import { useQuery } from '@tanstack/react-query'
+import { axiosInstance } from "../../../../../../axios/axios";
+import { useEffect, useState } from "react";
 
 const options = {
   responsive: true,
@@ -11,9 +14,32 @@ const options = {
 };
 
 const ProgressAnalysisTab = ({ workItem, workConfirmation, text }) => {
-  const startDate = new Date(workConfirmation?.startDate);
-  const endDate = new Date(workConfirmation?.endDate);
-
+  const [totalQuantityOfWorkItem,setTotalQuantityOfWorkItem] = useState([])
+  const contractId = workConfirmation ? String(workConfirmation.contractId._id) : null;
+  // Get all work confirmations with contract id
+  const {data: contractWorkConfirmations, error: errorContractWorkConfirmations,isLoading} = useQuery({
+    queryKey: ["getAllWorkConfirmationsByContractId", contractId],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(`/api/workConfirmation/${contractId}/contract`)
+        return res.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    }
+  })
+  useEffect(() => {
+    if (!errorContractWorkConfirmations && contractWorkConfirmations) {
+      let workItemsArray = []
+      contractWorkConfirmations.forEach(workConfirmation => {
+        workItemsArray.push(workConfirmation?.workItems.filter((item) => item.workItemId._id === workItem.workItemId._id)[0])
+      })
+      let totalQuantityOfWorkItemArray = workItemsArray.map((workItem) => workItem.totalQuantity)
+      setTotalQuantityOfWorkItem(totalQuantityOfWorkItemArray)
+    }
+  }, [contractWorkConfirmations])
+  const startDate = new Date(workConfirmation?.contractId.startDate);
+  const endDate = new Date(workConfirmation?.contractId.endDate);
   const diffInMs = endDate.getTime() - startDate.getTime();
   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
@@ -67,7 +93,7 @@ const ProgressAnalysisTab = ({ workItem, workConfirmation, text }) => {
     datasets: [
       {
         label: text,
-        data: progressData,
+        data: totalQuantityOfWorkItem,
         borderColor: "rgb(37, 99, 235)",
         backgroundColor: "rgb(59, 130, 246)",
         yAxisId: "Actual",
