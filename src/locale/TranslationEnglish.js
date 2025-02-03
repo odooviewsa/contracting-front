@@ -1077,12 +1077,13 @@ const TranslationEnglish = {
             filter: {
                 "columns": {
                     text: "Columns",
-                    values: [
-                        "Unit Of Measure",
-                        "Assigned Quantity",
-                        "Price",
-                        "Total",
-                    ]
+                    "unitOfMeasure": "Unit Of Measure",
+                    "assignedQuantity": "Assigned Quantity",
+                    "previousQuantity": "Previous Quantity",
+                    "remainingQuantity": "Remaining Quantity",
+                    "financialCategory": "Financial Category",
+                    "price": "Price",
+                    "total": "Total"
                 },
                 expand: "Expand",
                 reset: "Reset",

@@ -41,29 +41,32 @@ const Reports = () => {
   });
 
   // Work Confirmations data
-  const { data, isLoading } = useQuery({
-    queryKey: "getWorkConfirmationByContractId",
+  const { data, error: confirmationError, isLoading } = useQuery({
+    queryKey: ["getWorkConfirmationByContractId", contractId],
     queryFn: async () => {
-      const res = await axiosInstance.get(
-        `/api/workConfirmation/${contractId}/contract`
-      );
-      if (res.status !== 200) {
-        toast.error("Failed to fetch work confirmations");
+      try {
+        const res = await axiosInstance.get(`/api/workConfirmation/${contractId}/contract`);
+        return res.data.data;
+      } catch (err) {
+        console.error("Error fetching work confirmations:", err);
+        throw new Error(err.message);
       }
-      return res.data;
     },
   });
-
   // Contract Data
   const { data: contract } = useQuery({
-    queryKey: "GetContractById",
+    queryKey: ["GetContractById", contractId],
     queryFn: async () => {
-      const res = await axiosInstance.get(`/api/contracts/${contractId}`);
-      if (res.status === 200) {
+      try {
+        const res = await axiosInstance.get(`/api/contracts/${contractId}`);
         return res.data.data;
+      } catch (err) {
+        console.error("Error fetching contract data:", err);
+        throw new Error(err.message);
       }
     },
   });
+  
 
   // Calculate the arguments
   useLayoutEffect(() => {
@@ -91,9 +94,10 @@ const Reports = () => {
 
       // Compute cumulative previous payments
       const cumulativePreviousPayments = netArray.reduce((acc, val, index) => {
-        if (index === 0) return [netArray[index]]; // First item has no previous payments
-        return [...acc, acc[index - 1] + netArray[index]];
+        if (index === 0) return [netArray[index] || 0]; 
+        return [...acc, (acc[index - 1] || 0) + (netArray[index] || 0)];
       }, []);
+      
 
       setPreviousPaymentsValues(["-", ...cumulativePreviousPayments]);
 
@@ -139,124 +143,50 @@ const Reports = () => {
 
   // Export to PDF
   const exportToPDF = () => {
-    const input = document.getElementById("reports-content"); // Ensure the reports content has an ID
-
-    // Hide buttons before capturing
+    const input = document.getElementById("reports-content");
     const buttons = document.querySelectorAll(".hide-on-pdf");
-    buttons.forEach((button) => (button.style.display = "none"));
-
+  
+    buttons.forEach((button) => button.style.visibility = "hidden");
+  
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4"); // A4 size
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calculate height based on width
-
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save("reports.pdf"); // Save the file as reports.pdf
-
-      // Show buttons after capturing
-      buttons.forEach((button) => (button.style.display = "flex")); // Ensure buttons return to flex-row
+      pdf.save("reports.pdf");
+  
+      buttons.forEach((button) => button.style.visibility = "visible");
     });
   };
+  
 
   // Export to Excel
   const exportToExcel = () => {
-    // Create a single table for all data
-    const table = document.createElement("table");
-    const thead = document.createElement("thead");
-    const tbody = document.createElement("tbody");
-
-    // Add header row
-    const headerRow = document.createElement("tr");
-    [
-      "Description",
-      ...data.map((_, i) => `Work Confirmation #${i + 1}`),
-      "Total",
-    ].forEach((text) => {
-      const th = document.createElement("th");
-      th.textContent = text;
-      headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-    const previousExcel = previousPaymentsValues.slice(
-      0,
-      previousPaymentsValues.length - 1
-    );
-    // Add rows for each category
-    const categories = [
-      { label: "Works Value", values: data.map((item) => item.totalAmount) },
-      {
-        label: `VAT (${contract?.taxRate}%)`,
-        values: data.map(
-          (item) => item.totalAmount * (contract.taxRate / 100)
-        ),
-      },
-      {
-        label: `Business Guarantee (${contract?.businessGuarantee}%)`,
-        values: data.map(
-          (item) => item.totalAmount * (contract.businessGuarantee / 100)
-        ),
-      },
-      {
-        label: "Deductions",
-        values: data.map((item) => item.totalDeduction),
-      },
-      {
-        label: "Additions",
-        values: data.map((item) => item.totalAddition),
-      },
-      {
-        label: "Net",
-        values: data.map(
-          (item, index) =>
-            item.totalAmount +
-            item.totalAmount * (contract.taxRate / 100) -
-            item.totalAmount * (contract.businessGuarantee / 100) -
-            item.totalDeduction +
-            item.totalAddition
-        ),
-      },
-      {
-        label: "Previous Payments",
-        values: previousExcel,
-      },
-      {
-        label: "Due Amount",
-        values: dueAmountValues,
-      },
+    if (!data || data.length === 0 || !contract) {
+      toast.error("No data available for export.");
+      return;
+    }
+  
+    const workbook = XLSX.utils.book_new();
+    const sheetData = [
+      ["Description", ...data.map((_, i) => `Work Confirmation #${i + 1}`), "Total"],
+      ["Works Value", ...data.map((item) => item.totalAmount), allSumValues.works],
+      [`VAT (${contract.taxRate}%)`, ...data.map((item) => item.totalAmount * (contract.taxRate / 100)), allSumValues.vat],
+      [`Business Guarantee (${contract.businessGuarantee}%)`, ...data.map((item) => item.totalAmount * (contract.businessGuarantee / 100)), allSumValues.businessGuarantee],
+      ["Deductions", ...data.map((item) => item.totalDeduction), allSumValues.deductions],
+      ["Additions", ...data.map((item) => item.totalAddition), allSumValues.additions],
+      ["Net", ...data.map((_, i) => allSumValues.net), allSumValues.net],
+      ["Previous Payments", ...previousPaymentsValues.slice(0, previousPaymentsValues.length - 1), "-"],
+      ["Due Amount", ...dueAmountValues, allSumValues.dueAmount]
     ];
-    categories.forEach((category) => {
-      const row = document.createElement("tr");
-      const tdLabel = document.createElement("td");
-      tdLabel.textContent = category.label;
-      row.appendChild(tdLabel);
-
-      category.values.forEach((value) => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        row.appendChild(td);
-      });
-
-      // Add total for each category
-      const tdTotal = document.createElement("td");
-      tdTotal.textContent =
-        category.label !== "Previous Payments"
-          ? category.values.reduce((acc, val) => acc + val, 0)
-          : "-";
-      row.appendChild(tdTotal);
-
-      tbody.appendChild(row);
-    });
-
-    table.appendChild(tbody);
-
-    // Convert table to worksheet
-    const ws = XLSX.utils.table_to_sheet(table);
-    const wb = XLSX.utils.book_new(); // Create a new workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); // Add worksheet to workbook
-    XLSX.writeFile(wb, "reports.xlsx"); // Save the file as reports.xlsx
+  
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
+    XLSX.writeFile(workbook, "reports.xlsx");
   };
+  
   return (
     <div id="reports-content">
       <div className="flex flex-col items-stretch justify-start gap-4">
@@ -323,7 +253,8 @@ const Reports = () => {
           </div>
         </div>
 
-        {!isLoading ? (
+        {!isLoading ?
+        !confirmationError ? (
           data?.length > 0 ? (
             chunkedData.map((chunk, chunkIndex) => {
               return (
@@ -476,8 +407,8 @@ const Reports = () => {
             <p>
               <Loading />
             </p>
-          )
-        ) : (
+          )) : <p>Field to get confirmation. please create confirmation and try again.</p>
+         : (
           <Loading />
         )}
       </div>

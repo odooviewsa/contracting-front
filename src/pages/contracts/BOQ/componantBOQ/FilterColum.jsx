@@ -14,9 +14,36 @@ export default function FilterColum() {
       [name]: !prevState[name],
     }));
   };
-  const nameColum = t("ContractsForms.BOQ.filter.columns.values", {
-    returnObjects: true,
-  });
+  const nameColum = [
+    {
+      value: "Unit Of Measure",
+      text: t("ContractsForms.BOQ.filter.columns.unitOfMeasure")
+    },
+    {
+      value: "Assigned Quantity",
+      text: t("ContractsForms.BOQ.filter.columns.assignedQuantity")
+    },
+    {
+      value: "Previous Quantity",
+      text: t("ContractsForms.BOQ.filter.columns.previousQuantity")
+    },
+    {
+      value: "Remaining Quantity",
+      text: t("ContractsForms.BOQ.filter.columns.remainingQuantity")
+    },
+    {
+      value: "Financial Category",
+      text: t("ContractsForms.BOQ.filter.columns.financialCategory")
+    },
+    {
+      value: "Price",
+      text: t("ContractsForms.BOQ.filter.columns.price")
+    },
+    {
+      value: "Total",
+      text: t("ContractsForms.BOQ.filter.columns.total")
+    },
+  ]
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -49,16 +76,16 @@ export default function FilterColum() {
       </div>
       {openColumValue && (
         <div className="absolute ltr:left-0 rtl:right-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white">
-          {nameColum?.map((value, i) => (
+          {nameColum?.map((ele, i) => (
             <div
               key={i}
               className={`${
                 i !== 6 && "border-b"
               } p-1 flex items-center justify-between border-gray-300 text-center w-full hover:bg-gray-300 cursor-pointer`}
-              onClick={() => toggleSelect(value)}
+              onClick={() => toggleSelect(ele.value)}
             >
-              <p>{value}</p>
-              {currentValueColum[value] && <p>✔</p>}
+              <p>{ele.text}</p>
+              {currentValueColum[ele.value] && <p>✔</p>}
             </div>
           ))}
         </div>

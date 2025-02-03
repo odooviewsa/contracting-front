@@ -963,12 +963,13 @@ const TranslationArabic = {
             "filter": {
                 "columns": {
                     "text": "الأعمدة",
-                    "values": [
-                        "وحدة القياس",
-                        "الكمية المخصصة",
-                        "السعر",
-                        "الإجمالي"
-                    ]
+                    "unitOfMeasure": "وحدة القياس",
+                    "assignedQuantity": "الكمية المعينة",
+                    "previousQuantity": "الكمية السابقة",
+                    "remainingQuantity": "الكمية المتبقية",
+                    "financialCategory": "الفئة المالية",
+                    "price": "السعر",
+                    "total": "الإجمالي"
                 },
                 "expand": "توسيع",
                 "reset": "إعادة تعيين",

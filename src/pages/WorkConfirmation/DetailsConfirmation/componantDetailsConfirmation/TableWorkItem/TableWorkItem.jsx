@@ -30,27 +30,24 @@ export default function TableWorkItem({
   const [lineDetails, setLineDetails] = useState(null);
   useEffect(() => {
     if (
-      dispalyDate?.data?.data?.workItems &&
+      dispalyDate?.data?.data?.workItems?.length &&
       dispalyDate?.data?.data?.workConfirmationType === "final"
     ) {
       const initialQuantities = dispalyDate.data.data.workItems.reduce(
         (acc, item, index) => ({
           ...acc,
-          [index]:
-            item?.workItemId?.workDetails?.assignedQuantity -
-              item?.previousQuantity || 0,
+          [index]: (item?.workItemId?.workDetails?.assignedQuantity || 0) - (item?.previousQuantity || 0),
         }),
         {}
       );
       setValueInputCurrentQuantity(initialQuantities);
     }
   }, [dispalyDate]);
-
   // handleChangeCurrentQuantity
   const handleChangeCurrentQuantity = (value, index) => {
     setValueInputCurrentQuantity((prev) => ({
       ...prev,
-      [Number(index)]: Number(value),
+      [Number(index)]: Number(value) || 0,
     }));
   };
   // handleChangeCompletion
@@ -243,39 +240,26 @@ export default function TableWorkItem({
                   {/* // current quantity */}
                   <td
                     className={`border-none ${
-                      !currentValueColumWorkConfirmation["Current Work %"]
-                        ? "hidden"
-                        : ""
+                      !currentValueColumWorkConfirmation["Current Work %"] ? "hidden" : ""
                     }`}
                   >
                     <input
                       type="number"
                       min={isNegativeActive ? "" : 0}
                       className={`outline-none border px-1 ${
-                        !currentValueColumWorkConfirmation["Current Work QTY"]
-                          ? "hidden"
-                          : ""
+                        !currentValueColumWorkConfirmation["Current Work QTY"] ? "hidden" : ""
                       }`}
-                      onChange={(e) =>
-                        handleChangeCurrentQuantity(e.target.value, i)
-                      }
+                      onChange={(e) => handleChangeCurrentQuantity(e.target.value, i)}
                       value={
-                        dispalyDate?.data?.data?.workConfirmationType ===
-                        "final"
-                          ? e?.workItemId?.workDetails?.assignedQuantity -
-                            e?.previousQuantity
-                          : e?.currentQuantity
-                          ? dispalyDate?.data?.data?.typeOfProgress ===
-                            "Percentage per Line"
-                            ? (e?.currentQuantity * 100) /
-                              e?.workItemId?.workDetails?.assignedQuantity
-                            : e?.currentQuantity
-                          : valueInputCurrentQuantity[i]
+                        dispalyDate?.data?.data?.workConfirmationType === "final"
+                          ? dispalyDate?.data?.data?.workItems[i]?.workItemId?.workDetails?.assignedQuantity -
+                            dispalyDate?.data?.data?.workItems[i]?.previousQuantity
+                          : dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line"
+                          ? (dispalyDate?.data?.data?.workItems[i]?.currentQuantity * 100) /
+                            dispalyDate?.data?.data?.workItems[i]?.workItemId?.workDetails?.assignedQuantity
+                          : dispalyDate?.data?.data?.workItems[i]?.currentQuantity || valueInputCurrentQuantity[i]
                       }
-                      disabled={
-                        dispalyDate?.data?.data?.workConfirmationType ===
-                        "final"
-                      }
+                      disabled={dispalyDate?.data?.data?.workConfirmationType === "final"}
                     />
                   </td>
                   {/* // special of percentage  */}
@@ -427,8 +411,6 @@ export default function TableWorkItem({
         />
       )}
       <div className="flex justify-end items-center">
-        {/* <div className="text-gray-600 mt-2">page 1 of 5 </div> */}
-
         <div className="flex justify-end gap-4 mt-4">
           <button
             type="button"
