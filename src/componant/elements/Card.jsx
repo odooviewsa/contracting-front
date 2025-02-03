@@ -1,4 +1,6 @@
 import { IoDownloadOutline, IoTrashOutline } from "react-icons/io5";
+import { url } from "../../axios/axios";
+import { Link } from "react-router-dom";
 
 const Card = ({
   handleDelete,
@@ -8,8 +10,9 @@ const Card = ({
   icon,
   isLoading,
   className = "",
-  handleDownload,
+  downloadLink,
 }) => {
+  console.log(downloadLink)
   return (
     <div
       className={`group flex items-center justify-between rounded border p-2 relative ${className}`}
@@ -27,13 +30,13 @@ const Card = ({
         </div>
       )}
       <div className="absolute ltr:right-0 rtl:left-0 group-hover:opacity-100 opacity-0 transition-all duration-700 h-fit flex items-center justify-center gap-2 mx-4">
-        {handleDownload && (
-          <button onClick={handleDownload} className="bg-blue-200 p-1 rounded">
+        {downloadLink && (
+          <Link to={`${url}/download/${downloadLink}`} className="bg-blue-200 p-1 rounded">
             <IoDownloadOutline
               size={18}
               className="text-blue-500 cursor-pointer"
             />
-          </button>
+          </Link>
         )}
         <button disabled={isLoading} className="bg-red-300 rounded p-1">
           <IoTrashOutline

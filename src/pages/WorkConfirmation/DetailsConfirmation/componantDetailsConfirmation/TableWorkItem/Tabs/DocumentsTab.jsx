@@ -66,42 +66,42 @@ const DocumentsTab = ({ workItem, refetch }) => {
     }
   };
 
-  // Function to handle document download
-  const handleDownloadDocument = async (documentName) => {
-    try {
-      // Fetch the document as a blob
-      const response = await axiosInstance.get(
-        `${url}/uploads/${documentName}`,
-        {
-          responseType: "blob", // Remove the manual CORS header
-        }
-      );
+  // // Function to handle document download
+  // const handleDownloadDocument = async (documentName) => {
+  //   try {
+  //     // Fetch the document as a blob
+  //     const response = await axiosInstance.get(
+  //       `${url}/uploads/${documentName}`,
+  //       {
+  //         responseType: "blob", // Remove the manual CORS header
+  //       }
+  //     );
 
-      // Check if the response is valid
-      if (!response.data || response.status !== 200) {
-        throw new Error("Failed to fetch the document.");
-      }
+  //     // Check if the response is valid
+  //     if (!response.data || response.status !== 200) {
+  //       throw new Error("Failed to fetch the document.");
+  //     }
 
-      // Create a temporary link element
-      const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.setAttribute("download", documentName); // Set the filename for the download
-      document.body.appendChild(link);
-      link.click(); // Trigger the download
+  //     // Create a temporary link element
+  //     const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = blobUrl;
+  //     link.setAttribute("download", documentName); // Set the filename for the download
+  //     document.body.appendChild(link);
+  //     link.click(); // Trigger the download
 
-      // Clean up
-      link.remove();
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error("Error downloading document:", error);
-      toast.error(
-        t("DetailsWorkLine.line.tabs.docs.alerts", {
-          returnObjects: true,
-        })[2]
-      );
-    }
-  };
+  //     // Clean up
+  //     link.remove();
+  //     window.URL.revokeObjectURL(blobUrl);
+  //   } catch (error) {
+  //     console.error("Error downloading document:", error);
+  //     toast.error(
+  //       t("DetailsWorkLine.line.tabs.docs.alerts", {
+  //         returnObjects: true,
+  //       })[2]
+  //     );
+  //   }
+  // };
 
   return (
     <TabBody
@@ -155,7 +155,8 @@ const DocumentsTab = ({ workItem, refetch }) => {
                 ).toFixed(2)} MB`}
                 icon={<IoDocumentAttachOutline size={24} />}
                 isLoading={isLoading}
-                handleDownload={() => handleDownloadDocument(doc.title)} // Pass the download function
+                downloadLink={doc.title}
+                // handleDownload={() => handleDownloadDocument(doc.title)} // Pass the download function
               />
             ))
           ) : (

@@ -52,7 +52,6 @@ const PrintPageDetails = ({
       setTotalPayments(total);
     }
   }, [workConfirmations, data]);
-  console.log(totalPayments)
   const detailsValues = {
     project: data?.projectName?.projectName,
     contractor: data?.partner.partnerName,
