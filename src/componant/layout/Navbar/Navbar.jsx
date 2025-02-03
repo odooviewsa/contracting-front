@@ -23,7 +23,7 @@ export default function Navbar({ setOpenSidebar }) {
   };
 
   return (
-    <div className="bg-primaryColor w-full py-3 px-3 flex justify-between md:justify-end items-center z-20 sticky top-0">
+    <div className="print:hidden bg-primaryColor w-full py-3 px-3 flex justify-between md:justify-end items-center z-20 sticky top-0">
       <div className="md:hidden">
         <GiHamburgerMenu
           size={30}

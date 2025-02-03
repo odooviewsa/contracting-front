@@ -3,13 +3,11 @@ import PrintDetails from "./PrintDetails";
 import PrintTable from "./PrintTable";
 import moment from "moment/moment";
 import PrintSummary from "./PrintSummary";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../../../../axios/axios";
 
 const PrintPageDetails = ({
-  setPrintButton,
-  printButton,
   data,
   className = "",
 }) => {
@@ -29,18 +27,18 @@ const PrintPageDetails = ({
   });
   useEffect(() => {
     if (workConfirmations && data?.contractId) {
-      const previousPaymentsArray = workConfirmations.map((ele) => {
+      const previousPaymentsArray = workConfirmations?.map((ele) => {
         const prevWorkValue = ele.workItems.reduce((total, item) => {
           return (
-            total + item.previousQuantity * item.workItemId.workDetails.price
+            total + item?.previousQuantity * item?.workItemId?.workDetails?.price
           );
         }, 0);
-        const vatValue = (data.contractId.taxRate / 100) * prevWorkValue;
-        const businessGuaranteeValue =
-          (data.contractId.businessGuarantee / 100) * prevWorkValue;
+        const vatValue = data?.contractId.taxRate ? (data?.contractId.taxRate || 0 / 100) * prevWorkValue : 0;
+        const businessGuaranteeValue = data?.contractId.businessGuarantee ?
+          (data?.contractId.businessGuarantee / 100) * prevWorkValue : 0;
         const addition = ele.totalAddition;
         const deduction = ele.totalDeduction;
-
+        console.log(workConfirmations)
         return (
           prevWorkValue +
           vatValue -
@@ -54,7 +52,7 @@ const PrintPageDetails = ({
       setTotalPayments(total);
     }
   }, [workConfirmations, data]);
-  // return previousPaymentsArray.reduce((pv, cv) => pv + cv, 0)
+  console.log(totalPayments)
   const detailsValues = {
     project: data?.projectName?.projectName,
     contractor: data?.partner.partnerName,
@@ -65,7 +63,7 @@ const PrintPageDetails = ({
       data?.contractId.totalContractValue - totalPayments
     } EGP`,
     date: date,
-    consultant: data?.contractId.consultant.partnerName,
+    consultant: data?.contractId?.consultant?.partnerName,
     contractDuration: `${moment(data?.contractId?.endDate).diff(
       moment(data?.contractId?.startDate),
       "months"
@@ -98,7 +96,7 @@ const PrintPageDetails = ({
     ).toLocaleString("en-US")} EGP`,
   };
   return (
-    <div className={`w-[calc(100vw-132px)] ${className}`}>
+    <div className={`w-[calc(100vw-132px)] hidden print:block ${className}`}>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold text-primaryColor">
           {t("PrintConfirmationDetails.title", { code: 1 })}
