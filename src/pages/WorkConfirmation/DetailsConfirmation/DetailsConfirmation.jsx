@@ -3,20 +3,26 @@ import ContractDetailsConfirmation from "./componantDetailsConfirmation/Contract
 import CurrentWorkConfirmationDetails from "./componantDetailsConfirmation/CurrentWorkConfirmationDetails";
 import TableWorkItem from "./componantDetailsConfirmation/TableWorkItem/TableWorkItem";
 import TaxDetailsConfirmation from "./componantDetailsConfirmation/TaxDetailsConfirmation";
-import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../../axios/axios";
 import PartHeaderTableWork from "./componantDetailsConfirmation/TableWorkItem/PartHeaderTableWork";
 import { useEffect, useState } from "react";
+import PrintPageDetails from "./componantDetailsConfirmation/TableWorkItem/printPageDetails";
+import { useParams } from "react-router-dom";
 
 function DetailsConfirmation() {
   const { workId, contractId } = useParams();
   const [searchWorkConfirmation, setSearchWorkConfirmation] = useState("");
   const [valueSearch, setValueSearch] = useState([]);
+  const [printButton, setPrintButton] = useState(false);
   // details Work confirmation
   function getSingleWorkConfirmation() {
     return axiosInstance.get(`/api/workConfirmation/${workId}`);
   }
-  const { data: work, refetch, isLoading } = useQuery({
+  const {
+    data: work,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["getSingleWorkConfirmation", workId],
     queryFn: getSingleWorkConfirmation,
   });
@@ -49,11 +55,11 @@ function DetailsConfirmation() {
         totalAmount={work?.data?.data?.totalAmount}
       />
       <TaxDetailsConfirmation />
-      <div className="mt-10 flex flex-col gap-3">
+      <div className="print:hidden mt-10 flex flex-col gap-3">
         <PartHeaderTableWork
           setSearchWorkConfirmation={setSearchWorkConfirmation}
           dispalyDate={dispalyDate}
-
+          setPrintButton={setPrintButton}
         />
         <TableWorkItem
           dispalyDate={dispalyDate}
@@ -62,6 +68,13 @@ function DetailsConfirmation() {
           isLoading={isLoading}
         />
       </div>
+      {work?.data?.data && (
+        <PrintPageDetails
+          printButton={printButton}
+          setPrintButton={setPrintButton}
+          data={work?.data?.data}
+        />
+      )}
     </div>
   );
 }

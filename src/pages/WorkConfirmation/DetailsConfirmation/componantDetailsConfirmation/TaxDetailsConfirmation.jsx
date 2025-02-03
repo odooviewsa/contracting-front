@@ -28,7 +28,7 @@ export default function TaxDetailsConfirmation() {
   return (
     <motion.div
       ref={ref}
-      className="flex flex-col gap-3 p-3 rounded-lg shadowWork overflow-hidden"
+      className="flex flex-col gap-3 p-3 rounded-lg shadowWork overflow-hidden print:hidden"
       animate={{
         height: open ? height : 50,
       }}

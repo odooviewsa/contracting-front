@@ -1892,7 +1892,102 @@ const TranslationEnglish = {
             }
         },
     },
-
+    // Print Work Confirmation Details
+    "PrintConfirmationDetails": {
+        title: "Work Confirmation No. {{code}}",
+        details: [
+            [
+                {
+                    label: "Project",
+                    text: "{{project}}"
+                },
+                {
+                    label: "Contractor",
+                    text: "{{contractor}}"
+                },
+                {
+                    label: "Contract Number",
+                    text: "{{contractNumber}}"
+                },
+                {
+                    label: "Contract Value",
+                    text: "{{contractValue}}"
+                },
+                {
+                    label: "Remaining Amount",
+                    text: "{{remainingAmount}}",
+                    color: "#155DFC"
+                }
+            ],
+            [
+                {
+                    label: "Date",
+                    text: "{{date}}"
+                },
+                {
+                    label: "Consultant",
+                    text: "{{consultant}}"
+                },
+                {
+                    label: "Contract Duration",
+                    text: "{{contractDuration}}"
+                },
+                {
+                    label: "Previous Payments",
+                    text: "{{previousPayments}}",
+                    color: "#00A63E"
+                }
+            ]
+        ],
+        summary: {
+            title: "Financial Summary",
+            items: [
+                {
+                    label: "Works Value",
+                    text: "{{worksValue}}",
+                },
+                {
+                    label: "VAT",
+                    text: "{{vat}}",
+                    bgColor: "#DBEAFE",
+                    textColor: "#155DFC"
+                },
+                {
+                    label: "Business Guarantee Deduction",
+                    text: "{{businessGuarantee}}",
+                    bgColor: "#FFE2E2",
+                    textColor: "#E7000B"
+                },
+                [
+                    {
+                        label: "Deductions",
+                        text: "{{deductions}}",
+                        bgColor: "#FFE2E2",
+                        textColor: "#E7000B"
+                    },
+                    {
+                        label: "Additions",
+                        text: "{{additions}}",
+                        bgColor: "#DBFCE7",
+                        textColor: "#00A63E"
+                    },
+                ],
+                {
+                    label: "Down Payments",
+                    text: "{{downPayments}}",
+                },
+                {
+                    label: "Net Due",
+                    text: "{{netDue}}",
+                    bgColor: "#DBFCE7",
+                    textColor: "#00A63E"
+                }
+            ]
+        },
+        table: {
+            columns: ["Item", "Unit", "Contract QTY", "Previous Works", "Current Extract", "Total QTY", "Completions %", "Remaining QTY", "Cost", "Previous Amount", "Current Amount ", "Total Value"]
+        }
+    }
 }
 
 export default TranslationEnglish

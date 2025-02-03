@@ -57,7 +57,7 @@ function AddConfirmationSteps() {
     if (location?.pathname.includes("summary")) setTotalIndex(8);
   }, [location?.pathname]);
   return (
-    <div className="flex flex-row items-center justify-between  gap-2 sm:gap-8 md:gap-5   flex-nowrap  md:py-8">
+    <div className="flex flex-row items-center justify-between  gap-2 sm:gap-8 md:gap-5 print:hidden  flex-nowrap  md:py-8">
       {steps.map((step, index) =>
         step.name.includes("ProgressDahedLine") ? (
           <div

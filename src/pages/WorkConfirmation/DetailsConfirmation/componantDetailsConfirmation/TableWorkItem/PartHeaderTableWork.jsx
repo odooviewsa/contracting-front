@@ -3,10 +3,13 @@ import { ContextBOQ } from "../../../../../context/BOQContext";
 import { FaBars, FaCaretDown, FaCaretUp } from "react-icons/fa6";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import Button from "../../../../../componant/elements/Button";
+import { IoPrintOutline } from "react-icons/io5";
 
 export default function PartHeaderTableWork({
   setSearchWorkConfirmation,
   dispalyDate,
+  setPrintButton,
 }) {
   // Language
   const { t } = useTranslation();
@@ -44,7 +47,8 @@ export default function PartHeaderTableWork({
     },
     {
       header: t("ConfirmationForms.BOQ.table.columns.currentWork"),
-      display: dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
+      display:
+        dispalyDate?.data?.data?.typeOfProgress === "Percentage per Line",
     },
     {
       header: t("ConfirmationForms.BOQ.table.columns.totalQuantity"),
@@ -99,48 +103,68 @@ export default function PartHeaderTableWork({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const handlePrintButton = () => {
+    window.print()
+  }
   return (
-    <div className="flex items-center gap-7  text-[0.9rem] flex-wrap">
-      <input
-        type="text"
-        placeholder={t("ConfirmationForms.BOQ.table.searchBar")}
-        className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
-        onChange={(e) => setSearchWorkConfirmation(e.target.value)}
-      />
-      <div className="relative z-40">
-        <div
-          className="flex items-center gap-1 cursor-pointer "
-          onClick={() => setOpenColumValue((e) => !e)}
-        >
-          <FaBars size={20} />
-          <p>{t("ConfirmationForms.BOQ.table.columnsText")}</p>
-          {openColumValue ? (
-            <FaCaretDown color="gray" size={20} />
-          ) : (
-            <FaCaretUp color="gray" size={20} />
+    <>
+      <div className="print:hidden flex items-center gap-7 text-[0.9rem] flex-wrap">
+        <input
+          type="text"
+          placeholder={t("ConfirmationForms.BOQ.table.searchBar")}
+          className="border border-gray-400 rounded-md py-1 px-2  w-60 outline-none"
+          onChange={(e) => setSearchWorkConfirmation(e.target.value)}
+        />
+        <div className="relative z-40">
+          <div
+            className="flex items-center gap-1 cursor-pointer "
+            onClick={() => setOpenColumValue((e) => !e)}
+          >
+            <FaBars size={20} />
+            <p>{t("ConfirmationForms.BOQ.table.columnsText")}</p>
+            {openColumValue ? (
+              <FaCaretDown color="gray" size={20} />
+            ) : (
+              <FaCaretUp color="gray" size={20} />
+            )}
+          </div>
+          {openColumValue && (
+            <div
+              ref={menuRef}
+              className="absolute left-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white "
+            >
+              {nameColum
+                ?.filter((e) => e.display)
+                .map((value, i) => (
+                  <div
+                    key={i}
+                    className={`${
+                      i !== 13 && "border-b"
+                    } p-1 flex items-center justify-between  border-gray-300 text-center w-full hover:bg-gray-300 cursor-pointer`}
+                    onClick={() => toggleSelect(value.header)}
+                  >
+                    <p>{value.header}</p>
+                    {currentValueColumWorkConfirmation[value.header] && (
+                      <p>✔</p>
+                    )}
+                  </div>
+                ))}
+            </div>
           )}
         </div>
-        {openColumValue && (
-          <div
-            ref={menuRef}
-            className="absolute left-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white "
+        <div>
+          <Button
+            onClick={() => {
+              handlePrintButton()
+              setPrintButton(true);
+            }}
+            className="flex gap-2 items-center !px-3"
           >
-            {nameColum?.filter((e) => e.display).map((value, i) => (
-              <div
-                key={i}
-                className={`${
-                  i !== 13 && "border-b"
-                } p-1 flex items-center justify-between  border-gray-300 text-center w-full hover:bg-gray-300 cursor-pointer`}
-                onClick={() => toggleSelect(value.header)}
-              >
-                <p>{value.header}</p>
-                {currentValueColumWorkConfirmation[value.header] && <p>✔</p>}
-              </div>
-            ))}
-          </div>
-        )}
+            <IoPrintOutline size={22} /> Print
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 PartHeaderTableWork.propTypes = {

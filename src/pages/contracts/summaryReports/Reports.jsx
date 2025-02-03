@@ -55,7 +55,7 @@ const Reports = () => {
   });
 
   // Contract Data
-  const { data: contract, isLoadingContract } = useQuery({
+  const { data: contract } = useQuery({
     queryKey: "GetContractById",
     queryFn: async () => {
       const res = await axiosInstance.get(`/api/contracts/${contractId}`);
@@ -71,7 +71,7 @@ const Reports = () => {
       // Extract values properly
       const works = data.map((item) => item.totalAmount);
       const vats = data.map(
-        (item) => item.totalAmount * (contract.taxValue / 100)
+        (item) => item.totalAmount * (contract.taxRate / 100)
       );
       const guarantees = data.map(
         (item) => item.totalAmount * (contract.businessGuarantee / 100)
@@ -187,9 +187,9 @@ const Reports = () => {
     const categories = [
       { label: "Works Value", values: data.map((item) => item.totalAmount) },
       {
-        label: `VAT (${contract?.taxValue}%)`,
+        label: `VAT (${contract?.taxRate}%)`,
         values: data.map(
-          (item) => item.totalAmount * (contract.taxValue / 100)
+          (item) => item.totalAmount * (contract.taxRate / 100)
         ),
       },
       {
@@ -211,7 +211,7 @@ const Reports = () => {
         values: data.map(
           (item, index) =>
             item.totalAmount +
-            item.totalAmount * (contract.taxValue / 100) -
+            item.totalAmount * (contract.taxRate / 100) -
             item.totalAmount * (contract.businessGuarantee / 100) -
             item.totalDeduction +
             item.totalAddition
@@ -240,7 +240,10 @@ const Reports = () => {
 
       // Add total for each category
       const tdTotal = document.createElement("td");
-      tdTotal.textContent = category.label !== "Previous Payments" ? category.values.reduce((acc, val) => acc + val, 0) : "-";
+      tdTotal.textContent =
+        category.label !== "Previous Payments"
+          ? category.values.reduce((acc, val) => acc + val, 0)
+          : "-";
       row.appendChild(tdTotal);
 
       tbody.appendChild(row);
@@ -254,73 +257,74 @@ const Reports = () => {
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1"); // Add worksheet to workbook
     XLSX.writeFile(wb, "reports.xlsx"); // Save the file as reports.xlsx
   };
-  console.log(previousPaymentsValues);
   return (
     <div id="reports-content">
-      {data?.length > 0 ? (
-        <div className="flex flex-col items-stretch justify-start gap-4">
-          <div className="rounded-lg bg-slate-100 border shadow-md p-6 flex flex-col gap-6">
-            <div className="flex items-start justify-between gap-y-6">
-              <div className="flex flex-col gap-3">
-                <h1 className="text-3xl font-bold text-primaryColor">
-                  {t("ContractsForms.summaryReports.title")}
-                </h1>
-                <div className="flex items-center gap-4">
-                  {t("ContractsForms.summaryReports.subTitles", {
-                    returnObjects: true,
-                    date: "2021-10-10",
-                  }).map((subTitle, key) => {
-                    const Icon = subTitle.icon;
-                    return (
-                      <p
-                        key={key}
-                        className="flex items-center gap-2 text-grayColor lead"
-                      >
-                        <Icon size={24} /> {subTitle.text}
-                      </p>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex items-center gap-4 hide-on-pdf">
-                {t("ContractsForms.summaryReports.buttons", {
+      <div className="flex flex-col items-stretch justify-start gap-4">
+        <div className="rounded-lg bg-slate-100 border shadow-md p-6 flex flex-col gap-6">
+          <div className="flex items-start justify-between gap-y-6">
+            <div className="flex flex-col gap-3">
+              <h1 className="text-3xl font-bold text-primaryColor">
+                {t("ContractsForms.summaryReports.title")}
+              </h1>
+              <div className="flex items-center gap-4">
+                {t("ContractsForms.summaryReports.subTitles", {
                   returnObjects: true,
-                }).map((button, key) => {
-                  const Icon = button.icon;
+                  date: "2021-10-10",
+                }).map((subTitle, key) => {
+                  const Icon = subTitle.icon;
                   return (
-                    <Button
+                    <p
                       key={key}
-                      type="button"
-                      onClick={() => handleButtonType(button.type)}
-                      className={`text-white flex gap-1 items-center`}
-                      styleHtml={{
-                        backgroundColor: `${button.bgColor}`,
-                      }}
+                      className="flex items-center gap-2 text-grayColor lead"
                     >
-                      <Icon size={22} />
-                      {button.text}
-                    </Button>
+                      <Icon size={24} /> {subTitle.text}
+                    </p>
                   );
                 })}
               </div>
             </div>
-            <div>
-              {t("ContractsForms.summaryReports.details", {
+            <div className="flex items-center gap-4 hide-on-pdf">
+              {t("ContractsForms.summaryReports.buttons", {
                 returnObjects: true,
-                contractNo: "CNT-2024-001",
-                contractValue: String(contract?.totalContractValue),
-                contractDuration: `${moment(contract?.endDate).diff(
-                  moment(contract?.startDate),
-                  "months"
-                )} Months`,
-              }).map((detail, key) => (
-                <p key={key} className="text-grayColor text-lg">
-                  {detail.text}
-                </p>
-              ))}
+              }).map((button, key) => {
+                const Icon = button.icon;
+                return (
+                  <Button
+                    key={key}
+                    type="button"
+                    onClick={() => handleButtonType(button.type)}
+                    className={`text-white flex gap-1 items-center`}
+                    styleHtml={{
+                      backgroundColor: `${button.bgColor}`,
+                    }}
+                  >
+                    <Icon size={22} />
+                    {button.text}
+                  </Button>
+                );
+              })}
             </div>
           </div>
-          {!isLoading ? (
+          <div>
+            {t("ContractsForms.summaryReports.details", {
+              returnObjects: true,
+              contractNo: "CNT-2024-001",
+              contractValue:
+                contract?.totalContractValue.toLocaleString("en-US"),
+              contractDuration: `${moment(contract?.endDate).diff(
+                moment(contract?.startDate),
+                "months"
+              )} Months`,
+            }).map((detail, key) => (
+              <p key={key} className="text-grayColor text-lg">
+                {detail.text}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        {!isLoading ? (
+          data?.length > 0 ? (
             chunkedData.map((chunk, chunkIndex) => {
               return (
                 <div
@@ -346,21 +350,27 @@ const Reports = () => {
                           <strong>Works Value</strong>
                         </td>
                         {chunk.map((item, i) => (
-                          <td key={i}>{item.totalAmount} EGP</td>
+                          <td key={i}>
+                            {item.totalAmount.toLocaleString("en-US")} EGP
+                          </td>
                         ))}
-                        <td>{allSumValues.works} EGP</td>
+                        <td>{allSumValues.works.toLocaleString("en-US")} EGP</td>
                       </tr>
                       {/* Vat */}
                       <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
                         <td>
-                          <strong>VAT ({contract?.taxValue}%)</strong>
+                          <strong>VAT ({contract?.taxRate}%)</strong>
                         </td>
                         {chunk.map((item, i) => (
                           <td key={i}>
-                            {item.totalAmount * (contract.taxValue / 100)} EGP
+                            {(
+                              item.totalAmount *
+                              (contract?.taxRate / 100)
+                            ).toLocaleString("en-US")}{" "}
+                            EGP
                           </td>
                         ))}
-                        <td>{allSumValues.vat} EGP</td>
+                        <td>{allSumValues.vat.toLocaleString("en-US")} EGP</td>
                       </tr>
                       {/* Business Guarantee */}
                       <tr className="bg-red-100 *:py-6">
@@ -373,12 +383,14 @@ const Reports = () => {
                         {chunk.map((item, i) => (
                           <td key={i}>
                             (
-                            {item.totalAmount *
-                              (contract.businessGuarantee / 100)}{" "}
+                            {(
+                              item.totalAmount *
+                              (contract?.businessGuarantee / 100)
+                            ).toLocaleString("en-US")}{" "}
                             EGP)
                           </td>
                         ))}
-                        <td>({allSumValues.businessGuarantee} EGP)</td>
+                        <td>({allSumValues?.businessGuarantee.toLocaleString("en-US")} EGP)</td>
                       </tr>
                       {/* Deductions */}
                       <tr className="bg-red-100 *:py-6">
@@ -386,9 +398,11 @@ const Reports = () => {
                           <strong>Deductions</strong>
                         </td>
                         {chunk.map((item, i) => (
-                          <td key={i}>({item.totalDeduction} EGP)</td>
+                          <td key={i}>
+                            ({item.totalDeduction.toLocaleString("en-US")} EGP)
+                          </td>
                         ))}
-                        <td>({allSumValues.deductions} EGP)</td>
+                        <td>({allSumValues?.deductions.toLocaleString("en-US")} EGP)</td>
                       </tr>
                       {/* Additions */}
                       <tr className="bg-green-100 *:py-6">
@@ -396,9 +410,11 @@ const Reports = () => {
                           <strong>Additions</strong>
                         </td>
                         {chunk.map((item, i) => (
-                          <td key={i}>{item.totalAddition} EGP</td>
+                          <td key={i}>
+                            {item.totalAddition.toLocaleString("en-US")} EGP
+                          </td>
                         ))}
-                        <td>{allSumValues.additions} EGP</td>
+                        <td>{allSumValues?.additions.toLocaleString("en-US")} EGP</td>
                       </tr>
                       {/* Net */}
                       <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
@@ -407,16 +423,18 @@ const Reports = () => {
                         </td>
                         {chunk.map((item, i) => (
                           <td key={i}>
-                            {item.totalAmount +
-                              item.totalAmount * (contract.taxValue / 100) -
+                            {(
+                              item.totalAmount +
+                              item.totalAmount * (contract?.taxRate / 100) -
                               item.totalAmount *
-                                (contract.businessGuarantee / 100) -
+                                (contract?.businessGuarantee / 100) -
                               item.totalDeduction +
-                              item.totalAddition}{" "}
+                              item.totalAddition
+                            ).toLocaleString("en-US")}{" "}
                             EGP
                           </td>
                         ))}
-                        <td>{allSumValues.net} EGP</td>
+                        <td>{allSumValues?.net.toLocaleString("en-US")} EGP</td>
                       </tr>
                       {/* Previous Payments */}
                       <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
@@ -430,7 +448,7 @@ const Reports = () => {
                           } else {
                             return (
                               <td key={i}>
-                                ({previousPaymentsValues[paymentIndex]} EGP)
+                                ({previousPaymentsValues[paymentIndex]?.toLocaleString("en-US")} EGP)
                               </td>
                             );
                           }
@@ -444,10 +462,10 @@ const Reports = () => {
                         </td>
                         {chunk.map((item, i) => (
                           <td key={i}>
-                            {dueAmountValues[chunkIndex * 4 + i]} EGP
+                            {dueAmountValues[chunkIndex * 4 + i]?.toLocaleString("en-US")} EGP
                           </td>
                         ))}
-                        <td>{allSumValues.dueAmount} EGP</td>
+                        <td>{allSumValues?.dueAmount.toLocaleString("en-US")} EGP</td>
                       </tr>
                     </tbody>
                   </table>
@@ -455,12 +473,14 @@ const Reports = () => {
               );
             })
           ) : (
-            <Loading />
-          )}
-        </div>
-      ) : (
-        <p>No Work Confirmation Found</p>
-      )}
+            <p>
+              <Loading />
+            </p>
+          )
+        ) : (
+          <Loading />
+        )}
+      </div>
 
       <div className="flex justify-end gap-4 mt-4 hide-on-pdf">
         <button

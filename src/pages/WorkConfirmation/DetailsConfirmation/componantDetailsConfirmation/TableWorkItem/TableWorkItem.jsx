@@ -157,7 +157,7 @@ export default function TableWorkItem({
     },
   ];
   return (
-    <div>
+    <div className="print:hidden">
       <ToastContainer />
       <div className="scrollbar min-h-[60vh] overflow-auto">
         <table>
