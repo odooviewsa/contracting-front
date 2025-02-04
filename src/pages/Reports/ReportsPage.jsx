@@ -71,12 +71,12 @@ const ReportsPage = () => {
     setOptionProjects(options);
   }, [projects]);
   return (
-    <div className="">
+    <div className="px-4 md:px-8">
       {/* Form */}
       <form
-        className="bg-slate-100 p-4 border rounded-lg flex flex-col gap-6 items-start"
+        className="bg-slate-100 p-4 border rounded-lg flex flex-col gap-6 items-start h-fit w-full md:w-[24rem] mx-auto mt-8 md:mt-16"
         onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="text-center text-4xl font-bold text-primaryColor w-full mb-4">
+        <h1 className="text-center text-3xl lg:text-4xl font-bold text-primaryColor w-full mb-2 lg:mb-4">
           Reports
         </h1>
         <div className="w-full flex flex-col items-center justify-center gap-4">

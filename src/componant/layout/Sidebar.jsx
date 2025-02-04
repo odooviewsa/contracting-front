@@ -125,7 +125,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
             pathname.includes("reports") && "activeSidebar"
           }`}>
           <FaFileLines size={20} />
-          {openSidebar && <h1>{t("Sidebar.product")}</h1>}
+          {openSidebar && <h1>{t("Sidebar.reports")}</h1>}
         </Link>
         <p
           onClick={() => setOpenMenu(!openMenu)}

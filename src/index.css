@@ -107,6 +107,9 @@ td {
 }
 
 @layer base {
+  h1.lead {
+    @apply text-2xl md:text-3xl font-bold text-primaryColor;
+  }
   h3.lead {
     @apply text-xl font-semibold text-primaryColor;
   }

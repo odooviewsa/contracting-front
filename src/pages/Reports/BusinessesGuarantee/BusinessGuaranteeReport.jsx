@@ -1,10 +1,8 @@
 import moment from "moment";
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   IoCalendarOutline,
   IoCheckmarkCircleOutline,
-  IoDocumentAttachOutline,
-  IoDocumentText,
   IoDocumentTextOutline,
   IoDownloadOutline,
   IoTimeOutline,
@@ -14,148 +12,163 @@ import { useParams } from "react-router-dom";
 import Button from "../../../componant/elements/Button";
 import Block from "../../../componant/elements/Block";
 import Table from "../../../componant/layout/Table";
+import { useQuery } from "@tanstack/react-query";
+import { axiosInstance } from "../../../axios/axios";
+import Loading from "../../../componant/Loading";
 
-// Warranty data
-const data = {
-  projectInfo: {
-    name: "Alsalam Commercial Tower",
-    code: "PRJ-2024-001",
-    warrantyPercentage: 5,
-    warrantyPeriod: "12 months",
-    startDate: "2024-01-15",
-  },
-  tableHead: [
-    "Work Confirmation",
-    "Date",
-    "Work Confirmation Value",
-    "Business Guarantee Value",
-  ],
-  extracts: [
-    {
-      id: 1,
-      date: "2024-01-15",
-      value: 850000,
-      warranty: 42500,
-      status: "active",
-      releaseDate: "2025-01-15",
-    },
-    {
-      id: 2,
-      date: "2024-02-15",
-      value: 920000,
-      warranty: 46000,
-      status: "active",
-      releaseDate: "2025-02-15",
-    },
-    {
-      id: 3,
-      date: "2024-03-15",
-      value: 780000,
-      warranty: 39000,
-      status: "active",
-      releaseDate: "2025-03-15",
-    },
-    {
-      id: 4,
-      date: "2024-04-15",
-      value: 850000,
-      warranty: 42500,
-      status: "active",
-      releaseDate: "2025-04-15",
-    },
-  ],
-  tableHeadWarranty: [
-    "Claim Number",
-    "Date",
-    "Description",
-    "Value",
-    "Status",
-    "Notes",
-  ],
-  warrantyClaims: [
-    {
-      id: "CL001",
-      date: "2024-03-01",
-      description: "Repairing concrete cracks",
-      value: 15000,
-      status: "pending",
-      notes: "Pending inspection",
-    },
-    {
-      id: "CL002",
-      date: "2024-03-15",
-      description: "Water leakage treatment",
-      value: 8500,
-      status: "completed",
-      notes: "Repair completed and claim closed",
-    },
-  ],
-  widgets: [
-    {
-      icon: IoWarningOutline,
-      textColor: "#2b7fff",
-      bgColor: "#dbeafe",
-      valueColor: "#0084d1",
-      text: "Total Business Guarantee",
-      value: `170,000 EGP`,
-      subText: `Percentage ${"5"}%`,
-    },
-    {
-      icon: IoWarningOutline,
-      textColor: "#e7000b",
-      bgColor: "#ffe2e2",
-      valueColor: "#c10007",
-      text: "Claims Value",
-      value: `23,500 EGP`,
-      subText: `${"2"} claims`,
-    },
-    {
-      icon: IoCheckmarkCircleOutline,
-      textColor: "#00c950",
-      bgColor: "#dbfce7",
-      valueColor: "#008235",
-      text: "Available Business Guarantee",
-      value: `146,500 EGP`,
-      subText: `Remaining ${"86.2"}%`,
-    },
-    {
-      icon: IoTimeOutline,
-      textColor: "#e12afb",
-      bgColor: "#f3e8ff",
-      valueColor: "#9810fa",
-      text: "Business Guarantee Duration",
-      value: `12 months`,
-      subText: `From ${"2024-5-15"}`,
-    },
-  ],
-};
 const BusinessGuaranteeReport = () => {
-  const { contractId } = useParams();
-  console.log(contractId);
+  const { contractId, companyName } = useParams();
 
+  // States
+  const [totalBusinessesGuarantees, setTotalBusinessesGuarantees] = useState(0);
+  const [totalWorksValue, setTotalWorksValue] = useState(0);
+  // Fetch contract information
+  const {
+    data: contract,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["getContractById", contractId],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(`/api/contracts/${contractId}`);
+        return res.data.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
+  });
+  // Fetch work confirmations information
+  const {
+    data: workConfirmations,
+    isLoading: workIsLoading,
+    error: workError,
+  } = useQuery({
+    queryKey: ["getWorkConfirmationByContractId", contractId],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/workConfirmation/${contractId}/contract`
+        );
+        return res.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
+  });
+  // Calculate total businesses guarantees & works values
+  useLayoutEffect(() => {
+    if (workConfirmations?.length > 0) {
+      const totalBusinessesGuarantees = workConfirmations.reduce(
+        (sum, wc) =>
+          sum + (wc.contractId.businessGuarantee / 100) * wc.totalAmount,
+        0
+      );
+      const totalWorksValue = workConfirmations.reduce(
+        (sum, wc) => sum + wc.totalAmount,
+        0
+      );
+      setTotalBusinessesGuarantees(totalBusinessesGuarantees);
+      setTotalWorksValue(totalWorksValue);
+    }
+  }, [workConfirmations]);
+  console.log(workConfirmations);
   const formatCurrency = (amount) => {
     return amount.toLocaleString() + " EGP";
   };
+  // static data
+  const data = {
+    projectInfo: {
+      name: companyName,
+      startDate: moment().format("YYYY-MM-DD"),
+    },
+    tableHead: [
+      "Work Confirmation",
+      "Date",
+      "Work Confirmation Value",
+      "Business Guarantee Value",
+    ],
+    tableHeadWarranty: [
+      "Claim Number",
+      "Date",
+      "Description",
+      "Value",
+      "Notes",
+    ],
+    warrantyClaims: [
+      {
+        id: "CL001",
+        date: "2024-03-01",
+        description: "Repairing concrete cracks",
+        value: 15000,
+        status: "pending",
+        notes: "Pending inspection",
+      },
+      {
+        id: "CL002",
+        date: "2024-03-15",
+        description: "Water leakage treatment",
+        value: 8500,
+        status: "completed",
+        notes: "Repair completed and claim closed",
+      },
+    ],
+    widgets: [
+      {
+        icon: IoWarningOutline,
+        textColor: "#2b7fff",
+        bgColor: "#dbeafe",
+        valueColor: "#0084d1",
+        text: "Total Business Guarantee",
+        value: formatCurrency(totalBusinessesGuarantees),
+        subText: `Percentage ${contract?.businessGuarantee}%`,
+      },
+      {
+        icon: IoWarningOutline,
+        textColor: "#e7000b",
+        bgColor: "#ffe2e2",
+        valueColor: "#c10007",
+        text: "Claims Value",
+        value: `23,500 EGP`,
+        subText: `${"2"} claims`,
+      },
+      {
+        icon: IoCheckmarkCircleOutline,
+        textColor: "#00c950",
+        bgColor: "#dbfce7",
+        valueColor: "#008235",
+        text: "Available Business Guarantee",
+        value: `146,500 EGP`,
+        subText: `Remaining ${"86.2"}%`,
+      },
+      {
+        icon: IoTimeOutline,
+        textColor: "#e12afb",
+        bgColor: "#f3e8ff",
+        valueColor: "#9810fa",
+        text: "Business Guarantee Duration",
+        value: (() => {
+          const startDate = moment(contract?.startDate);
+          const endDate = moment(contract?.endDate);
+          const monthsDifference = endDate.diff(startDate, "months");
+          const daysDifference = endDate.diff(startDate, "days");
 
-  // Calculate warranty totals
-  const totalWarranty = data.extracts.reduce(
-    (sum, ext) => sum + ext.warranty,
-    0
-  );
-  const totalClaims = data.warrantyClaims.reduce(
-    (sum, claim) => sum + claim.value,
-    0
-  );
-  const availableWarranty = totalWarranty - totalClaims;
+          return monthsDifference < 1
+            ? `${daysDifference} days`
+            : `${monthsDifference} months`;
+        })(),
+        subText: `From ${moment(contract?.startDate).format("YYYY-MM-DD")}`,
+      },
+    ],
+  };
+  console.log(moment(contract?.endDate).format("YYYY-MM-DD"));
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 p-4 md:px-0">
       {/* Header */}
-      <Block className="flex flex-row items-center justify-between">
+      <Block className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-6">
         <div className="flex flex-col items-start gap-3">
-          <h1 className="text-3xl font-bold text-primaryColor">
-            Business Guarantee Report
-          </h1>
-          <div className="flex gap-4">
+          <h1 className="lead">Business Guarantee Report</h1>
+          <div className="flex flex-col md:flex-row gap-4">
             <p className="flex gap-2 text-grayColor">
               <IoDocumentTextOutline size={24} />
               {data.projectInfo.name}
@@ -174,7 +187,7 @@ const BusinessGuaranteeReport = () => {
         </div>
       </Block>
       {/* Widgets */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {data.widgets.map((item, i) => {
           const Icon = item.icon;
           return (
@@ -197,7 +210,7 @@ const BusinessGuaranteeReport = () => {
                   {item.value}
                 </p>
                 <p className="text-sm" style={{ color: item.textColor }}>
-                  {item.text}
+                  {item.subText}
                 </p>
               </div>
             </Block>
@@ -205,37 +218,57 @@ const BusinessGuaranteeReport = () => {
         })}
       </div>
       {/* Deductions Table */}
-      <Table
-        formatCurrency={formatCurrency}
-        title="Business Guarantee Deductions Details"
-        header={data.tableHead}
-        body={data.extracts.map((item) => (
-          <tr key={item.id} className="border-b *:py-6">
-            <td>Work Confirmation {item.id}</td>
-            <td>{moment(item.date).format("YYYY-MM-DD")}</td>
-            <td>{formatCurrency(item.value)}</td>
-            <td>{formatCurrency(item.warranty)}</td>
-          </tr>
-        ))}
-        footer={
-          <tr>
-            <td
-              colSpan={data.tableHead.length - 2}
-              className="py-6 text-start font-medium">
-              Total
-            </td>
-            <td className="py-6 text-start font-medium">
-              {formatCurrency(totalWarranty)}
-            </td>
-            <td className="py-6 text-start font-medium">
-              {formatCurrency(totalClaims)}
-            </td>
-          </tr>
-        }
-      />
+      {!workError ? (
+        !workIsLoading ? (
+          workConfirmations.length > 0 && (
+            <Table
+              title="Business Guarantee Deductions Details"
+              header={data.tableHead}
+              body={workConfirmations.map((item) => (
+                <tr key={item.id} className="border-b *:py-6">
+                  <td>Work Confirmation {item.id}</td>
+                  <td>{moment(item.date).format("YYYY-MM-DD")}</td>
+                  <td>{formatCurrency(item.totalAmount)}</td>
+                  <td>
+                    {formatCurrency(
+                      item.totalAmount *
+                        (item.contractId.businessGuarantee / 100)
+                    )}
+                  </td>
+                </tr>
+              ))}
+              footer={
+                <tr>
+                  <td
+                    colSpan={data.tableHead.length - 2}
+                    className="py-6 text-start font-medium">
+                    Total
+                  </td>
+                  <td className="py-6 text-start font-medium">
+                    {formatCurrency(totalWorksValue)}
+                  </td>
+                  <td className="py-6 text-start font-medium">
+                    {formatCurrency(totalBusinessesGuarantees)}
+                  </td>
+                </tr>
+              }
+            />
+          )
+        ) : (
+          <Loading />
+        )
+      ) : (
+        <p>{workError}</p>
+      )}
+
       {/* Claims Table */}
       <Table
-        title="Business Guarantee Claims"
+        title={
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <p>Business Guarantee Claims</p>
+            <Button>Add Claim</Button>
+          </div>
+        }
         header={data.tableHeadWarranty}
         body={data.warrantyClaims.map((item) => (
           <tr key={item.id} className="border-b *:py-6">
@@ -243,14 +276,6 @@ const BusinessGuaranteeReport = () => {
             <td>{moment(item.date).format("YYYY-MM-DD")}</td>
             <td>{item.description}</td>
             <td>{formatCurrency(item.value)}</td>
-            <td>
-              <p
-                className={`${
-                  item.status === "pending" ? "bg-yellow-100" : "bg-green-100"
-                } w-fit p-1 rounded capitalize text-primaryColor/80 text-sm font-medium`}>
-                {item.status}
-              </p>
-            </td>
             <td>{item.notes}</td>
           </tr>
         ))}
