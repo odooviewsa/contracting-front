@@ -46,7 +46,7 @@ const Reports = () => {
     queryFn: async () => {
       try {
         const res = await axiosInstance.get(`/api/workConfirmation/${contractId}/contract`);
-        return res.data.data;
+        return res.data;
       } catch (err) {
         console.error("Error fetching work confirmations:", err);
         throw new Error(err.message);
@@ -413,7 +413,7 @@ const Reports = () => {
         )}
       </div>
 
-      <div className="flex justify-end gap-4 mt-4 hide-on-pdf">
+      <div className="flex justify-end gap-4 mt-4 hide-on-pdf print:hidden">
         <button
           type="button"
           className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"

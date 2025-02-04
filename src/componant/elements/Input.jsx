@@ -21,7 +21,7 @@ const Input = ({
           {...register}
         >
           {options.map((option, key) => (
-            <option value={option.value} key={key}>
+            <option value={option.value} key={key} defaultValue={option.asDefault && option.value}>
               {option.text}
             </option>
           ))}

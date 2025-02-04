@@ -48,6 +48,8 @@ import { useTranslation } from "react-i18next";
 import SettingLayout from "./pages/setting/settingLayout.jsx";
 import CompanyProfile from "./pages/companyProfile/companyProfile.jsx";
 import Reports from "./pages/contracts/summaryReports/Reports.jsx";
+import BusinessGuaranteeReport from "./pages/Reports/BusinessesGuarantee/BusinessGuaranteeReport.jsx";
+import ReportsPage from "./pages/Reports/ReportsPage.jsx";
 
 function App() {
   // Multi Language
@@ -269,6 +271,14 @@ function App() {
           path: ":companyName/productsManagemet",
           element: <ProductsManagement />,
         },
+        {
+          path: ":companyName/reports",
+          element: <ReportsPage />,
+        },
+        {
+          path: ":companyName/reports/businessesGuarantee/:contractId",
+          element: <BusinessGuaranteeReport />,
+        }
       ],
     },
   ]);
