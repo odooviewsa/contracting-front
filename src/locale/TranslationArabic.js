@@ -759,6 +759,7 @@ const TranslationArabic = {
     users: "المستخدمون",
     setting: "الإعدادات",
     logout: "تسجيل الخروج",
+    reports: "التقارير",
   },
   EstimationPage: {
     noFound: "لم يتم العثور على تقدير",
