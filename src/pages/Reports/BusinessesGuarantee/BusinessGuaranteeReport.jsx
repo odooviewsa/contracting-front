@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useLayoutEffect, useState } from "react";
 import {
   IoAlertCircleOutline,
+  IoArrowDownOutline,
   IoCalendarOutline,
   IoCheckmarkCircleOutline,
   IoDocumentTextOutline,
@@ -18,8 +19,10 @@ import { axiosInstance, url } from "../../../axios/axios";
 import Loading from "../../../componant/Loading";
 import ClaimForm from "../components/ClaimForm";
 import { toast, ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 const BusinessGuaranteeReport = () => {
   const { contractId, companyName } = useParams();
+  const { t } = useTranslation();
 
   // States
   const [openClaimForm, setOpenClaimForm] = useState(false);
@@ -106,79 +109,7 @@ const BusinessGuaranteeReport = () => {
     }
   };
   const handlePrintButton = () => {
-    window.print()
-  }
-  // static data
-  const data = {
-    projectInfo: {
-      name: companyName,
-      startDate: moment().format("YYYY-MM-DD"),
-    },
-    tableHead: [
-      "Work Confirmation",
-      "Date",
-      "Work Confirmation Value",
-      "Business Guarantee Value",
-    ],
-    tableHeadWarranty: [
-      "Claim Number",
-      "Date",
-      "Description",
-      "Value",
-      "Notes",
-      "Options",
-    ],
-    widgets: [
-      {
-        icon: IoAlertCircleOutline,
-        textColor: "#2b7fff",
-        bgColor: "#dbeafe",
-        valueColor: "#0084d1",
-        text: "Total Business Guarantee",
-        value: formatCurrency(totalBusinessesGuarantees),
-        subText: `Percentage ${contract?.businessGuarantee}%`,
-      },
-      {
-        icon: IoAlertCircleOutline,
-        textColor: "#e7000b",
-        bgColor: "#ffe2e2",
-        valueColor: "#c10007",
-        text: "Claims Value",
-        value: formatCurrency(totalClaimsValue),
-        subText: `${contract?.claims.length} claims`,
-      },
-      {
-        icon: IoCheckmarkCircleOutline,
-        textColor: "#00c950",
-        bgColor: "#dbfce7",
-        valueColor: "#008235",
-        text: "Available Business Guarantee",
-        value: formatCurrency(totalBusinessesGuarantees - totalClaimsValue),
-        subText: `Remaining ${totalBusinessesGuarantees ? (
-          ((totalBusinessesGuarantees - totalClaimsValue) /
-            totalBusinessesGuarantees) *
-          100
-        ).toFixed(1) : 0}%`,
-      },
-      {
-        icon: IoTimeOutline,
-        textColor: "#e12afb",
-        bgColor: "#f3e8ff",
-        valueColor: "#9810fa",
-        text: "Business Guarantee Duration",
-        value: (() => {
-          const startDate = moment(contract?.startDate);
-          const endDate = moment(contract?.endDate);
-          const monthsDifference = endDate.diff(startDate, "months");
-          const daysDifference = endDate.diff(startDate, "days");
-
-          return monthsDifference < 1
-            ? `${daysDifference} days`
-            : `${monthsDifference} months`;
-        })(),
-        subText: `From ${moment(contract?.startDate).format("YYYY-MM-DD")}`,
-      },
-    ],
+    window.print();
   };
   return (
     <>
@@ -187,11 +118,11 @@ const BusinessGuaranteeReport = () => {
         {/* Header */}
         <Block className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-6">
           <div className="flex flex-col items-start gap-3">
-            <h1 className="lead">Business Guarantee Report</h1>
+            <h1 className="lead">{t("BusinessGuaranteeReportPage.title")}</h1>
             <div className="flex flex-col md:flex-row gap-4">
               <p className="flex gap-2 text-grayColor">
                 <IoDocumentTextOutline size={24} />
-                {data.projectInfo.name}
+                {companyName}
               </p>
               <p className="flex gap-2 text-grayColor">
                 <IoCalendarOutline size={24} />
@@ -200,15 +131,46 @@ const BusinessGuaranteeReport = () => {
             </div>
           </div>
           <div>
-            <Button className="flex gap-2 items-center !px-4 print:hidden" onClick={handlePrintButton}>
+            <Button
+              className="flex gap-2 items-center !px-4 print:hidden"
+              onClick={handlePrintButton}>
               <IoDownloadOutline size={24} />
-              Export Report
+              {t("BusinessGuaranteeReportPage.exportButton")}
             </Button>
           </div>
         </Block>
         {/* Widgets */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          {data.widgets.map((item, i) => {
+          {t("BusinessGuaranteeReportPage.widgets", {
+            alertValue: formatCurrency(totalBusinessesGuarantees),
+            businessGuarantee: contract?.businessGuarantee,
+            claimsValue: formatCurrency(totalClaimsValue),
+            claimsLength: contract?.claims.length,
+            availableBusinessGuarantee: formatCurrency(
+              totalBusinessesGuarantees - totalClaimsValue
+            ),
+            remaining: totalBusinessesGuarantees
+              ? (
+                  ((totalBusinessesGuarantees - totalClaimsValue) /
+                    totalBusinessesGuarantees) *
+                  100
+                ).toFixed(1)
+              : 0,
+            businessGuaranteeDuration: (() => {
+              const startDate = moment(contract?.startDate);
+              const endDate = moment(contract?.endDate);
+              const monthsDifference = endDate.diff(startDate, "months");
+              const daysDifference = endDate.diff(startDate, "days");
+
+              return monthsDifference < 1
+                ? `${daysDifference} days`
+                : `${monthsDifference} months`;
+            })(),
+            availableBusinessGuaranteeDuration: moment(
+              contract?.startDate
+            ).format("YYYY-MM-DD"),
+            returnObjects: true,
+          }).map((item, i) => {
             const Icon = item.icon;
             return (
               <Block
@@ -240,29 +202,36 @@ const BusinessGuaranteeReport = () => {
         {/* Deductions Table */}
         {!workError ? (
           !workIsLoading ? (
-            workConfirmations.length > 0 && (
+            workConfirmations.length > 0 ? (
               <Table
-                title="Business Guarantee Deductions Details"
-                header={data.tableHead}
-                body={workConfirmations.map((item) => (
+                title={t("BusinessGuaranteeReportPage.table1.title")}
+                header={t("BusinessGuaranteeReportPage.table1.columns", {
+                  returnObjects: true,
+                })}
+                body={workConfirmations.map((item,i) => (
                   <tr key={item.id} className="border-b *:py-6">
-                    <td>Work Confirmation {item.id}</td>
+                    <td>Work Confirmation-{i}</td>
                     <td>{moment(item.date).format("YYYY-MM-DD")}</td>
                     <td>{formatCurrency(item.totalAmount)}</td>
-                    <td>
+                    <td className="text-sky-600 flex items-center gap-2">
                       {formatCurrency(
                         item.totalAmount *
                           (item.contractId.businessGuarantee / 100)
                       )}
+                      <IoArrowDownOutline size={18} />
                     </td>
                   </tr>
                 ))}
                 footer={
                   <tr>
                     <td
-                      colSpan={data.tableHead.length - 2}
+                      colSpan={
+                        t("BusinessGuaranteeReportPage.table1.columns", {
+                          returnObjects: true,
+                        }).length - 2
+                      }
                       className="py-6 text-start font-medium">
-                      Total
+                      {t("BusinessGuaranteeReportPage.table1.total")}
                     </td>
                     <td className="py-6 text-start font-medium">
                       {formatCurrency(totalWorksValue)}
@@ -273,6 +242,10 @@ const BusinessGuaranteeReport = () => {
                   </tr>
                 }
               />
+            ) : (
+              <p>
+                {t("BusinessGuaranteeReportPage.messages.noWorkConfirmation")}
+              </p>
             )
           ) : (
             <div className="h-[20rem] flex items-center justify-center">
@@ -290,15 +263,19 @@ const BusinessGuaranteeReport = () => {
               <Table
                 title={
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <p>Business Guarantee Claims</p>
-                    <Button onClick={() => setOpenClaimForm(true)}>
-                      Add Claim
+                    <p>{t("BusinessGuaranteeReportPage.table2.title")}</p>
+                    <Button
+                      onClick={() => setOpenClaimForm(true)}
+                      className="print:hidden">
+                      {t("BusinessGuaranteeReportPage.table2.addButton")}
                     </Button>
                   </div>
                 }
-                header={data.tableHeadWarranty}
+                header={t("BusinessGuaranteeReportPage.table2.columns", {
+                  returnObjects: true,
+                })}
                 body={contract?.claims.map((item, i) => (
-                  <tr key={i} className="border-b *:py-6">
+                  <tr key={item.id} className="border-b *:py-6">
                     <td>Claim-{i + 1}</td>
                     <td>{moment(item.date).format("YYYY-MM-DD")}</td>
                     <td>{item.description ? item.description : "-"}</td>
@@ -307,7 +284,7 @@ const BusinessGuaranteeReport = () => {
                     <td>
                       <Button
                         onClick={() => deleteClaim(item._id)}
-                        className="bg-red-500 w-fit !px-1"
+                        className="bg-red-500 w-fit !px-1 print:hidden"
                         disabled={deleteLoading ? true : false}>
                         <IoTrashOutline size={18} />
                       </Button>
@@ -317,9 +294,13 @@ const BusinessGuaranteeReport = () => {
                 footer={
                   <tr>
                     <td
-                      colSpan={data.tableHeadWarranty.length - 1}
+                      colSpan={
+                        t("BusinessGuaranteeReportPage.table2.columns", {
+                          returnObjects: true,
+                        }).length - 1
+                      }
                       className="py-6 text-start font-medium">
-                      Total
+                      {t("BusinessGuaranteeReportPage.table2.total")}
                     </td>
                     <td className="py-6 text-start font-medium">
                       {formatCurrency(totalClaimsValue)}
@@ -329,11 +310,11 @@ const BusinessGuaranteeReport = () => {
               />
             ) : (
               <p className="text-center text-grayColor text-sm">
-                No Claims found.{" "}
+                {t("BusinessGuaranteeReportPage.messages.noClaims")}{" "}
                 <span
                   onClick={() => setOpenClaimForm(true)}
                   className="text-blue-600 cursor-pointer">
-                  Add a claim
+                  {t("BusinessGuaranteeReportPage.messages.addClaim")}
                 </span>
               </p>
             )
