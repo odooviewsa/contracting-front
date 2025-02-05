@@ -783,6 +783,7 @@ const TranslationEnglish = {
     users: "Users",
     setting: "Setting",
     logout: "Logout",
+    reports: "Reports",
   },
   // Estimation Page
   EstimationPage: {
