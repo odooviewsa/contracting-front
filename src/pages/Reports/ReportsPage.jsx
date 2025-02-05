@@ -14,6 +14,23 @@ const ReportsPage = () => {
   const [optionsContracts, setOptionContracts] = useState([]);
   const [showContractInput, setShowContractInput] = useState(false);
   const navigate = useNavigate();
+  // Add the form to display report options and filters
+  const {
+    data: projects,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      try {
+        const response = await axiosInstance.get("/api/projects");
+        return response.data.projects;
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        throw error;
+      }
+    },
+  });
   // Form handling
   const {
     formState: { errors },
@@ -22,7 +39,13 @@ const ReportsPage = () => {
     watch,
   } = useForm();
   const onSubmit = (data) => {
-    navigate(`businessesGuarantee/${data.contract}`);
+    navigate(`businessesGuarantee/${data.contract}`, {
+      state: {
+        projectName: projects.filter(
+          (project) => project._id === data.project
+        )[0].projectName,
+      },
+    });
   };
   const projectValue = watch("project");
   useEffect(() => {
@@ -45,23 +68,6 @@ const ReportsPage = () => {
       setShowContractInput(false);
     }
   }, [projectValue]);
-  // Add the form to display report options and filters
-  const {
-    data: projects,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["projects"],
-    queryFn: async () => {
-      try {
-        const response = await axiosInstance.get("/api/projects");
-        return response.data.projects;
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-        throw error;
-      }
-    },
-  });
   if (error) {
     return <div>Error fetching projects</div>;
   }
@@ -93,7 +99,11 @@ const ReportsPage = () => {
                 errors={errors}
                 label={t("ReportPage.projectsLabel")}
                 options={[
-                  { value: "", text: t("ReportPage.selectProject"), asDefault: true },
+                  {
+                    value: "",
+                    text: t("ReportPage.selectProject"),
+                    asDefault: true,
+                  },
                   ...optionsProjects,
                 ]}
                 register={register("project", { required: true })}
@@ -106,7 +116,11 @@ const ReportsPage = () => {
                   errors={errors}
                   label={t("ReportPage.contractsLabel")}
                   options={[
-                    { value: "", text: t("ReportPage.selectContract"), asDefault: true },
+                    {
+                      value: "",
+                      text: t("ReportPage.selectContract"),
+                      asDefault: true,
+                    },
                     ...optionsContracts,
                   ]}
                   register={register("contract", { required: true })}

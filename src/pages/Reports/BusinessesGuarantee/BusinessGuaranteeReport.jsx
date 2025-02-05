@@ -10,7 +10,7 @@ import {
   IoTimeOutline,
   IoTrashOutline,
 } from "react-icons/io5";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Button from "../../../componant/elements/Button";
 import Block from "../../../componant/elements/Block";
 import Table from "../../../componant/layout/Table";
@@ -21,9 +21,9 @@ import ClaimForm from "../components/ClaimForm";
 import { toast, ToastContainer } from "react-toastify";
 import { useTranslation } from "react-i18next";
 const BusinessGuaranteeReport = () => {
-  const { contractId, companyName } = useParams();
+  const { contractId } = useParams();
   const { t } = useTranslation();
-
+  const { state } = useLocation();
   // States
   const [openClaimForm, setOpenClaimForm] = useState(false);
   const [totalBusinessesGuarantees, setTotalBusinessesGuarantees] = useState(0);
@@ -117,12 +117,12 @@ const BusinessGuaranteeReport = () => {
       <div className="flex flex-col gap-6 p-4 md:px-0">
         {/* Header */}
         <Block className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-6">
-          <div className="flex flex-col items-start gap-3">
+          <div className="flex flex-col items-start gap-3 print:flex-row print:items-center">
             <h1 className="lead">{t("BusinessGuaranteeReportPage.title")}</h1>
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-4 print:flex-row print:items-center">
               <p className="flex gap-2 text-grayColor">
                 <IoDocumentTextOutline size={24} />
-                {companyName}
+                {state?.projectName}
               </p>
               <p className="flex gap-2 text-grayColor">
                 <IoCalendarOutline size={24} />
@@ -140,7 +140,7 @@ const BusinessGuaranteeReport = () => {
           </div>
         </Block>
         {/* Widgets */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 print:grid-cols-4 gap-4">
           {t("BusinessGuaranteeReportPage.widgets", {
             alertValue: formatCurrency(totalBusinessesGuarantees),
             businessGuarantee: contract?.businessGuarantee,
@@ -208,7 +208,7 @@ const BusinessGuaranteeReport = () => {
                 header={t("BusinessGuaranteeReportPage.table1.columns", {
                   returnObjects: true,
                 })}
-                body={workConfirmations.map((item,i) => (
+                body={workConfirmations.map((item, i) => (
                   <tr key={item.id} className="border-b *:py-6">
                     <td>Work Confirmation-{i}</td>
                     <td>{moment(item.date).format("YYYY-MM-DD")}</td>
@@ -313,7 +313,7 @@ const BusinessGuaranteeReport = () => {
                 {t("BusinessGuaranteeReportPage.messages.noClaims")}{" "}
                 <span
                   onClick={() => setOpenClaimForm(true)}
-                  className="text-blue-600 cursor-pointer">
+                  className="text-blue-600 cursor-pointer print:hidden">
                   {t("BusinessGuaranteeReportPage.messages.addClaim")}
                 </span>
               </p>
