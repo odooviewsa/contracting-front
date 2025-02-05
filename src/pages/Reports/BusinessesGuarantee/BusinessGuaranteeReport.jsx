@@ -105,6 +105,9 @@ const BusinessGuaranteeReport = () => {
       toast.error("Error deleting claim");
     }
   };
+  const handlePrintButton = () => {
+    window.print()
+  }
   // static data
   const data = {
     projectInfo: {
@@ -151,11 +154,11 @@ const BusinessGuaranteeReport = () => {
         valueColor: "#008235",
         text: "Available Business Guarantee",
         value: formatCurrency(totalBusinessesGuarantees - totalClaimsValue),
-        subText: `Remaining ${(
+        subText: `Remaining ${totalBusinessesGuarantees ? (
           ((totalBusinessesGuarantees - totalClaimsValue) /
             totalBusinessesGuarantees) *
           100
-        ).toFixed(1)}%`,
+        ).toFixed(1) : 0}%`,
       },
       {
         icon: IoTimeOutline,
@@ -197,7 +200,7 @@ const BusinessGuaranteeReport = () => {
             </div>
           </div>
           <div>
-            <Button className="flex gap-2 items-center !px-4">
+            <Button className="flex gap-2 items-center !px-4 print:hidden" onClick={handlePrintButton}>
               <IoDownloadOutline size={24} />
               Export Report
             </Button>
