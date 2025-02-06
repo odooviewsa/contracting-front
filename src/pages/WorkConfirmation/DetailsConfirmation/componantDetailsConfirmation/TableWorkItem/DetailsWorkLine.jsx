@@ -14,6 +14,7 @@ import PhotosTab from "./Tabs/PhotosTab";
 import DocumentsTab from "./Tabs/DocumentsTab";
 import { Alert } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import TasksTab from "./Tabs/TasksTab";
 
 const DetailsWorkLine = ({
   workItem,
@@ -50,6 +51,11 @@ const DetailsWorkLine = ({
     {
       title: t("DetailsWorkLine.line.tabs.docs.title"),
       content: <DocumentsTab workItem={currentWorkItem} refetch={refetch} />,
+    },
+    {
+      // t("DetailsWorkLine.line.tabs.tasks.title")
+      title: "Tasks",
+      content: <TasksTab workItem={currentWorkItem} refetch={refetch} />,
     },
   ];
   const widgets = [
@@ -116,8 +122,7 @@ const DetailsWorkLine = ({
                     100
                   }%`,
                 }}
-                className="flex h-full items-center justify-center bg-green-500  text-white rounded-3xl"
-              ></div>
+                className="flex h-full items-center justify-center bg-green-500  text-white rounded-3xl"></div>
             </div>
           </div>
         ) : (
