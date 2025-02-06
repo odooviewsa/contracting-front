@@ -5,6 +5,8 @@ import block from "../../../../assets/images/block2.png";
 import close from "../../../../assets/images/close3.png";
 import money4 from "../../../../assets/images/money4.png";
 import victor from "../../../../assets/images/Vector.png";
+import dollor from "../../../../assets/images/bx_dollar.png";
+
 import { motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
@@ -16,7 +18,6 @@ export default function CurrentWorkConfirmationDetails({ data }) {
   const [height, setHeight] = useState(0);
   const ref = useRef();
   const [guaranteeDeduction, setGuaranteeDeduction] = useState(0);
-
   const updateHeight = () => {
     if (ref.current) {
       setHeight(ref.current.scrollHeight);
@@ -39,6 +40,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
     );
     setGuaranteeDeduction(calcSumTotalAmount || 0); // Fallback to 0 if undefined
   }, [data?.contractId?.businessGuarantee, data?.workItems]);
+
   return (
     <motion.div
       ref={ref}
@@ -46,8 +48,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
       animate={{
         height: open ? height : 50,
       }}
-      transition={{ duration: 0.4 }}
-    >
+      transition={{ duration: 0.4 }}>
       <div className="flex justify-between">
         <h4 className="text-blue-950 font-semibold text-[0.8rem] md:text-[1rem]">
           {t("ConfirmationForms.BOQ.currentWork.title")}
@@ -55,8 +56,7 @@ export default function CurrentWorkConfirmationDetails({ data }) {
 
         <motion.div
           className="cursor-pointer"
-          onClick={() => setOpen((prev) => !prev)}
-        >
+          onClick={() => setOpen((prev) => !prev)}>
           <IoIosArrowDown
             size={23}
             color="#777"
@@ -94,8 +94,22 @@ export default function CurrentWorkConfirmationDetails({ data }) {
             icon: <img src={money4} alt="victor" className="w-full h-full" />,
           },
           {
+            label: t("ConfirmationForms.BOQ.currentWork.data.downPayment"),
+            value: (
+              (data?.contractId?.downPaymentRate / 100) *
+              data?.totalAmount
+            ).toFixed(1),
+            icon: <img src={dollor} alt="victor" className="w-full h-full" />,
+          },
+          {
             label: t("ConfirmationForms.BOQ.currentWork.data.dueAmount"),
-            value: data?.dueAmount,
+            value: (
+              data?.totalAmount -
+              guaranteeDeduction -
+              data?.totalDeduction +
+              data?.totalAddition -
+              (data?.contractId?.downPaymentRate / 100) * data?.totalAmount
+            ).toFixed(1),
             icon: <img src={victor} alt="victor" className="w-full h-full" />,
           },
         ].map((e, i) => (

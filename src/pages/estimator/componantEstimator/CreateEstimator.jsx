@@ -224,7 +224,7 @@ export default function CreateEstimator({ setOpenCreate, refetch }) {
               {isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin" />
-                  <span>{t("EstimationForm.adddButton.loading")}</span>
+                  <span>{t("EstimationForm.addButton.loading")}</span>
                 </div>
               ) : (
                 t("EstimationForm.addButton.text")

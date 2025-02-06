@@ -1598,6 +1598,7 @@ const TranslationEnglish = {
           guaranteeDeduction: "Guarantee Deduction",
           totalOtherDeductions: "Total Other Deductions",
           totalAdditions: "Total Additions",
+          downPayment: "Down Payment",
           dueAmount: "Due Amount",
         },
       },
