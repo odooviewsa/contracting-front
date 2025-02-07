@@ -9,7 +9,8 @@ import { useSelector } from "react-redux";
 import { axiosInstance, url } from "../../axios/axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FaCamera } from "react-icons/fa6";
-
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../componant/Loading.jsx";
 const CompanyProfile = () => {
   // Language
   const { t } = useTranslation();
@@ -20,6 +21,19 @@ const CompanyProfile = () => {
   const [logo, setLogo] = useState(
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
   );
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["companyProfile", userId],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/companyProfile/${userId}/user`
+        );
+        return res.data;
+      } catch (error) {
+        throw new Error(errors.message);
+      }
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -50,6 +64,7 @@ const CompanyProfile = () => {
 
       if (res) {
         toast.success("Updated successfully!");
+        refetch();
       }
     } catch (error) {
       if (error.response?.data?.errors) {
@@ -81,88 +96,86 @@ const CompanyProfile = () => {
   };
   // Fetch Company Data
   useEffect(() => {
-    const fetchCompanyProfile = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/api/companyProfile/${userId}/user`
-        );
-        if (res) {
-          setCompanyProfileData(res.data);
-          setValue("companyName", res.data.companyName);
-          setValue("companySize", res.data.companySize);
-          setValue("companyType", res.data.companyType);
-          setValue("phone", res.data.phone);
-          setValue("website", res.data.website);
-          setValue("taxId", res.data.taxId);
-          setValue("companyId", res.data.companyId);
-          if (res.data.logo) {
-            setLogo(`${url}/companyProfileImages/${res.data.logo}`);
-          }
-        }
-      } catch (error) {
-        console.log(error.message);
+    if (data) {
+      setCompanyProfileData(data);
+      setValue("companyName", data.companyName);
+      setValue("companySize", data.companySize);
+      setValue("companyType", data.companyType);
+      setValue("phone", data.phone);
+      setValue("website", data.website);
+      setValue("taxId", data.taxId);
+      setValue("companyId", data.companyId);
+      if (data.logo) {
+        setLogo(`${url}/companyProfileImages/${data.logo}`);
       }
-    };
-    fetchCompanyProfile();
-  }, [userId, setValue]);
+    }
+  }, [data, isLoading, setValue]);
   return (
     <>
       <ToastContainer />
       <div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-start gap-4"
-        >
-          {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <div className="relative">
-              <label
-                htmlFor="image-upload"
-                className="block w-32 h-32 rounded-full bg-slate-100 cursor-pointer group overflow-hidden"
-              >
-                {logo ? (
-                  <img
-                    src={logo}
-                    alt="Partner"
-                    className="w-full h-full object-cover"
+        {!isLoading ? (
+          !error ? (
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col items-start gap-4">
+              {/* Logo */}
+              <div className="flex justify-center mb-8">
+                <div className="relative">
+                  <label
+                    htmlFor="image-upload"
+                    className="block w-32 h-32 rounded-full bg-slate-100 cursor-pointer group overflow-hidden">
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt="Partner"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <FaCamera className="w-8 h-8 text-gray-400" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100">
+                      <IoImageOutline className="w-6 h-6 text-white" />
+                    </div>
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleChangeImage}
+                    className="hidden"
                   />
-                ) : (
-                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                    <FaCamera className="w-8 h-8 text-gray-400" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100">
-                  <IoImageOutline className="w-6 h-6 text-white" />
                 </div>
-              </label>
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleChangeImage}
-                className="hidden"
-              />
-            </div>
-          </div>
+              </div>
 
-          {t("CompanyProfile.form.fields", { returnObjects: true }).map(
-            (field, key) => (
-              <Input
-                disabled={field.disabled ? true : false}
-                id={field.id}
-                type={field.type}
-                placeholder={field.placeholder}
-                label={field.label}
-                options={field.options}
-                errorMessage={field.errorMessage}
-                register={register(field.id, { required: field.required })}
-                errors={errors}
-                key={key}
-              />
-            )
-          )}
-          <Button>{t("CompanyProfile.buttons.updateButton")}</Button>
-        </form>
+              {t("CompanyProfile.form.fields", { returnObjects: true }).map(
+                (field, key) => (
+                  <Input
+                    disabled={field.disabled ? true : false}
+                    id={field.id}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    label={field.label}
+                    options={field.options}
+                    errorMessage={field.errorMessage}
+                    register={register(field.id, { required: field.required })}
+                    errors={errors}
+                    key={key}
+                  />
+                )
+              )}
+              <Button>{t("CompanyProfile.buttons.updateButton")}</Button>
+            </form>
+          ) : (
+            <p>{error}</p>
+          )
+        ) : (
+          <div className="flex items-center justify-center h-[24rem]">
+            <Loading />
+          </div>
+        )}
       </div>
     </>
   );
