@@ -8,7 +8,7 @@ const ProductsList = ({ onSelect }) => {
   const [data, setData] = useState(null);
   const [products, setProducts] = useState([]);
   // Language
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   // Pagination state
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({
@@ -53,16 +53,14 @@ const ProductsList = ({ onSelect }) => {
   };
 
   // Fields we want to display
-  const fields = ["sku", "name", "uom", "category", "price", "quantity"];
-
+  const fields = ["sku", "name", "category", "price", "uom", "quantity"];
   return (
     <div className="w-full">
       <Grid
         container
         alignItems="center"
         justifyContent="center"
-        sx={{ my: 3 }}
-      >
+        sx={{ my: 3 }}>
         <TextField
           label={t("ProductsList.searchBar")}
           style={{ flex: 1 }}
@@ -93,7 +91,7 @@ const ProductsList = ({ onSelect }) => {
                   {fields.map((field) => (
                     <td key={field}>
                       {field === "category"
-                        ? product[field]?.name || "-" // Display category name
+                        ? product[field].name || "-" // Display category name
                         : field === "price"
                         ? `$${product[field]?.toFixed(2) || "0.00"}`
                         : product[field] || "-"}
@@ -106,8 +104,7 @@ const ProductsList = ({ onSelect }) => {
                     <button
                       onClick={() => onSelect(product)}
                       style={styles.selectButton}
-                      aria-label={`Edit ${product.name || "product"}`}
-                    >
+                      aria-label={`Edit ${product.name || "product"}`}>
                       {t("ProductsList.selectButton")}
                     </button>
                   </td>
@@ -116,7 +113,7 @@ const ProductsList = ({ onSelect }) => {
             ) : (
               <tr>
                 <td colSpan={fields.length + 3} style={styles.noData}>
-                {t("ProductsList.noFound")}
+                  {t("ProductsList.noFound")}
                 </td>
               </tr>
             )}
@@ -128,8 +125,7 @@ const ProductsList = ({ onSelect }) => {
         container
         alignItems="center"
         justifyContent={"center"}
-        sx={{ mt: 3 }}
-      >
+        sx={{ mt: 3 }}>
         <Pagination
           count={data?.pages || 1} // Total number of pages
           page={page}

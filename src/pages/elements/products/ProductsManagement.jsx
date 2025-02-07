@@ -9,6 +9,8 @@ import { Grid, Pagination } from "@mui/material";
 
 import { axiosInstance, url } from "../../../axios/axios";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { toast, ToastContainer } from "react-toastify";
 
 const ProductsManagement = () => {
   const [data, setData] = useState(null);
@@ -24,36 +26,60 @@ const ProductsManagement = () => {
   const [page, setPage] = useState(1);
   // Language
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const fetchData = async () => {
+  const {
+    data: productsData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["products", page],
+    queryFn: async () => {
       try {
         let urlNew = `/api/products`;
         if (page) {
           urlNew = `/api/products?page=${page}`;
         }
         const response = await axiosInstance.get(urlNew);
-        if (!response) {
-          throw new Error("Failed to fetch products");
-        }
-        setData(response.data);
-        setProducts(response.data.products);
-      } catch (err) {
-        console.error("Error fetching products:", err);
+        return response.data;
+      } catch (error) {
+        throw new Error(error.message);
       }
-    };
-    fetchData();
-  }, [page]);
+    },
+  });
+  // Get categories
+  const {
+    data: categories,
+    isLoading: isLoadingCategory,
+    error: errorCategory,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get("/api/categories");
+        return res.data.categories;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+  });
+  useEffect(() => {
+    setData(productsData);
+    setProducts(productsData.products);
+  }, [page, productsData]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      return (
-        (filters.name === "" ||
-          product.name.toLowerCase().includes(filters.name.toLowerCase())) &&
-        (filters.category === "" || product.category === filters.category) &&
-        (filters.supplier === "" || product.supplier === filters.supplier)
-      );
-    });
+    return (
+      products?.length > 0 &&
+      products?.filter((product) => {
+        return (
+          (filters.name === "" ||
+            product.name.toLowerCase().includes(filters.name.toLowerCase())) &&
+          (filters.category === "" ||
+            product.category._id === filters.category) &&
+          (filters.supplier === "" || product.supplier === filters.supplier)
+        );
+      })
+    );
   }, [products, filters]);
 
   const handleAddProduct = () => {
@@ -74,10 +100,9 @@ const ProductsManagement = () => {
       credentials: "include",
     });
     if (res.ok) {
-      // eslint-disable-next-line no-restricted-globals
-      location.reload();
+      toast.success("Product deleted successfully");
+      refetch();
     }
-    // setData(products.filter((product) => product.id !== productId));
   };
 
   const handleFormSubmit = async (product) => {
@@ -92,133 +117,159 @@ const ProductsManagement = () => {
       });
       if (res.ok) {
         setIsFormVisible(false);
-        // eslint-disable-next-line no-restricted-globals
-        location.reload();
+        toast.success("Product added successfully");
+        refetch();
       }
     } else {
-      const res = await fetch(`${url}/api/v1/products/${product._id}`, {
+      const res = await fetch(`${url}/api/products/${product._id}`, {
         method: "PUT",
         body: JSON.stringify({ ...product }),
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       if (res.ok) {
         setIsFormVisible(false);
-        // eslint-disable-next-line no-restricted-globals
-        location.reload();
+        toast.success("Product updated successfully");
+        refetch();
       }
     }
   };
-
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
   return (
-    <div style={styles.container}>
-      <div style={styles.actions} className="w-full flex items-center justify-between">
-        <Link to="/" style={styles.backLink} aria-label="Go back to main menu">
-          &larr; {t("ProductsPage.backButton")}
-        </Link>
-        <button
-          onClick={handleAddProduct}
-          style={styles.addButton}
-          aria-label="Add a new product"
-        >
-          {t("ProductsPage.addButton")}
-        </button>
-      </div>
-      <div style={styles.filterContainer}>
-        <div style={styles.filterGroup}>
-          {t("ProductsPage.fields", { returnObjects: true }).map((field, key) =>
-            field.type === "text" ? (
-              <div key={key} style={styles.filterItem}>
-                <label style={styles.label} htmlFor={field.id}>
-                  {field.label}
-                </label>
-                <input
-                  type={field.type}
-                  id={field.id}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  value={filters.name}
-                  onChange={handleFilterChange}
-                  style={styles.input}
-                />
-              </div>
-            ) : field.id === "category" ? (
-              <div key={key} style={styles.filterItem}>
-                <label style={styles.label} htmlFor={field.id}>
-                  {field.label}
-                </label>
-                <select
-                  id={field.id}
-                  name={field.name}
-                  value={filters.category}
-                  onChange={handleFilterChange}
-                  style={styles.select}
-                >
-                  <option value="">All Categories</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Furniture">Furniture</option>
-                  <option value="Clothing">Clothing</option>
-                </select>
-              </div>
-            ) : (
-              <div key={key} style={styles.filterItem}>
-                <label style={styles.label} htmlFor={field.id}>
-                  {field.label}
-                </label>
-                <select
-                  id={field.id}
-                  name={field.name}
-                  value={filters.supplier}
-                  onChange={handleFilterChange}
-                  style={styles.select}
-                >
-                  <option value="">All Suppliers</option>
-                  <option value="Supplier A">Supplier A</option>
-                  <option value="Supplier B">Supplier B</option>
-                  <option value="Supplier C">Supplier C</option>
-                </select>
-              </div>
-            )
-          )}
+    <>
+      <ToastContainer />
+      <div style={styles.container}>
+        <div
+          style={styles.actions}
+          className="w-full flex items-center justify-between">
+          <Link
+            to="/"
+            style={styles.backLink}
+            aria-label="Go back to main menu">
+            &larr; {t("ProductsPage.backButton")}
+          </Link>
+          <button
+            onClick={handleAddProduct}
+            style={styles.addButton}
+            aria-label="Add a new product">
+            {t("ProductsPage.addButton")}
+          </button>
         </div>
-        <button style={styles.searchButton} aria-label="Apply filters">
-          {t("ProductsPage.searchButton")}
-        </button>
-      </div>
-      <ProductTable
-        products={filteredProducts}
-        onEdit={handleEditProduct}
-        onDelete={handleDeleteProduct}
-      />
-      <Grid
-        container
-        alignItems="center"
-        justifyContent={"center"}
-        sx={{ mt: 3 }}
-      >
-        <Pagination
-          count={data?.pages || 1} // Total number of pages
-          page={page}
-          onChange={(_, value) => setPage(value)}
-        />
-      </Grid>
-      {isFormVisible && (
-        <div style={styles.overlay}>
-          <div style={styles.formContainer}>
-            <ProductForm
-              product={selectedProduct}
-              onSubmit={handleFormSubmit}
-              onCancel={() => setIsFormVisible(false)}
-            />
+        <div style={styles.filterContainer}>
+          <div style={styles.filterGroup}>
+            {t("ProductsPage.fields", { returnObjects: true }).map(
+              (field, key) =>
+                field.type === "text" ? (
+                  <div key={key} style={styles.filterItem}>
+                    <label style={styles.label} htmlFor={field.id}>
+                      {field.label}
+                    </label>
+                    <input
+                      type={field.type}
+                      id={field.id}
+                      name={field.name}
+                      placeholder={field.placeholder}
+                      value={filters.name}
+                      onChange={handleFilterChange}
+                      style={styles.input}
+                    />
+                  </div>
+                ) : field.id === "category" ? (
+                  <div key={key} style={styles.filterItem}>
+                    <label style={styles.label} htmlFor={field.id}>
+                      {field.label}
+                    </label>
+                    <select
+                      id={field.id}
+                      name={field.name}
+                      value={filters.category}
+                      onChange={handleFilterChange}
+                      style={styles.select}>
+                      {!isLoadingCategory ? (
+                        categories.length > 0 ? (
+                          [
+                            ...categories,
+                            {
+                              _id: "",
+                              name: "Select a category",
+                              asDefault: true,
+                            },
+                          ]?.map((category) => (
+                            <option
+                              defaultValue={category.asDefault && category._id}
+                              value={category._id}>
+                              {category.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="">No category found</option>
+                        )
+                      ) : (
+                        <option value="">Loading...</option>
+                      )}
+                    </select>
+                  </div>
+                ) : (
+                  <div key={key} style={styles.filterItem}>
+                    <label style={styles.label} htmlFor={field.id}>
+                      {field.label}
+                    </label>
+                    <select
+                      id={field.id}
+                      name={field.name}
+                      value={filters.supplier}
+                      onChange={handleFilterChange}
+                      style={styles.select}>
+                      <option value="">All Suppliers</option>
+                      <option value="Supplier A">Supplier A</option>
+                      <option value="Supplier B">Supplier B</option>
+                      <option value="Supplier C">Supplier C</option>
+                    </select>
+                  </div>
+                )
+            )}
           </div>
+          <button style={styles.searchButton} aria-label="Apply filters">
+            {t("ProductsPage.searchButton")}
+          </button>
         </div>
-      )}
-    </div>
+        <ProductTable
+          products={filteredProducts}
+          onEdit={handleEditProduct}
+          onDelete={handleDeleteProduct}
+        />
+        <Grid
+          container
+          alignItems="center"
+          justifyContent={"center"}
+          sx={{ mt: 3 }}>
+          <Pagination
+            count={data?.pages || 1} // Total number of pages
+            page={page}
+            onChange={(_, value) => setPage(value)}
+          />
+        </Grid>
+        {isFormVisible && (
+          <div style={styles.overlay}>
+            <div style={styles.formContainer}>
+              <ProductForm
+                product={selectedProduct}
+                onSubmit={handleFormSubmit}
+                onCancel={() => setIsFormVisible(false)}
+                categories={categories}
+                isLoading={isLoadingCategory}
+                error={errorCategory}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

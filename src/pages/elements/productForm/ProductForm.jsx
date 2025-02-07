@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-const ProductForm = ({ product, onSubmit, onCancel }) => {
+import { useQuery } from "@tanstack/react-query";
+import { axiosInstance } from "../../../axios/axios";
+const ProductForm = ({
+  product,
+  onSubmit,
+  onCancel,
+  isLoading,
+  error,
+  categories,
+}) => {
   const { t } = useTranslation();
-
   const [formData, setFormData] = useState(
     product || {
       sku: "",
@@ -30,11 +37,12 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
     }
     onSubmit({ ...formData, price: parseFloat(formData.price) });
   };
-
   return (
     <form onSubmit={handleSubmit} style={styles.form} className="slide-in">
       <h2 style={styles.heading}>
-        {product ? t("EditAndAddProductForm.editProduct") : t("EditAndAddProductForm.addProduct")}
+        {product
+          ? t("EditAndAddProductForm.editProduct")
+          : t("EditAndAddProductForm.addProduct")}
       </h2>
       <div style={styles.formGroup}>
         <label>{t("EditAndAddProductForm.sku")}:</label>
@@ -68,13 +76,25 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
       </div>
       <div style={styles.formGroup}>
         <label>{t("EditAndAddProductForm.category")}:</label>
-        <input
+        <select
           type="text"
           name="category"
           value={formData.category?._id}
           onChange={handleChange}
-          style={styles.input}
-        />
+          style={styles.input}>
+          {!isLoading ? (
+            categories.length > 0 ? (
+              categories?.map((category) => (
+                <option value={category._id}>{category.name}</option>
+              ))
+            ) : (
+              <option value="">No category found</option>
+            )
+          ) : (
+            <option value="">Loading...</option>
+          )}
+        </select>
+        {error && <div>{error.message}</div>}
       </div>
       <div style={styles.formGroup}>
         <label>{t("EditAndAddProductForm.price")}:</label>
@@ -112,8 +132,7 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
           name="description"
           value={formData.description}
           onChange={handleChange}
-          style={styles.textarea}
-        ></textarea>
+          style={styles.textarea}></textarea>
       </div>
       <div style={styles.buttonGroup}>
         <button type="submit" style={styles.submitButton}>

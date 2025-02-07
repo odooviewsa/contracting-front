@@ -33,6 +33,8 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
                   <td key={field}>
                     {field === "price"
                       ? `$${product[field]?.toFixed(2) || "0.00"}`
+                      : field === "category"
+                      ? product.category.name
                       : product[field] || "-"}
                   </td>
                 ))}
@@ -43,15 +45,13 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
                   <button
                     onClick={() => onEdit(product)}
                     style={styles.editButton}
-                    aria-label={`Edit ${product.name || "product"}`}
-                  >
+                    aria-label={`Edit ${product.name || "product"}`}>
                     {t("ProductsPage.editButton")}
                   </button>
                   <button
                     onClick={() => onDelete(product._id)}
                     style={styles.deleteButton}
-                    aria-label={`Delete ${product.name || "product"}`}
-                  >
+                    aria-label={`Delete ${product.name || "product"}`}>
                     {t("ProductsPage.deleteButton")}
                   </button>
                 </td>
