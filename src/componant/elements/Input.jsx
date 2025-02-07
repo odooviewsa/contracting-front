@@ -10,18 +10,24 @@ const Input = ({
   errors,
   options,
   disabled,
+  onChange,
+  value,
 }) => {
   return (
     <div className={`flex flex-col gap-2 w-full ${groupClassName}`}>
       <label htmlFor={id}>{label}</label>
       {options ? (
         <select
+          value={value}
+          onChange={onChange}
           disabled={disabled}
           className={`bg-slate-100 p-3 rounded-lg outline-none disabled:bg-gray-300 disabled:cursor-not-allowed ${className}`}
-          {...register}
-        >
+          {...register}>
           {options.map((option, key) => (
-            <option value={option.value} key={key} defaultValue={option.asDefault && option.value}>
+            <option
+              value={option.value}
+              key={key}
+              defaultValue={option.asDefault && option.value}>
               {option.text}
             </option>
           ))}
@@ -29,6 +35,8 @@ const Input = ({
       ) : (
         <input
           id={id}
+          value={value}
+          onChange={onChange}
           type={type}
           placeholder={placeholder}
           className={`bg-slate-100 p-3 rounded-lg outline-none disabled:bg-gray-300 disabled:cursor-not-allowed ${className}`}
