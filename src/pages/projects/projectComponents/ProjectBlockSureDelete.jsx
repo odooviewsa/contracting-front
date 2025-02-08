@@ -45,7 +45,7 @@ function ProjectBlockSureDelete({
               handleDeleteProject();
             }}
           >
-            {loading ? "Loading..." : t("DeleteProject.deleteButton")}
+            {loading ? t("DeleteProject.deleteButton.loading") : t("DeleteProject.deleteButton.text")}
           </button>
         </div>
       </div>

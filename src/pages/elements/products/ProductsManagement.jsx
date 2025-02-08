@@ -14,9 +14,9 @@ import { toast, ToastContainer } from "react-toastify";
 
 const ProductsManagement = () => {
   const [data, setData] = useState(null);
-  const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isLoadingForm, setIsLoadingForm] = useState(false);
   const [filters, setFilters] = useState({
     name: "",
     category: "",
@@ -62,26 +62,20 @@ const ProductsManagement = () => {
       }
     },
   });
-  useEffect(() => {
-    setData(productsData);
-    setProducts(productsData.products);
-  }, [page, productsData]);
 
   const filteredProducts = useMemo(() => {
-    return (
-      products?.length > 0 &&
-      products?.filter((product) => {
-        return (
-          (filters.name === "" ||
-            product.name.toLowerCase().includes(filters.name.toLowerCase())) &&
-          (filters.category === "" ||
-            product.category._id === filters.category) &&
-          (filters.supplier === "" || product.supplier === filters.supplier)
-        );
-      })
-    );
-  }, [products, filters]);
+    if (!productsData || !productsData.products) return [];
 
+    return productsData.products.filter((product) => {
+      return (
+        (filters.name === "" ||
+          product.name.toLowerCase().includes(filters.name.toLowerCase())) &&
+        (filters.category === "" ||
+          product.category._id === filters.category) &&
+        (filters.supplier === "" || product.supplier === filters.supplier)
+      );
+    });
+  }, [productsData?.products, filters]);
   const handleAddProduct = () => {
     setSelectedProduct(null);
     setIsFormVisible(true);
@@ -107,6 +101,7 @@ const ProductsManagement = () => {
 
   const handleFormSubmit = async (product) => {
     if (!product._id) {
+      setIsLoadingForm(true);
       const res = await fetch(`${url}/api/products`, {
         method: "POST",
         body: JSON.stringify({ ...product }),
@@ -117,10 +112,12 @@ const ProductsManagement = () => {
       });
       if (res.ok) {
         setIsFormVisible(false);
+        setIsLoadingForm(false);
         toast.success("Product added successfully");
         refetch();
       }
     } else {
+      setIsLoadingForm(true);
       const res = await fetch(`${url}/api/products/${product._id}`, {
         method: "PUT",
         body: JSON.stringify({ ...product }),
@@ -131,6 +128,7 @@ const ProductsManagement = () => {
       });
       if (res.ok) {
         setIsFormVisible(false);
+        setIsLoadingForm(false);
         toast.success("Product updated successfully");
         refetch();
       }
@@ -262,7 +260,7 @@ const ProductsManagement = () => {
                 onSubmit={handleFormSubmit}
                 onCancel={() => setIsFormVisible(false)}
                 categories={categories}
-                isLoading={isLoadingCategory}
+                isLoading={isLoadingForm}
                 error={errorCategory}
               />
             </div>

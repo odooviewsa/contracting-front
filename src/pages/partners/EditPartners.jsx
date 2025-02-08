@@ -77,27 +77,25 @@ export default function EditPartners({
       animate={{ x: "0%" }}
       transition={{
         duration: 0.5,
-      }}
-    >
+      }}>
       <div className="bg-white rounded-lg shadow p-3 md:w-[50%] w-full max-h-[90vh] scrollbar overflow-auto text-textLabalForm">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-900 ">{t("EditPartnerForm.title")}</h3>
+          <h3 className="font-semibold text-gray-900 ">
+            {t("EditPartnerForm.title")}
+          </h3>
           <div
             className="p-1 ms-3 rounded-full bg-red-300 text-red-500 cursor-pointer"
-            onClick={() => setOpenEfitPartnerId(null)}
-          >
+            onClick={() => setOpenEfitPartnerId(null)}>
             <IoCloseOutline size={20} />
           </div>
         </div>
         <form
           className="flex flex-col gap-4 mt-1"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+          onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-center">
             <label
               htmlFor="camera"
-              className="w-20 h-20 cursor-pointer bg-gray-200 rounded-full flex justify-center items-center text-gray-700"
-            >
+              className="w-20 h-20 cursor-pointer bg-gray-200 rounded-full flex justify-center items-center text-gray-700">
               {imgReader ? (
                 <img
                   src={imgReader}
@@ -133,12 +131,11 @@ export default function EditPartners({
                         className="bg-bgInput p-2 rounded-md outline-none"
                         {...register(input.name, {
                           required: `${input.name} is required`,
-                        })}
-                      >
+                        })}>
                         <option value="">{input.label}</option>
                         {input.option?.map((e, i) => (
-                          <option key={i} value={e}>
-                            {e}
+                          <option key={i} value={e.value}>
+                            {e.label}
                           </option>
                         ))}
                       </select>

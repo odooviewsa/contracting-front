@@ -193,7 +193,7 @@ const TranslationEnglish = {
       },
       {
         label: "Project Location",
-        placeholder: "Select",
+        placeholder: "Enter project location",
         name: "projectLocation",
         required: true,
         errorMessage: "Project Location is required",
@@ -379,6 +379,8 @@ const TranslationEnglish = {
     teamMember: {
       title: "Team Member",
       seeAll: "See All",
+      projectMember: "Project Member",
+      projectManager: "Project Manager",
     },
     projectOverview: "Project Overview",
     scopeOfWork: "Scope of Work",
@@ -388,12 +390,16 @@ const TranslationEnglish = {
     workConfirmation: {
       headTitle: "Work Confirmation",
     },
+    messages: {
+      loadingMessage: "Loading...",
+      errorMessage: "Error fetching data!",
+    },
   },
   // Delete Project
   DeleteProject: {
     message: "Are you sure !",
     backButton: "Back",
-    deleteButton: "Delete",
+    deleteButton: { loading: "Loading...", text: "Delete" },
   },
   // Partners
   PartnersPage: {
@@ -493,7 +499,11 @@ const TranslationEnglish = {
         label: "Type",
         type: "select",
         name: "type",
-        option: ["Owner", "Sub-contractor", "Consultant"],
+        option: [
+          { value: "Owner", label: "Owner" },
+          { value: "Sub-contractor", label: "Sub-contractor" },
+          { value: "Consultant", label: "Consultant" },
+        ],
       },
       { label: "Email ", type: "email", name: "email" },
       { label: "Phone Number", type: "number", name: "phone" },

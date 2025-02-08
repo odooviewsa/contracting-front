@@ -90,14 +90,14 @@ const ProjectDetails = () => {
   }
 
   if (isError) {
-    return <div>Error fetching data!</div>;
+    return <div>{t("ProjectDetailsPage.messages.errorMessage")}</div>;
   }
   if (error) {
     return <div>{error}</div>;
   }
 
   if (!project) {
-    return <div>Loading...</div>;
+    return <div>{t("ProjectDetailsPage.messages.loadingMessage")}</div>;
   }
   // Contracts
   return (
@@ -131,8 +131,7 @@ const ProjectDetails = () => {
                       project.status === "Completed"
                         ? "text-green-500"
                         : "text-red-500"
-                    }`}
-                  >
+                    }`}>
                     {project.status}
                   </p>
                 </div>
@@ -177,7 +176,7 @@ const ProjectDetails = () => {
                   {project.projectManger}
                 </p>
                 <p className="text-gray-500 font-thin text-sm">
-                  Project Manager
+                  {t("ProjectDetailsPage.teamMember.projectManager")}
                 </p>
               </div>
             </li>
@@ -196,7 +195,7 @@ const ProjectDetails = () => {
                 <div className="flex flex-col">
                   <p className="text-gray-900 font-semibold">{member}</p>
                   <p className="text-gray-500 font-thin text-sm">
-                    Project Member
+                    {t("ProjectDetailsPage.teamMember.projectMember")}
                   </p>
                 </div>
               </li>
@@ -223,8 +222,7 @@ const ProjectDetails = () => {
       <div className="flex justify-end">
         <button
           onClick={() => navigate(`/${user?.companyName}/projects`)}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 "
-        >
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 ">
           {t("ProjectDetailsPage.backButton")}
         </button>
       </div>
@@ -284,8 +282,7 @@ const ProjectDetails = () => {
                             `/${user?.companyName}/workconfirm/addConfirmation/Details/${work._id}/${work?.contractId?._id}`
                           )
                         }
-                        ref={trRef}
-                      >
+                        ref={trRef}>
                         <td className="text-blue-600 thContract">
                           {work.contractType}
                         </td>
@@ -312,8 +309,7 @@ const ProjectDetails = () => {
                         </td>
                         <td className={` thContract`}>
                           <div
-                            className={`flex items-center gap-2 bg-green-200 h-fit text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}
-                          >
+                            className={`flex items-center gap-2 bg-green-200 h-fit text-green-800 text-[0.8rem] w-fit py-[1px] px-2 rounded-md`}>
                             <FaCircle />
                             <p>{work?.status}</p>
                           </div>
@@ -325,16 +321,16 @@ const ProjectDetails = () => {
                             e.stopPropagation();
                             setIdContractWork(work._id);
                             setOpenModalDetailsWork((prev) => !prev);
-                          }}
-                        >
+                          }}>
                           <div className="flex justify-center relative">
-                            {openModalDetailsWork && work._id === idContractWork && (
-                              <ModalDetailsWork
-                                workConfirmationId={work._id}
-                                setOpenModalDetails={setOpenModalDetailsWork}
-                                refetchData={refetch}
-                              />
-                            )}
+                            {openModalDetailsWork &&
+                              work._id === idContractWork && (
+                                <ModalDetailsWork
+                                  workConfirmationId={work._id}
+                                  setOpenModalDetails={setOpenModalDetailsWork}
+                                  refetchData={refetch}
+                                />
+                              )}
                             <div>
                               <HiOutlineDotsVertical />
                             </div>
@@ -358,8 +354,7 @@ const ProjectDetails = () => {
                     type="button"
                     className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
                     onClick={() => setPageWork((prev) => prev - 1)}
-                    disabled={workConfirmationData.currentPage === 1}
-                  >
+                    disabled={workConfirmationData.currentPage === 1}>
                     {t("ConfirmationPage.buttons.previousButton")}
                   </button>
                   <button
@@ -369,8 +364,7 @@ const ProjectDetails = () => {
                     disabled={
                       workConfirmationData.currentPage ===
                       workConfirmationData.totalPages
-                    }
-                  >
+                    }>
                     {t("ConfirmationPage.buttons.nextButton")}
                   </button>
                 </div>

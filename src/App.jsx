@@ -278,7 +278,11 @@ function App() {
         {
           path: ":companyName/reports/businessesGuarantee/:contractId",
           element: <BusinessGuaranteeReport />,
-        }
+        },
+        {
+          path: ":companyName/reports/workConfirmation/:workConfirmationId",
+          element: <BusinessGuaranteeReport />,
+        },
       ],
     },
   ]);

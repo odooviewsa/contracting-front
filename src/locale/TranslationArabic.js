@@ -1,4 +1,8 @@
-import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoTimeOutline } from "react-icons/io5";
+import {
+  IoAlertCircleOutline,
+  IoCheckmarkCircleOutline,
+  IoTimeOutline,
+} from "react-icons/io5";
 
 const TranslationArabic = {
   // User Tanet Page
@@ -174,7 +178,7 @@ const TranslationArabic = {
       },
       {
         label: "موقع المشروع",
-        placeholder: "اختر",
+        placeholder: "أدخل موقع المشروع",
         name: "projectLocation",
         required: true,
         errorMessage: "موقع المشروع مطلوب",
@@ -360,18 +364,27 @@ const TranslationArabic = {
     teamMember: {
       title: "أعضاء الفريق",
       seeAll: "عرض الكل",
+      projectMember: "عضو المشروع",
+      projectManager: "مدير المشروع",
     },
     projectOverview: "نظرة عامة على المشروع",
     scopeOfWork: "نطاق العمل",
     contracts: {
       headTitle: "العقود",
     },
+    workConfirmation: {
+      headTitle: "تأكيد العمل",
+    },
+    messages: {
+      loadingMessage: "جاري التحميل...",
+      errorMessage: "خطأ في جلب البيانات!",
+    },
   },
   // Delete Project
   DeleteProject: {
     message: "هل أنت متأكد؟",
     backButton: "رجوع",
-    deleteButton: "حذف",
+    deleteButton: {loading: "تحميل...",text: "حذف"},
   },
   // Partners
   PartnersPage: {
@@ -471,7 +484,11 @@ const TranslationArabic = {
         label: "النوع",
         type: "select",
         name: "type",
-        option: ["مالك", "مقاول فرعي", "استشاري"],
+        option: [
+          { value: "Owner", label: "مالك" },
+          { value: "Sub-contractor", label: "مقاول فرعي" },
+          { value: "Consultant", label: "استشاري" },
+        ],
       },
       { label: "البريد الإلكتروني", type: "email", name: "email" },
       { label: "رقم الهاتف", type: "number", name: "phone" },
@@ -1609,6 +1626,10 @@ const TranslationArabic = {
         backButton: "رجوع",
         nextButton: {
           text: "التالي",
+          loading: "جارٍ التحميل...",
+        },
+        updateButton: {
+          text: "تحديث",
           loading: "جارٍ التحميل...",
         },
         previousButton: "السابق",

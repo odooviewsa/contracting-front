@@ -9,6 +9,7 @@ const ProductForm = ({
   isLoading,
   error,
   categories,
+  isLoadingForm,
 }) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState(
@@ -23,7 +24,6 @@ const ProductForm = ({
       supplier: "",
     }
   );
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -135,7 +135,7 @@ const ProductForm = ({
           style={styles.textarea}></textarea>
       </div>
       <div style={styles.buttonGroup}>
-        <button type="submit" style={styles.submitButton}>
+        <button type="submit" style={styles.submitButton} disabled={isLoading}>
           {t("EditAndAddProductForm.save")}
         </button>
         <button type="button" onClick={onCancel} style={styles.cancelButton}>

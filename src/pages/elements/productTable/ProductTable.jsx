@@ -26,7 +26,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
           </tr>
         </thead>
         <tbody>
-          {products.length > 0 ? (
+          {products?.length > 0 ? (
             products.map((product) => (
               <tr key={product._id}>
                 {fields.map((field) => (
