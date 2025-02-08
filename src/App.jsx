@@ -50,6 +50,7 @@ import CompanyProfile from "./pages/companyProfile/companyProfile.jsx";
 import Reports from "./pages/contracts/summaryReports/Reports.jsx";
 import BusinessGuaranteeReport from "./pages/Reports/BusinessesGuarantee/BusinessGuaranteeReport.jsx";
 import ReportsPage from "./pages/Reports/ReportsPage.jsx";
+import WorkConfirmationReport from "./pages/Reports/WorkConfirmation/WorkConfirmationReport.jsx";
 
 function App() {
   // Multi Language
@@ -280,8 +281,8 @@ function App() {
           element: <BusinessGuaranteeReport />,
         },
         {
-          path: ":companyName/reports/workConfirmation/:workConfirmationId",
-          element: <BusinessGuaranteeReport />,
+          path: ":companyName/reports/workConfirmation/:contractId/:workConfirmationId",
+          element: <WorkConfirmationReport />,
         },
       ],
     },

@@ -119,8 +119,8 @@ export default function PartHeaderTableWork({
     };
   }, []);
   const handlePrintButton = () => {
-    window.print()
-  }
+    window.print();
+  };
   return (
     <>
       <div className="print:hidden flex items-center gap-7 text-[0.9rem] flex-wrap">
@@ -133,8 +133,7 @@ export default function PartHeaderTableWork({
         <div className="relative z-40">
           <div
             className="flex items-center gap-1 cursor-pointer "
-            onClick={() => setOpenColumValue((e) => !e)}
-          >
+            onClick={() => setOpenColumValue((e) => !e)}>
             <FaBars size={20} />
             <p>{t("ConfirmationForms.BOQ.table.columnsText")}</p>
             {openColumValue ? (
@@ -146,8 +145,7 @@ export default function PartHeaderTableWork({
           {openColumValue && (
             <div
               ref={menuRef}
-              className="absolute left-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white "
-            >
+              className="absolute left-0 top-7 rounded-md flex flex-col border border-gray-300 w-[200px] bg-white ">
               {nameColum
                 ?.filter((e) => e.display)
                 .map((value, i) => (
@@ -156,8 +154,7 @@ export default function PartHeaderTableWork({
                     className={`${
                       i !== 13 && "border-b"
                     } p-1 flex items-center justify-between  border-gray-300 text-center w-full hover:bg-gray-300 cursor-pointer`}
-                    onClick={() => toggleSelect(value.header)}
-                  >
+                    onClick={() => toggleSelect(value.header)}>
                     <p>{value.text}</p>
                     {currentValueColumWorkConfirmation[value.header] && (
                       <p>✔</p>
@@ -170,11 +167,10 @@ export default function PartHeaderTableWork({
         <div>
           <Button
             onClick={() => {
-              handlePrintButton()
+              handlePrintButton();
               setPrintButton(true);
             }}
-            className="flex gap-2 items-center !px-3"
-          >
+            className="flex gap-2 items-center !px-3">
             <IoPrintOutline size={22} /> Print
           </Button>
         </div>

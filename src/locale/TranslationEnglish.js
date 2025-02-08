@@ -2108,14 +2108,29 @@ const TranslationEnglish = {
   },
   // Report Page
   ReportPage: {
-    title: "Reports",
-    projectsLabel: "Projects",
-    selectProject: "Select a Project",
-    projectErrorMessage: "You must select a project before saving.",
-    contractsLabel: "Contracts",
-    selectContract: "Select a Contract",
-    contractErrorMessage: "You must select a contract before saving.",
     saveButton: "Save",
+    businessGuarantee: {
+      title: "Reports Business Guarantee",
+      projectsLabel: "Projects",
+      selectProject: "Select a Project",
+      projectErrorMessage: "You must select a project before saving.",
+      contractsLabel: "Contracts",
+      selectContract: "Select a Contract",
+      contractErrorMessage: "You must select a contract before saving.",
+    },
+    workConfirmation: {
+      title: "Reports Work Confirmation",
+      projectsLabel: "Projects",
+      selectProject: "Select a Project",
+      projectErrorMessage: "You must select a project before saving.",
+      contractsLabel: "Contracts",
+      selectContract: "Select a Contract",
+      contractErrorMessage: "You must select a contract before saving.",
+      workConfirmationLabel: "Work Confirmation",
+      selectWorkConfirmation: "Select a Work Confirmation",
+      workConfirmationErrorMessage:
+        "You must select a work confirmation before saving.",
+    },
   },
   BusinessGuaranteeReportPage: {
     title: "Business Guarantee Report",

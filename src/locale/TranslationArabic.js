@@ -384,7 +384,7 @@ const TranslationArabic = {
   DeleteProject: {
     message: "هل أنت متأكد؟",
     backButton: "رجوع",
-    deleteButton: {loading: "تحميل...",text: "حذف"},
+    deleteButton: { loading: "تحميل...", text: "حذف" },
   },
   // Partners
   PartnersPage: {
@@ -1854,15 +1854,30 @@ const TranslationArabic = {
     },
   },
   ReportPage: {
-    title: "التقارير",
-    projectsLabel: "المشاريع",
-    selectProject: "اختر مشروعًا",
-    projectErrorMessage: "يجب عليك اختيار مشروع قبل الحفظ.",
-    contractsLabel: "العقود",
-    selectContract: "اختر عقدًا",
-    contractErrorMessage: "يجب عليك اختيار عقد قبل الحفظ.",
     saveButton: "حفظ",
+    businessGuarantee: {
+      title: "تقارير ضمان الأعمال",
+      projectsLabel: "المشاريع",
+      selectProject: "اختر مشروعًا",
+      projectErrorMessage: "يجب تحديد مشروع قبل الحفظ.",
+      contractsLabel: "العقود",
+      selectContract: "اختر عقدًا",
+      contractErrorMessage: "يجب تحديد عقد قبل الحفظ.",
+    },
+    workConfirmation: {
+      title: "تقارير تأكيد العمل",
+      projectsLabel: "المشاريع",
+      selectProject: "اختر مشروعًا",
+      projectErrorMessage: "يجب تحديد مشروع قبل الحفظ.",
+      contractsLabel: "العقود",
+      selectContract: "اختر عقدًا",
+      contractErrorMessage: "يجب تحديد عقد قبل الحفظ.",
+      workConfirmationLabel: "تأكيد العمل",
+      selectWorkConfirmation: "اختر تأكيد العمل",
+      workConfirmationErrorMessage: "يجب تحديد تأكيد العمل قبل الحفظ.",
+    },
   },
+
   BusinessGuaranteeReportPage: {
     title: "تقرير الضمان التجاري",
     exportButton: "تصدير التقرير",

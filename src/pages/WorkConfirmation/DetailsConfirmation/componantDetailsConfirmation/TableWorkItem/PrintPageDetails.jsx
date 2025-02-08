@@ -7,17 +7,14 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../../../../../axios/axios";
 
-const PrintPageDetails = ({
-  data,
-  className = "",
-}) => {
+const PrintPageDetails = ({ data, printButton, className = "" }) => {
   // Translations
   const { t } = useTranslation();
   const date = moment().format("YYYY-MM-DD");
-  const contractId = String(data.contractId._id);
+  const contractId = data.contractId && String(data.contractId._id);
   const [totalPayments, setTotalPayments] = useState(0);
   const { data: workConfirmations, isLoading } = useQuery({
-    queryKey: "getWorkConfirmationsByContractId",
+    queryKey: ["getWorkConfirmationsByContractId"],
     queryFn: async () => {
       const res = await axiosInstance.get(
         `/api/workConfirmation/${contractId}/contract`
@@ -30,15 +27,19 @@ const PrintPageDetails = ({
       const previousPaymentsArray = workConfirmations?.map((ele) => {
         const prevWorkValue = ele.workItems.reduce((total, item) => {
           return (
-            total + item?.previousQuantity * item?.workItemId?.workDetails?.price
+            total +
+            item?.previousQuantity * item?.workItemId?.workDetails?.price
           );
         }, 0);
-        const vatValue = data?.contractId.taxRate ? (data?.contractId.taxRate || 0 / 100) * prevWorkValue : 0;
-        const businessGuaranteeValue = data?.contractId.businessGuarantee ?
-          (data?.contractId.businessGuarantee / 100) * prevWorkValue : 0;
+        const vatValue = data?.contractId.taxRate
+          ? (data?.contractId.taxRate || 0 / 100) * prevWorkValue
+          : 0;
+        const businessGuaranteeValue = data?.contractId.businessGuarantee
+          ? (data?.contractId.businessGuarantee / 100) * prevWorkValue
+          : 0;
         const addition = ele.totalAddition;
         const deduction = ele.totalDeduction;
-        console.log(workConfirmations)
+        console.log(workConfirmations);
         return (
           prevWorkValue +
           vatValue -
@@ -95,7 +96,10 @@ const PrintPageDetails = ({
     ).toLocaleString("en-US")} EGP`,
   };
   return (
-    <div className={`w-[calc(100vw-132px)] hidden print:block ${className}`}>
+    <div
+      className={`w-[calc(100vw-132px)] ${
+        printButton ? "hidden print:block" : "block"
+      } ${className}`}>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold text-primaryColor">
           {t("PrintConfirmationDetails.title", { code: 1 })}
