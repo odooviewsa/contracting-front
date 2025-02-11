@@ -97,9 +97,7 @@ const PrintPageDetails = ({ data, printButton, className = "" }) => {
   };
   return (
     <div
-      className={`w-[calc(100vw-132px)] ${
-        printButton ? "hidden print:block" : "block"
-      } ${className}`}>
+      className={`w-[calc(100vw-132px)] hidden print:block ${className}`}>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold text-primaryColor">
           {t("PrintConfirmationDetails.title", { code: 1 })}

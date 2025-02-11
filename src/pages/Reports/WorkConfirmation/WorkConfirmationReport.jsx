@@ -29,6 +29,7 @@ const WorkConfirmationReport = () => {
       {!isLoading && data && (
         <PrintPageDetails
           data={data}
+          className="!block"
         />
       )}
     </div>

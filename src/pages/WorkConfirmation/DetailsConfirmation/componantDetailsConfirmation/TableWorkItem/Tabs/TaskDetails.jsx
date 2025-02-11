@@ -89,6 +89,7 @@ const TaskDetails = ({
                   startDate,
                   status,
                   id: _id,
+                  progress,
                 },
               })
             }

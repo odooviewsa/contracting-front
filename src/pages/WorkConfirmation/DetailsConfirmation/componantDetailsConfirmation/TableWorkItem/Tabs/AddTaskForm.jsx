@@ -6,7 +6,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
-const AddTaskForm = ({ setActiveAddForm, workItemId, usersGroup, refetch }) => {
+const AddTaskForm = ({
+  setActiveAddForm,
+  workItemId,
+  usersGroup,
+  refetch,
+  image,
+}) => {
   const [formLoading, setFormLoading] = useState(false);
   const {
     register,
@@ -16,15 +22,15 @@ const AddTaskForm = ({ setActiveAddForm, workItemId, usersGroup, refetch }) => {
   const onSubmit = async (data) => {
     setFormLoading(true);
     try {
-      const res = await axiosInstance.put(`/api/work/${workItemId}/details`, {
-        task: { ...data },
+      const res = await axiosInstance.post(`/api/work/${workItemId}/details`, {
+        task: { ...data, image },
       });
       console.log(res);
       if (res.statusText === "OK") {
         setActiveAddForm(false);
         setFormLoading(false);
         toast.success(`Task created successfully`);
-        refetch()
+        refetch();
       }
     } catch (error) {
       toast.error(error.message);

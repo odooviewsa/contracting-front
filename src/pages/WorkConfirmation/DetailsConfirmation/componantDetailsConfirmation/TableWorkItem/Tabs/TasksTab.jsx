@@ -7,7 +7,7 @@ import AddTaskForm from "./AddTaskForm";
 import EditTaskForm from "./EditTaskForm";
 import Input from "../../../../../../componant/elements/Input";
 
-const TasksTab = ({ workItem, refetch }) => {
+const TasksTab = ({ workItem, refetch, image }) => {
   const [activeAddForm, setActiveAddForm] = useState(false);
   const [activeEditTaskForm, setActiveEditTaskForm] = useState(false);
   const [activeFilterOptions, setActiveFilterOptions] = useState(false);
@@ -101,6 +101,7 @@ const TasksTab = ({ workItem, refetch }) => {
           workItemId={workItem.workItemId._id}
           usersGroup={workItem.workItemId.userId.usersGroup}
           refetch={refetch}
+          image={image}
         />
       )}
 
@@ -112,6 +113,7 @@ const TasksTab = ({ workItem, refetch }) => {
           workItemId={workItem.workItemId._id}
           usersGroup={workItem.workItemId.userId.usersGroup}
           refetch={refetch}
+          image={image}
         />
       )}
     </TabBody>

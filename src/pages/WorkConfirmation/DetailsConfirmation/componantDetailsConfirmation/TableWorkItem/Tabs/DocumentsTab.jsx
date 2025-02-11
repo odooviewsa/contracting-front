@@ -47,7 +47,7 @@ const DocumentsTab = ({ workItem, refetch }) => {
       formData.append("documents", file);
     });
     setIsLoading(true);
-    let res = await axiosInstance.put(
+    let res = await axiosInstance.post(
       `/api/work/${workItem?.workItemId._id}/details`,
       formData,
       {
@@ -110,8 +110,7 @@ const DocumentsTab = ({ workItem, refetch }) => {
         <div>
           <button
             className="flex items-center gap-2 text-blue-500"
-            onClick={handleButtonClick}
-          >
+            onClick={handleButtonClick}>
             <IoAddOutline size={24} />{" "}
             {t("DetailsWorkLine.line.tabs.docs.addButton")}
           </button>
@@ -126,8 +125,7 @@ const DocumentsTab = ({ workItem, refetch }) => {
             accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           />
         </div>
-      }
-    >
+      }>
       {!isLoading ? (
         <div className="flex flex-col gap-2">
           {workItem?.workItemId?.documents?.length > 0 ? (

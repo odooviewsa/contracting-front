@@ -1,28 +1,38 @@
 import {
+  IoCloseOutline,
   IoCloudUploadOutline,
   IoDownloadOutline,
   IoEyeOutline,
+  IoPencilOutline,
   IoTrashOutline,
 } from "react-icons/io5";
 import TabBody from "./TabBody";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { axiosInstance, url } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import Cropper from "react-easy-crop";
+import { IoClose, IoCheckmark } from "react-icons/io5";
+import ImageEditor from "../ImageEditor";
+import Tabs from "../../../../../../componant/layout/Tabs";
+import ColTabs from "../../../../../../componant/layout/ColTabs";
+import TasksTab from "./TasksTab";
+
+
 
 const PhotosTab = ({ workItem, refetch }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openView, setOpenView] = useState({ open: false, image: "" });
+  const [isEditing, setIsEditing] = useState(null);
   // Translation
   const { t } = useTranslation();
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
-
   const handleFileChange = async (event) => {
-    const files = Array.from(event.target.files); // Handle multiple files
+    const files = Array.from(event.target.files);
     const validFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (validFiles.length !== files.length) {
@@ -35,29 +45,34 @@ const PhotosTab = ({ workItem, refetch }) => {
         t("DetailsWorkLine.line.tabs.photos.alerts", { returnObjects: true })[1]
       );
     }
+
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("images", file);
     });
+
     setIsLoading(true);
-    let res = await axiosInstance.put(
-      `/api/work/${workItem?.workItemId._id}/details`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    if (res.statusText === "OK") {
-      refetch();
-      setIsLoading(false);
-      formData.delete("images");
-      toast.success(
-        t("DetailsWorkLine.line.tabs.photos.success", {
-          returnObjects: true,
-        })[0]
+    try {
+      let res = await axiosInstance.post(
+        `/api/work/${workItem?.workItemId._id}/details`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
+      if (res.statusText === "OK") {
+        refetch();
+        toast.success(
+          t("DetailsWorkLine.line.tabs.photos.success", {
+            returnObjects: true,
+          })[0]
+        );
+      }
+    } catch (error) {
+      toast.error("حدث خطأ أثناء رفع الصورة.");
+    } finally {
+      setIsLoading(false);
+      event.target.value = "";
     }
   };
 
@@ -110,7 +125,35 @@ const PhotosTab = ({ workItem, refetch }) => {
       );
     }
   };
-
+  const tabData = [
+    {
+      title: "Crop Image",
+      component: (
+        <ImageEditor
+          image={`${url}/uploads/${isEditing}`}
+          oldImage={isEditing}
+          onSave={() => {
+            setIsEditing(null);
+          }}
+          workItem={workItem}
+          refetch={refetch}
+          onCancel={() => setIsEditing(null)}
+        />
+      ),
+    },
+    {
+      title: "Add Task",
+      component: (
+        <div className="h-fit">
+          <TasksTab workItem={workItem} refetch={refetch} image={isEditing}/>
+        </div>
+      ),
+    },
+    {
+      title: "Add Comment",
+      component: <div>Comments</div>,
+    },
+  ];
   return (
     <TabBody
       title={t("DetailsWorkLine.line.tabs.photos.text")}
@@ -121,8 +164,7 @@ const PhotosTab = ({ workItem, refetch }) => {
               isLoading && "cursor-not-allowed"
             }`}
             onClick={handleButtonClick}
-            disabled={isLoading}
-          >
+            disabled={isLoading}>
             <IoCloudUploadOutline size={24} />{" "}
             {t("DetailsWorkLine.line.tabs.photos.addButton")}
           </button>
@@ -137,8 +179,7 @@ const PhotosTab = ({ workItem, refetch }) => {
             onChange={handleFileChange}
           />
         </div>
-      }
-    >
+      }>
       {!isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {workItem?.workItemId?.images.length > 0 ? (
@@ -146,8 +187,7 @@ const PhotosTab = ({ workItem, refetch }) => {
               return (
                 <div
                   key={key}
-                  className="overflow-hidden rounded-md flex items-center justify-center h-[13rem] relative"
-                >
+                  className="overflow-hidden rounded-md flex items-center justify-center h-[13rem] relative">
                   <img
                     src={`${url}/uploads/${image}`}
                     alt={`image-${image}`}
@@ -156,20 +196,22 @@ const PhotosTab = ({ workItem, refetch }) => {
                   <div className="size-full absolute opacity-0 hover:opacity-100 transition-all flex flex-col items-stretch justify-center">
                     <button
                       className="bg-blue-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => handleOpenImage(image)}
-                    >
+                      onClick={() => handleOpenImage(image)}>
                       <IoEyeOutline size={24} className="text-blue-900" />
                     </button>
                     <button
+                      className="bg-yellow-300/60 flex items-center justify-center h-1/2"
+                      onClick={() => setIsEditing(image)}>
+                      <IoPencilOutline size={24} className="text-yellow-900" />
+                    </button>
+                    <button
                       className="bg-green-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => handleDownloadImage(image)}
-                    >
+                      onClick={() => handleDownloadImage(image)}>
                       <IoDownloadOutline size={24} className="text-green-900" />
                     </button>
                     <button
                       className="bg-red-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => handleRemoveImage(image)}
-                    >
+                      onClick={() => handleRemoveImage(image)}>
                       <IoTrashOutline size={24} className="text-red-900" />
                     </button>
                   </div>
@@ -189,14 +231,28 @@ const PhotosTab = ({ workItem, refetch }) => {
       {openView.open && (
         <div
           className="fixed top-0 left-0 bg-black/60 w-full h-full flex items-center justify-center"
-          onClick={() => setOpenView({ open: false, image: "" })}
-        >
+          onClick={() => setOpenView({ open: false, image: "" })}>
           <div className="bg-white w-[80vw] h-[60vh] rounded p-2 flex flex-col gap-2">
             <img
               src={`${url}/uploads/${openView?.image}`}
               alt={`image-${openView?.image}`}
               className="h-full w-full object-contain"
             />
+          </div>
+        </div>
+      )}
+      {isEditing && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/60 z-20">
+          <div className="bg-white rounded-md shadow-md w-[80vw] h-[80vh] relative z-50">
+            <div className="flex items-center justify-between p-3">
+              <button
+                className="hover:text-black/80"
+                onClick={() => setIsEditing(null)}>
+                <IoCloseOutline size={24} />
+              </button>
+              <h3 className="lead">Edit Image</h3>
+            </div>
+            <ColTabs items={tabData} />
           </div>
         </div>
       )}

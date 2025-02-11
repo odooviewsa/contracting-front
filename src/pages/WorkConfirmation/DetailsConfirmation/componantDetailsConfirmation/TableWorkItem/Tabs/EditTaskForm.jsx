@@ -13,6 +13,7 @@ const EditTaskForm = ({
   usersGroup,
   workItemId,
   refetch,
+  image,
 }) => {
   const [formLoading, setFormLoading] = useState(false);
   const formatDate = (isoString) => (isoString ? isoString.split("T")[0] : "");
@@ -39,7 +40,7 @@ const EditTaskForm = ({
       const res = await axiosInstance.put(
         `/api/work/${workItemId}/details?task=${data.id}`,
         {
-          task: { ...dataForm },
+          task: { ...dataForm, progress: data.progress || 0, image },
         }
       );
       if (res.status === 200) {
