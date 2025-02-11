@@ -15,10 +15,11 @@ const TasksTab = ({ workItem, refetch, image }) => {
   const [selectedPriority, setSelectedPriority] = useState("");
 
   // Filter tasks based on selected status and priority
-  const filteredTasks = workItem.workItemId.tasks.filter((task) => {
+  const filteredTasks = workItem?.workItemId.tasks.filter((task) => {
     return (
       (selectedStatus ? task.status === selectedStatus : true) &&
-      (selectedPriority ? task.priority === selectedPriority : true)
+      (selectedPriority ? task.priority === selectedPriority : true) &&
+      (image ? task.image === image : true)
     );
   });
 
