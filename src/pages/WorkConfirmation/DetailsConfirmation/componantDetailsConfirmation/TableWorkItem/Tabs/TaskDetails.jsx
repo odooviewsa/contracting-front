@@ -22,6 +22,7 @@ const TaskDetails = ({
   status,
   progress,
   _id,
+  disabled,
 }) => {
   const [inputProgress, setInputProgress] = useState(progress || 0);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -52,7 +53,7 @@ const TaskDetails = ({
         `/api/work/${workItemId}/details?task=${_id}&progress=${inputProgress}`
       );
       toast.success("Progress updated successfully");
-      refetch()
+      refetch();
     } catch (error) {
       toast.error("Failed to update progress");
     } finally {
@@ -68,33 +69,35 @@ const TaskDetails = ({
           <p className="text-sm text-grayColor">{description}</p>
           <h2 className="text-lg font-medium text-primaryColor">{name}</h2>
         </div>
-        <div className="flex gap-2">
-          <IoTrashOutline
-            size={18}
-            className="text-grayColor hover:text-red-500 transition-all cursor-pointer"
-            onClick={() => handleDelete(_id)}
-          />
-          <IoCreateOutline
-            size={18}
-            className="text-grayColor cursor-pointer"
-            onClick={() =>
-              setActiveEditTaskForm({
-                active: true,
-                data: {
-                  name,
-                  description,
-                  assignee,
-                  priority,
-                  endDate,
-                  startDate,
-                  status,
-                  id: _id,
-                  progress,
-                },
-              })
-            }
-          />
-        </div>
+        {!disabled && (
+          <div className="flex gap-2">
+            <IoTrashOutline
+              size={18}
+              className="text-grayColor hover:text-red-500 transition-all cursor-pointer"
+              onClick={() => handleDelete(_id)}
+            />
+            <IoCreateOutline
+              size={18}
+              className="text-grayColor cursor-pointer"
+              onClick={() =>
+                setActiveEditTaskForm({
+                  active: true,
+                  data: {
+                    name,
+                    description,
+                    assignee,
+                    priority,
+                    endDate,
+                    startDate,
+                    status,
+                    id: _id,
+                    progress,
+                  },
+                })
+              }
+            />
+          </div>
+        )}
       </div>
 
       {/* Details Options */}
@@ -151,6 +154,7 @@ const TaskDetails = ({
           onMouseUp={updateProgress}
           onBlur={updateProgress}
           className=""
+          disabled={disabled}
         />
       </div>
     </div>

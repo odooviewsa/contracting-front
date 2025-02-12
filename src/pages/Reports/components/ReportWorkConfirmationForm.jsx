@@ -70,7 +70,7 @@ const ReportWorkConfirmationForm = () => {
       throw error;
     }
   };
-  const { data: workConfirmations, isLoading: workConfirmationLoading } =
+  const { isLoading: workConfirmationLoading } =
     useQuery({
       queryKey: ["getWorkConfirmation", contractValue],
       queryFn: () => getWorkConfirmation(contractValue),
@@ -132,7 +132,7 @@ const ReportWorkConfirmationForm = () => {
   }, [projects]);
   return (
     <form
-      className="bg-slate-100 p-4 border rounded-lg flex flex-col gap-6 items-start h-fit w-full md:w-[24rem] mx-auto mt-8 md:mt-16"
+      className="bg-slate-100 p-4 border rounded-lg flex flex-col gap-6 items-start h-fit mx-auto mt-8 md:mt-16"
       onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-center text-2xl lg:text-4xl font-bold text-primaryColor w-full mb-2 lg:mb-4">
         {t("ReportPage.workConfirmation.title")}

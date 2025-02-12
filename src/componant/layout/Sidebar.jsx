@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaProjectDiagram } from "react-icons/fa";
+import { FaProjectDiagram, FaTasks } from "react-icons/fa";
 import { FaFileContract, FaFileLines } from "react-icons/fa6";
 import { LuBookTemplate } from "react-icons/lu";
 import { FaCheckCircle } from "react-icons/fa";
@@ -126,6 +126,15 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}>
           <FaFileLines size={20} />
           {openSidebar && <h1>{t("Sidebar.reports")}</h1>}
+        </Link>
+        {/* Tasks Page */}
+        <Link
+          to={`/${user?.companyName}/tasks`}
+          className={`flex items-center gap-2 text-grayColor p-3 ${
+            pathname.includes("tasks") && "activeSidebar"
+          }`}>
+          <FaTasks size={20} />
+          {openSidebar && <h1>{t("Sidebar.tasks")}</h1>}
         </Link>
         <p
           onClick={() => setOpenMenu(!openMenu)}
