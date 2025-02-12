@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loading from "../../../../../../../componant/Loading";
 
-const CommentsTab = ({ workItem, refetch, image }) => {
+const CommentsTab = ({ workItem, refetch, imageId }) => {
   const user = useSelector((state) => state.user);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -20,10 +20,10 @@ const CommentsTab = ({ workItem, refetch, image }) => {
     comment: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const commentsPerPage = 4;
+  const commentsPerPage = 5;
 
   const comments = workItem.workItemId.comments.filter(
-    (comment) => comment.image === image
+    (comment) => comment.image === imageId
   );
   const totalPages = Math.ceil(comments.length / commentsPerPage);
 
@@ -47,8 +47,9 @@ const CommentsTab = ({ workItem, refetch, image }) => {
   const addOnSubmit = async (data) => {
     setIsLoading(true);
     try {
+      console.log(imageId)
       const res = await axiosInstance.post(
-        `/api/work/${workItem.workItemId._id}/details?image=${image}`,
+        `/api/work/${workItem.workItemId._id}/details?image=${imageId}`,
         {
           comment: { userId: user._id, content: data.comment },
         }
@@ -76,7 +77,7 @@ const CommentsTab = ({ workItem, refetch, image }) => {
     setIsLoading(true);
     try {
       const res = await axiosInstance.put(
-        `/api/work/${workItem.workItemId._id}/details?comment=${activeEditCommentForm.comment._id}&image=${image}`,
+        `/api/work/${workItem.workItemId._id}/details?comment=${activeEditCommentForm.comment._id}&image=${imageId}`,
         {
           comment: { userId: user._id, content: data.comment },
         }
@@ -113,52 +114,55 @@ const CommentsTab = ({ workItem, refetch, image }) => {
     }
   }, [activeEditCommentForm, setValue]);
   return (
-    <div className="max-h-full">
-      <div className="flex items-center justify-between">
+    <div className="h-screen">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-y-4">
         <h3 className="lead">Comments</h3>
         <Button
           onClick={() => setActiveCommentForm(true)}
-          className="flex items-center gap-2">
+          className="flex items-center gap-2 !w-fit">
           <IoAddOutline size={18} /> Add Comment
         </Button>
       </div>
-      <div className={"my-6 max-h-[80%] overflow-y-auto scrollbar"}>
-        {/* Comments */}
-        {currentComments.length > 0 ? (
-          currentComments.map((comment, key) => {
-            return (
-              comment.image === image && (
-                <CommentDetails
-                  key={key}
-                  comment={comment}
-                  user={user}
-                  handleDelete={handleDelete}
-                  setActiveEditCommentForm={setActiveEditCommentForm}
-                />
-              )
-            );
-          })
-        ) : (
-          <p>No Comments</p>
+      <div className="flex flex-col gap-6 pb-8">
+        {" "}
+        <div className={"my-6"}>
+          {/* Comments */}
+          {currentComments.length > 0 ? (
+            currentComments.map((comment, key) => {
+              return (
+                comment.image === imageId && (
+                  <CommentDetails
+                    key={key}
+                    comment={comment}
+                    user={user}
+                    handleDelete={handleDelete}
+                    setActiveEditCommentForm={setActiveEditCommentForm}
+                  />
+                )
+              );
+            })
+          ) : (
+            <p>No Comments</p>
+          )}
+        </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                className={`px-3 py-1 mx-1 ${
+                  currentPage === index + 1
+                    ? "bg-primaryColor text-white"
+                    : "bg-slate-200"
+                }`}
+                onClick={() => handlePageChange(index + 1)}>
+                {index + 1}
+              </button>
+            ))}
+          </div>
         )}
       </div>
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index}
-              className={`px-3 py-1 mx-1 ${
-                currentPage === index + 1
-                  ? "bg-primaryColor text-white"
-                  : "bg-slate-200"
-              }`}
-              onClick={() => handlePageChange(index + 1)}>
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
       {/* Comment Form */}
       <Modal
         isActive={activeCommentForm}

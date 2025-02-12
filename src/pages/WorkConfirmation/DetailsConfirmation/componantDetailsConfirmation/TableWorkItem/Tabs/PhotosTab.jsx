@@ -24,7 +24,11 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openView, setOpenView] = useState({ open: false, image: "" });
-  const [isEditing, setIsEditing] = useState(null);
+  const [isEditing, setIsEditing] = useState({
+    filename: "",
+    id: "",
+    isActive: false,
+  });
   // Translation
   const { t } = useTranslation();
   const handleButtonClick = () => {
@@ -130,14 +134,14 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
       component: (
         <div className="flex-grow">
           <ImageEditor
-            image={`${url}/uploads/${isEditing}`}
-            oldImage={isEditing}
+            image={`${url}/uploads/${isEditing.filename}`}
+            oldImage={isEditing.id}
             onSave={() => {
-              setIsEditing(null);
+              setIsEditing({ isActive: false });
             }}
             workItem={workItem}
             refetch={refetch}
-            onCancel={() => setIsEditing(null)}
+            onCancel={() => setIsEditing({ isActive: false })}
           />
         </div>
       ),
@@ -145,13 +149,21 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
     {
       title: "Add Task",
       component: (
-        <TasksTab workItem={workItem} refetch={refetch} image={isEditing} />
+        <TasksTab
+          workItem={workItem}
+          refetch={refetch}
+          imageId={isEditing.id}
+        />
       ),
     },
     {
       title: "Add Comment",
       component: (
-        <CommentsTab workItem={workItem} refetch={refetch} image={isEditing} />
+        <CommentsTab
+          workItem={workItem}
+          refetch={refetch}
+          imageId={isEditing.id}
+        />
       ),
     },
   ];
@@ -190,29 +202,35 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
                   key={key}
                   className="overflow-hidden rounded-md flex items-center justify-center h-[13rem] relative">
                   <img
-                    src={`${url}/uploads/${image}`}
-                    alt={`image-${image}`}
+                    src={`${url}/uploads/${image.filename}`}
+                    alt={`image-${image.filename}`}
                     className="h-full w-full object-cover"
                   />
                   <div className="size-full absolute opacity-0 hover:opacity-100 transition-all flex flex-col items-stretch justify-center">
                     <button
                       className="bg-blue-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => handleOpenImage(image)}>
+                      onClick={() => handleOpenImage(image.filename)}>
                       <IoEyeOutline size={24} className="text-blue-900" />
                     </button>
                     <button
                       className="bg-yellow-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => setIsEditing(image)}>
+                      onClick={() =>
+                        setIsEditing({
+                          id: image._id,
+                          filename: image.filename,
+                          isActive: true,
+                        })
+                      }>
                       <IoPencilOutline size={24} className="text-yellow-900" />
                     </button>
                     <button
                       className="bg-green-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => handleDownloadImage(image)}>
+                      onClick={() => handleDownloadImage(image.filename)}>
                       <IoDownloadOutline size={24} className="text-green-900" />
                     </button>
                     <button
                       className="bg-red-300/60 flex items-center justify-center h-1/2"
-                      onClick={() => handleRemoveImage(image)}>
+                      onClick={() => handleRemoveImage(image._id)}>
                       <IoTrashOutline size={24} className="text-red-900" />
                     </button>
                   </div>
@@ -242,10 +260,10 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
           </div>
         </div>
       )}
-      {isEditing && (
+      {isEditing.isActive && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/60 z-20">
-          <div className="bg-white rounded-md shadow-md w-[80vw] h-[80vh] relative z-50">
-            <div className="h-[5vh] flex items-center justify-between px-6 pb-4 pt-6">
+          <div className="bg-white md:rounded-md shadow-md w-full md:w-[80vw] h-fit md:h-[80vh] relative z-50  overflow-y-auto scrollbar">
+            <div className="h-fit md:h-[5vh] flex items-center justify-between px-6 pb-4 pt-6">
               <button
                 className="hover:text-black/80"
                 onClick={() => {

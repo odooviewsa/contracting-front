@@ -7,7 +7,7 @@ import AddTaskForm from "./AddTaskForm";
 import EditTaskForm from "./EditTaskForm";
 import Input from "../../../../../../componant/elements/Input";
 
-const TasksTab = ({ workItem, refetch, image }) => {
+const TasksTab = ({ workItem, refetch, imageId }) => {
   const [activeAddForm, setActiveAddForm] = useState(false);
   const [activeEditTaskForm, setActiveEditTaskForm] = useState(false);
   const [activeFilterOptions, setActiveFilterOptions] = useState(false);
@@ -19,7 +19,7 @@ const TasksTab = ({ workItem, refetch, image }) => {
     return (
       (selectedStatus ? task.status === selectedStatus : true) &&
       (selectedPriority ? task.priority === selectedPriority : true) &&
-      (image ? task.image === image : true)
+      (imageId ? task.image === imageId : true)
     );
   });
 
@@ -27,7 +27,7 @@ const TasksTab = ({ workItem, refetch, image }) => {
     <TabBody
       title={"Project Tasks"}
       button={
-        <div className="flex items-center justify-center gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-center gap-y-3 md:gap-6">
           <button
             onClick={() => setActiveFilterOptions(!activeFilterOptions)}
             className="flex items-center gap-2 text-grayColor">
@@ -35,7 +35,7 @@ const TasksTab = ({ workItem, refetch, image }) => {
           </button>
           <Button
             onClick={() => setActiveAddForm(true)}
-            className="flex items-center gap-2 text-blue-500">
+            className="flex items-center gap-2 text-blue-500 w-fit">
             <IoAddOutline size={18} /> Add Task
           </Button>
         </div>
@@ -79,7 +79,7 @@ const TasksTab = ({ workItem, refetch, image }) => {
       )}
 
       {/* Task List */}
-      <div className="flex flex-col">
+      <div className="flex flex-col pb-16 mb:pb-0">
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task) => (
             <TaskDetails
@@ -102,7 +102,7 @@ const TasksTab = ({ workItem, refetch, image }) => {
           workItemId={workItem.workItemId._id}
           usersGroup={workItem.workItemId.userId.usersGroup}
           refetch={refetch}
-          image={image}
+          imageId={imageId}
         />
       )}
 
@@ -114,7 +114,7 @@ const TasksTab = ({ workItem, refetch, image }) => {
           workItemId={workItem.workItemId._id}
           usersGroup={workItem.workItemId.userId.usersGroup}
           refetch={refetch}
-          image={image}
+          imageId={imageId}
         />
       )}
     </TabBody>

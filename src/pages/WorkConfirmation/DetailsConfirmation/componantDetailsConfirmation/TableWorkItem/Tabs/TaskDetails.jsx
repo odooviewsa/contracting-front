@@ -98,7 +98,7 @@ const TaskDetails = ({
       </div>
 
       {/* Details Options */}
-      <div className="flex items-center justify-start gap-4">
+      <div className="flex flex-wrap items-center justify-start gap-4">
         {/* User */}
         <div className="flex gap-1 items-center text-grayColor text-sm">
           <IoPersonOutline size={18} /> {assignee.firstName}{" "}

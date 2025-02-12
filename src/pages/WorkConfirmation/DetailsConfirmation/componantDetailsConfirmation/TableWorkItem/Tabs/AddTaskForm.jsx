@@ -11,7 +11,7 @@ const AddTaskForm = ({
   workItemId,
   usersGroup,
   refetch,
-  image,
+  imageId,
 }) => {
   const [formLoading, setFormLoading] = useState(false);
   const {
@@ -22,8 +22,8 @@ const AddTaskForm = ({
   const onSubmit = async (data) => {
     setFormLoading(true);
     try {
-      const res = await axiosInstance.post(`/api/work/${workItemId}/details`, {
-        task: { ...data, image },
+      const res = await axiosInstance.post(`/api/work/${workItemId}/details?image=${imageId}`, {
+        task: { ...data },
       });
       console.log(res);
       if (res.statusText === "OK") {
@@ -38,11 +38,11 @@ const AddTaskForm = ({
     setActiveAddForm(false);
   };
   return (
-    <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center p-4 bg-black/30">
+    <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center md:p-4 bg-black/30">
       <form
         action=""
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full md:w-[40rem] 2xl:w-[60rem] bg-white rounded-lg p-6 flex flex-col gap-6">
+        className="w-full md:w-[40rem] 2xl:w-[60rem] h-screen md:h-fit overflow-y-auto scrollbar bg-white md:rounded-lg p-6 flex flex-col gap-6">
         <div>
           <h3 className="text-xl font-medium text-primaryColor">New Task</h3>
         </div>

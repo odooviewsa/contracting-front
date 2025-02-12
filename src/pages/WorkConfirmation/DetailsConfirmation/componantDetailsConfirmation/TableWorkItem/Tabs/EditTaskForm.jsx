@@ -13,7 +13,7 @@ const EditTaskForm = ({
   usersGroup,
   workItemId,
   refetch,
-  image,
+  imageId,
 }) => {
   const [formLoading, setFormLoading] = useState(false);
   const formatDate = (isoString) => (isoString ? isoString.split("T")[0] : "");
@@ -38,9 +38,9 @@ const EditTaskForm = ({
     try {
       setFormLoading(true);
       const res = await axiosInstance.put(
-        `/api/work/${workItemId}/details?task=${data.id}`,
+        `/api/work/${workItemId}/details?task=${data.id}&image=${imageId}`,
         {
-          task: { ...dataForm, progress: data.progress || 0, image },
+          task: { ...dataForm, progress: data.progress || 0 },
         }
       );
       if (res.status === 200) {
@@ -53,13 +53,12 @@ const EditTaskForm = ({
       toast.error(error.message);
     }
   };
-  console.log(data);
   return (
-    <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center p-4 bg-black/30">
+    <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center md:p-4 bg-black/30">
       <form
         onSubmit={handleSubmit(onSubmit)}
         action=""
-        className="w-full md:w-[40rem] 2xl:w-[60rem] bg-white rounded-lg p-6 flex flex-col gap-6">
+        className="w-full md:w-[40rem] 2xl:w-[60rem] h-screen md:h-fit overflow-y-auto scrollbar bg-white md:rounded-lg p-6 flex flex-col gap-6">
         <div>
           <h3 className="text-xl font-medium text-primaryColor">Edit Task</h3>
         </div>
