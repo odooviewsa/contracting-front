@@ -8,6 +8,7 @@ const Textarea = ({
   register,
   errors,
   errorMessage,
+  rows,
 }) => {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
@@ -17,8 +18,8 @@ const Textarea = ({
         name={id}
         placeholder={placeholder}
         className="w-full bg-slate-100 px-2 py-4 rounded"
-        {...register}
-        ></textarea>
+        rows={rows}
+        {...register}></textarea>
       {errors[id] && <p className="text-sm text-red-600">{errorMessage}</p>}
     </div>
   );

@@ -18,10 +18,9 @@ import ImageEditor from "../ImageEditor";
 import Tabs from "../../../../../../componant/layout/Tabs";
 import ColTabs from "../../../../../../componant/layout/ColTabs";
 import TasksTab from "./TasksTab";
+import CommentsTab from "./ImageTabs/CommentsTab";
 
-
-
-const PhotosTab = ({ workItem, refetch }) => {
+const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openView, setOpenView] = useState({ open: false, image: "" });
@@ -129,29 +128,31 @@ const PhotosTab = ({ workItem, refetch }) => {
     {
       title: "Crop Image",
       component: (
-        <ImageEditor
-          image={`${url}/uploads/${isEditing}`}
-          oldImage={isEditing}
-          onSave={() => {
-            setIsEditing(null);
-          }}
-          workItem={workItem}
-          refetch={refetch}
-          onCancel={() => setIsEditing(null)}
-        />
+        <div className="flex-grow">
+          <ImageEditor
+            image={`${url}/uploads/${isEditing}`}
+            oldImage={isEditing}
+            onSave={() => {
+              setIsEditing(null);
+            }}
+            workItem={workItem}
+            refetch={refetch}
+            onCancel={() => setIsEditing(null)}
+          />
+        </div>
       ),
     },
     {
       title: "Add Task",
       component: (
-        <div className="h-fit">
-          <TasksTab workItem={workItem} refetch={refetch} image={isEditing}/>
-        </div>
+        <TasksTab workItem={workItem} refetch={refetch} image={isEditing} />
       ),
     },
     {
       title: "Add Comment",
-      component: <div>Comments</div>,
+      component: (
+        <CommentsTab workItem={workItem} refetch={refetch} image={isEditing} />
+      ),
     },
   ];
   return (
@@ -244,10 +245,13 @@ const PhotosTab = ({ workItem, refetch }) => {
       {isEditing && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/60 z-20">
           <div className="bg-white rounded-md shadow-md w-[80vw] h-[80vh] relative z-50">
-            <div className="flex items-center justify-between p-3">
+            <div className="h-[5vh] flex items-center justify-between px-6 pb-4 pt-6">
               <button
                 className="hover:text-black/80"
-                onClick={() => setIsEditing(null)}>
+                onClick={() => {
+                  setLineDetails(false);
+                  setIsEditing(null);
+                }}>
                 <IoCloseOutline size={24} />
               </button>
               <h3 className="lead">Edit Image</h3>

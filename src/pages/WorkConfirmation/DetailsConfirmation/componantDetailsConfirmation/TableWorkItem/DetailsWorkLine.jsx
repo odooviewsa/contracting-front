@@ -46,7 +46,7 @@ const DetailsWorkLine = ({
     },
     {
       title: t("DetailsWorkLine.line.tabs.photos.title"),
-      content: <PhotosTab workItem={currentWorkItem} refetch={refetch} />,
+      content: <PhotosTab workItem={currentWorkItem} refetch={refetch} setLineDetails={setLineDetails}/>,
     },
     {
       title: t("DetailsWorkLine.line.tabs.docs.title"),
