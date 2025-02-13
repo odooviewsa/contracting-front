@@ -55,7 +55,7 @@ const DetailsWorkLine = ({
     {
       // t("DetailsWorkLine.line.tabs.tasks.title")
       title: "Tasks",
-      content: <TasksTab workItem={currentWorkItem} refetch={refetch} />,
+      content: <TasksTab title={<h4 className="lead">Projects Tasks</h4>} workItem={currentWorkItem} refetch={refetch} />,
     },
   ];
   const widgets = [

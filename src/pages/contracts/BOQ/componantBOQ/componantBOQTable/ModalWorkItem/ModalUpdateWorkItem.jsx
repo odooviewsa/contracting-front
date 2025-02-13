@@ -53,7 +53,6 @@ export default function ModalUpdateWorkItem({ refetch, dataContract }) {
       );
     }
   }, [openModalUpdateWorkItemId, setValue]);
-  console.log(openModalUpdateWorkItemId);
   return (
     <div className=" fixed top-0 left-0  w-full flex justify-center bg-bgOverlay items-center h-full  p-5 z-50">
       <div className="bg-white rounded-lg shadow p-3 md:w-[70%] w-full max-h-[90vh] scrollbar overflow-auto text-textLabalForm">

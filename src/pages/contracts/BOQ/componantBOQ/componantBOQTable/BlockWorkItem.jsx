@@ -42,7 +42,7 @@ export default function BlockWorkItem({ workItem }) {
   return (
     <div className="flex flex-col mb-1 w-full">
       <div
-        className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform ltr:translate-x-14  rtl:-translate-x-14 w-[82%]`}
+        className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform ltr:translate-x-14  rtl:-translate-x-14 w-[82%] relative z-20`}
         onClick={toggleItem}
       >
         <div className="flex items-center gap-4 text-colorTextValueItem ">
@@ -54,7 +54,7 @@ export default function BlockWorkItem({ workItem }) {
           </div>
         </div>
         <div
-          className="cursor-pointer flex items-center gap-2 text-[0.9rem] relative text-colorTextValueItem"
+          className="cursor-pointer flex items-center gap-2 text-[0.9rem] relative text-colorTextValueItem z-20"
           onClick={(e) => {
             e.stopPropagation();
             setOpenMore((e) => !e);

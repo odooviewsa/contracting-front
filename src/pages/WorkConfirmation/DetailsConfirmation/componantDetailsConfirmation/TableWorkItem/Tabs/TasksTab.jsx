@@ -6,8 +6,21 @@ import TaskDetails from "./TaskDetails";
 import AddTaskForm from "./AddTaskForm";
 import EditTaskForm from "./EditTaskForm";
 import Input from "../../../../../../componant/elements/Input";
+import { FaToggleOff, FaToggleOn } from "react-icons/fa";
+import Loading from "../../../../../../componant/Loading";
 
-const TasksTab = ({ workItem, refetch, imageId }) => {
+const TasksTab = ({
+  workItem,
+  refetch,
+  imageId,
+  data,
+  disabled,
+  title,
+  button,
+  myTask,
+  setMyTask,
+  loading,
+}) => {
   const [activeAddForm, setActiveAddForm] = useState(false);
   const [activeEditTaskForm, setActiveEditTaskForm] = useState(false);
   const [activeFilterOptions, setActiveFilterOptions] = useState(false);
@@ -15,17 +28,25 @@ const TasksTab = ({ workItem, refetch, imageId }) => {
   const [selectedPriority, setSelectedPriority] = useState("");
 
   // Filter tasks based on selected status and priority
-  const filteredTasks = workItem?.workItemId.tasks.filter((task) => {
-    return (
-      (selectedStatus ? task.status === selectedStatus : true) &&
-      (selectedPriority ? task.priority === selectedPriority : true) &&
-      (imageId ? task.image === imageId : true)
-    );
-  });
+  const filteredTasks = !data
+    ? workItem?.workItemId.tasks.filter((task) => {
+        return (
+          (selectedStatus ? task.status === selectedStatus : true) &&
+          (selectedPriority ? task.priority === selectedPriority : true) &&
+          (imageId ? task.image === imageId : true)
+        );
+      })
+    : data.filter((task) => {
+        return (
+          (selectedStatus ? task.status === selectedStatus : true) &&
+          (selectedPriority ? task.priority === selectedPriority : true) &&
+          (imageId ? task.image === imageId : true)
+        );
+      });
 
   return (
     <TabBody
-      title={"Project Tasks"}
+      title={title}
       button={
         <div className="flex flex-col md:flex-row md:items-center justify-center gap-y-3 md:gap-6">
           <button
@@ -33,11 +54,15 @@ const TasksTab = ({ workItem, refetch, imageId }) => {
             className="flex items-center gap-2 text-grayColor">
             <IoFunnelOutline size={18} /> Filter
           </button>
-          <Button
-            onClick={() => setActiveAddForm(true)}
-            className="flex items-center gap-2 text-blue-500 w-fit">
-            <IoAddOutline size={18} /> Add Task
-          </Button>
+          {disabled ? (
+            button
+          ) : (
+            <Button
+              onClick={() => setActiveAddForm(true)}
+              className="flex items-center gap-2 text-blue-500 w-fit">
+              <IoAddOutline size={18} /> Add Task
+            </Button>
+          )}
         </div>
       }>
       {/* Filter Options */}
@@ -53,8 +78,8 @@ const TasksTab = ({ workItem, refetch, imageId }) => {
               { value: "Completed", text: "Completed" },
             ]}
             label="Status:"
-            groupClassName="!flex !flex-row items-center gap-1 !w-fit"
-            className="!px-2 !py-1"
+            groupClassName="!flex !flex-row items-center gap-1 !w-fit text-base text-grayColor"
+            className="!px-2 !py-1 text-primaryColor"
             errors={[]}
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
@@ -69,34 +94,51 @@ const TasksTab = ({ workItem, refetch, imageId }) => {
               { value: "Low", text: "Low" },
             ]}
             label="Priority:"
-            groupClassName="!flex !flex-row items-center gap-1 !w-fit"
-            className="!px-2 !py-1 w-fit"
+            groupClassName="!flex !flex-row items-center gap-1 !w-fit text-base text-grayColor"
+            className="!px-2 !py-1 w-fit text-primaryColor"
             errors={[]}
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
           />
+          {disabled && (
+            <div
+              className="flex items-center space-x-2 cursor-pointer"
+              onClick={() => setMyTask(!myTask)}>
+              {myTask ? (
+                <FaToggleOn className="text-blue-500 text-3xl" />
+              ) : (
+                <FaToggleOff className="text-gray-400 text-3xl" />
+              )}
+              <span className="text-base text-grayColor">My Tasks</span>
+            </div>
+          )}
         </div>
       )}
 
       {/* Task List */}
       <div className="flex flex-col pb-16 mb:pb-0">
-        {filteredTasks.length > 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-8 lg:py-12">
+            <Loading />
+          </div>
+        ) : filteredTasks.length > 0 ? (
           filteredTasks.map((task) => (
             <TaskDetails
               key={task._id}
               setActiveEditTaskForm={setActiveEditTaskForm}
-              workItemId={workItem.workItemId._id}
+              workItemId={!disabled && workItem.workItemId._id}
               refetch={refetch}
+              disabled={disabled}
               {...task}
             />
           ))
         ) : (
-          <p>No tasks found.</p>
+          <p className="text-grayColor text-center py-8">No tasks found</p>
         )}
       </div>
 
       {/* Add Task Form */}
-      {activeAddForm && (
+      {activeAddForm && !disabled && (
         <AddTaskForm
           setActiveAddForm={setActiveAddForm}
           workItemId={workItem.workItemId._id}
@@ -107,7 +149,7 @@ const TasksTab = ({ workItem, refetch, imageId }) => {
       )}
 
       {/* Task Edit Form */}
-      {activeEditTaskForm.active && (
+      {activeEditTaskForm.active && !disabled && (
         <EditTaskForm
           setActiveEditTaskForm={setActiveEditTaskForm}
           data={activeEditTaskForm.data}

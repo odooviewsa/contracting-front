@@ -138,25 +138,32 @@ const TaskDetails = ({
           } rounded-md text-xs font-medium`}>
           {priority}
         </p>
+        {disabled && (
+          <p className="w-fit p-1 rounded-md text-sm font-medium text-grayColor">
+            Progress: {inputProgress}%
+          </p>
+        )}
       </div>
       {/* Progress */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-medium">Progress</h3>
-          <p className="text-grayColor">{inputProgress}%</p>
+      {!disabled && (
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-medium">Progress</h3>
+            <p className="text-grayColor">{inputProgress}%</p>
+          </div>
+          <input
+            type="range"
+            name="progress"
+            id="progress"
+            value={inputProgress}
+            onChange={handleProgressChange}
+            onMouseUp={updateProgress}
+            onBlur={updateProgress}
+            className=""
+            disabled={disabled}
+          />
         </div>
-        <input
-          type="range"
-          name="progress"
-          id="progress"
-          value={inputProgress}
-          onChange={handleProgressChange}
-          onMouseUp={updateProgress}
-          onBlur={updateProgress}
-          className=""
-          disabled={disabled}
-        />
-      </div>
+      )}
     </div>
   );
 };

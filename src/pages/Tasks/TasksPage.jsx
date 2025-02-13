@@ -3,41 +3,47 @@ import { useQuery, useQueries } from "@tanstack/react-query";
 import { axiosInstance } from "../../axios/axios.js";
 import Loading from "../../componant/Loading.jsx";
 import TaskDetails from "../WorkConfirmation/DetailsConfirmation/componantDetailsConfirmation/TableWorkItem/Tabs/TaskDetails.jsx";
+import { useSelector } from "react-redux";
+import TasksTab from "../WorkConfirmation/DetailsConfirmation/componantDetailsConfirmation/TableWorkItem/Tabs/TasksTab.jsx";
+import Button from "../../componant/elements/Button.jsx";
+import { IoAddOutline } from "react-icons/io5";
 
 const TasksPage = () => {
+  const user = useSelector((state) => state.user);
   const [tasksPage, setTasksPage] = useState(1);
+  const [myTask, setMyTask] = useState(true);
+  const [activeAddForm, setActiveAddForm] = useState(false);
   const tasksPerPage = 10;
 
-  const {
-    data: projects,
-  } = useQuery({
+  const { data: projects, isLoading: projectsLoading } = useQuery({
     queryKey: ["fetchProjects"],
     queryFn: async () => {
-      const res = await axiosInstance.get(
-        `/api/projects/all`
-      );
+      const res = await axiosInstance.get(`/api/projects/all`);
       return res.data.projects || [];
     },
   });
 
   const workConfirmationQueries = useQueries({
     queries:
-      projects?.flatMap((project) =>
-        project.contracts.map((contractId) => ({
-          queryKey: ["fetchWorkConfirmation", contractId],
-          queryFn: async () => {
-            const res = await axiosInstance.get(
-              `/api/workConfirmation/${contractId}/contract`
-            );
-            return res.data;
-          },
-          enabled: !!contractId,
-        }))
-      ) || [],
+      projects?.length > 0
+        ? projects.flatMap((project) =>
+            project.contracts
+              ? project.contracts?.map((contractId) => ({
+                  queryKey: ["fetchWorkConfirmation", contractId],
+                  queryFn: async () => {
+                    const res = await axiosInstance.get(
+                      `/api/workConfirmation/${contractId}/contract`
+                    );
+                    return res.data;
+                  },
+                  enabled: !!contractId,
+                }))
+              : []
+          )
+        : [],
   });
-
-  const tasksLoading = workConfirmationQueries.some((query) => query.isLoading);
-
+  const tasksLoading =
+    projectsLoading || workConfirmationQueries.some((query) => query.isLoading);
   const workConfirmations = useMemo(
     () =>
       workConfirmationQueries
@@ -66,21 +72,25 @@ const TasksPage = () => {
 
   return (
     <div>
-      <h1 className="lead">Tasks</h1>
-      <div className="space-y-8">
-        {tasksLoading ? (
-          <div className="h-[24rem] w-full flex items-center justify-center">
-            <Loading />
+      <div className="space-y-8 pt-6 md:pt-8 min-h-[24rem] flex-col">
+        <div className="flex-1 flex flex-col h-full items-center justify-center">
+          <div className="flex flex-col gap-4 size-full">
+            <TasksTab
+              title={<h1 className="lead">Tasks</h1>}
+              setMyTask={setMyTask}
+              myTask={myTask}
+              data={
+                !myTask
+                  ? paginatedTasks
+                  : paginatedTasks.filter(
+                      (task) => task.assignee._id === user._id
+                    )
+              }
+              loading={tasksLoading}
+              disabled={true}
+            />
           </div>
-        ) : paginatedTasks?.length === 0 ? (
-          <p>No tasks found</p>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {paginatedTasks?.map((task, index) => (
-              <TaskDetails disabled={true} key={index} {...task} />
-            ))}
-          </div>
-        )}
+        </div>
         <div className="flex items-center justify-between gap-3">
           <button
             onClick={() => setTasksPage((prev) => Math.max(prev - 1, 1))}
