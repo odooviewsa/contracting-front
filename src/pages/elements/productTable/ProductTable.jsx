@@ -27,6 +27,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
         </thead>
         <tbody>
           {products?.length > 0 ? (
+            Array.isArray(products) &&
             products.map((product) => (
               <tr key={product._id}>
                 {fields.map((field) => (
@@ -34,7 +35,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
                     {field === "price"
                       ? `$${product[field]?.toFixed(2) || "0.00"}`
                       : field === "category"
-                      ? product.category.name
+                      ? product.category?.name || "-"
                       : product[field] || "-"}
                   </td>
                 ))}
@@ -45,7 +46,7 @@ const ProductTable = ({ onEdit, onDelete, products }) => {
                   <button
                     onClick={() => onEdit(product)}
                     style={styles.editButton}
-                    aria-label={`Edit ${product?.name || "product"}`}>
+                    aria-label={`Edit ${product.name || "product"}`}>
                     {t("ProductsPage.editButton")}
                   </button>
                   <button

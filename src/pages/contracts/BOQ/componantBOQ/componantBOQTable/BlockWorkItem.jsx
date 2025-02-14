@@ -33,7 +33,7 @@ export default function BlockWorkItem({ workItem }) {
           setMaterials(res?.data);
         }
       } catch (error) {
-        console.error(error.message);
+        toast.error(error.message);
       }
     };
     fetchMaterials();
@@ -43,8 +43,7 @@ export default function BlockWorkItem({ workItem }) {
     <div className="flex flex-col mb-1 w-full">
       <div
         className={`p-3 flex justify-between items-center gap-3  cursor-pointer  transform ltr:translate-x-14  rtl:-translate-x-14 w-[82%] relative z-20`}
-        onClick={toggleItem}
-      >
+        onClick={toggleItem}>
         <div className="flex items-center gap-4 text-colorTextValueItem ">
           <div className="flex flex-col">
             <h4 className="text-black">
@@ -54,12 +53,11 @@ export default function BlockWorkItem({ workItem }) {
           </div>
         </div>
         <div
-          className="cursor-pointer flex items-center gap-2 text-[0.9rem] relative text-colorTextValueItem z-20"
+          className="cursor-pointer flex items-center gap-2 text-[0.9rem] relative text-colorTextValueItem"
           onClick={(e) => {
             e.stopPropagation();
             setOpenMore((e) => !e);
-          }}
-        >
+          }}>
           <p> {t("ContractsForms.BOQ.table.allItems.work.moreButton")}</p>
           <BsThreeDotsVertical />
           {openMore && <Menu workItem={workItem} />}

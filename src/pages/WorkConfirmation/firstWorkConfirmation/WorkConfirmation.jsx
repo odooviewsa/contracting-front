@@ -27,8 +27,7 @@ function WorkConfirmation() {
           />
           <Link
             to={`/${user?.companyName}/workconfirm/addConfirmation`}
-            className="p-2 bg-primaryColor rounded-md text-white text-[0.8rem] w-fit"
-          >
+            className="p-2 bg-primaryColor rounded-md text-white text-[0.8rem] w-fit">
             {t("ConfirmationPage.buttons.createButton")}
           </Link>
         </div>

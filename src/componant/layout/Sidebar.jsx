@@ -38,7 +38,7 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
   }
   return (
     <div
-      className={`flex flex-col gap-2 p-2 md:p-0 relative z-40 ${
+      className={`flex flex-col gap-2 p-2 sm:p-0 relative z-40 ${
         !openSidebar && "hidden md:block"
       }`}>
       <div className="pl-3 self-end">
@@ -59,7 +59,6 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
             {t("Sidebar.project")}
           </h1>
         </Link>
-
         <Link
           to={`/${user?.companyName}/boqTemplate`}
           className={`flex items-center gap-2 text-grayColor p-3 ${

@@ -2,7 +2,12 @@ import { useForm } from "react-hook-form";
 import { axiosInstance } from "../../axios/axios";
 import { ToastContainer, toast } from "react-toastify";
 
-export default function AddUsersTanet({ content, className }) {
+export default function AddUsersTanet({
+  content,
+  className,
+  setOpenForm,
+  refetch,
+}) {
   const {
     handleSubmit,
     register,
@@ -18,31 +23,30 @@ export default function AddUsersTanet({ content, className }) {
       .post("/api/auth/addTenantToGroup", formData)
       .then((result) => {
         if (result.status === 201) {
+          refetch();
+          setOpenForm(false);
           toast.success("create user successfully");
         }
       })
       .catch((error) => {
         toast.error(error?.response?.data?.message);
       });
-      console.log(formData);
   }
   const password = watch("password");
-  
+
   return (
     <>
       <ToastContainer />
       <div className="flex justify-center">
         <div
-          className={`p-3 md:w-[60%] w-full overflow-auto text-textLabalForm mt-5 ${className}`}
-        >
+          className={`p-3 md:w-[60%] w-full overflow-auto text-textLabalForm mt-5 ${className}`}>
           <h3 className="font-semibold text-gray-900 text-[1.3rem] mb-3">
             {content.Title}
           </h3>
 
           <form
             className="flex flex-col gap-4 mt-2"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+            onSubmit={handleSubmit(onSubmit)}>
             {/* // item name */}
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] gap-5">
               {content.Fields.map((email, index) => {
@@ -88,7 +92,9 @@ export default function AddUsersTanet({ content, className }) {
               })}
             </div>
 
-            <button className="text-white bg-primaryColor border text-[0.9rem] border-primaryColor px-12 py-1 mt-3 rounded-md">
+            <button
+              disabled={isSubmitting}
+              className="text-white bg-primaryColor border text-[0.9rem] border-primaryColor px-12 py-1 mt-3 rounded-md">
               {isSubmitting ? "Loading..." : content.SubmitButton}
             </button>
           </form>

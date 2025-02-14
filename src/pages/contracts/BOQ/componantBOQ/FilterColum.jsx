@@ -17,33 +17,21 @@ export default function FilterColum() {
   const nameColum = [
     {
       value: "Unit Of Measure",
-      text: t("ContractsForms.BOQ.filter.columns.unitOfMeasure")
+      text: t("ContractsForms.BOQ.filter.columns.unitOfMeasure"),
     },
     {
       value: "Assigned Quantity",
-      text: t("ContractsForms.BOQ.filter.columns.assignedQuantity")
-    },
-    {
-      value: "Previous Quantity",
-      text: t("ContractsForms.BOQ.filter.columns.previousQuantity")
-    },
-    {
-      value: "Remaining Quantity",
-      text: t("ContractsForms.BOQ.filter.columns.remainingQuantity")
-    },
-    {
-      value: "Financial Category",
-      text: t("ContractsForms.BOQ.filter.columns.financialCategory")
+      text: t("ContractsForms.BOQ.filter.columns.assignedQuantity"),
     },
     {
       value: "Price",
-      text: t("ContractsForms.BOQ.filter.columns.price")
+      text: t("ContractsForms.BOQ.filter.columns.price"),
     },
     {
       value: "Total",
-      text: t("ContractsForms.BOQ.filter.columns.total")
+      text: t("ContractsForms.BOQ.filter.columns.total"),
     },
-  ]
+  ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -64,8 +52,7 @@ export default function FilterColum() {
     <div className="relative z-50" ref={menuRef}>
       <div
         className="flex items-center gap-1 cursor-pointer"
-        onClick={() => setOpenColumValue((e) => !e)}
-      >
+        onClick={() => setOpenColumValue((e) => !e)}>
         <FaBars size={20} />
         <p>{t("ContractsForms.BOQ.filter.columns.text")}</p>
         {openColumValue ? (
@@ -82,8 +69,7 @@ export default function FilterColum() {
               className={`${
                 i !== 6 && "border-b"
               } p-1 flex items-center justify-between border-gray-300 text-center w-full hover:bg-gray-300 cursor-pointer`}
-              onClick={() => toggleSelect(ele.value)}
-            >
+              onClick={() => toggleSelect(ele.value)}>
               <p>{ele.text}</p>
               {currentValueColum[ele.value] && <p>✔</p>}
             </div>

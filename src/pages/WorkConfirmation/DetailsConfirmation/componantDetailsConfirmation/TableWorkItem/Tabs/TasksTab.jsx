@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import TabBody from "./TabBody";
 import Button from "../../../../../../componant/elements/Button";
-import { IoAddOutline, IoFunnelOutline } from "react-icons/io5";
+import {
+  IoAddOutline,
+  IoCalendarClearOutline,
+  IoFunnelOutline,
+} from "react-icons/io5";
 import TaskDetails from "./TaskDetails";
 import AddTaskForm from "./AddTaskForm";
 import EditTaskForm from "./EditTaskForm";
 import Input from "../../../../../../componant/elements/Input";
-import { FaToggleOff, FaToggleOn } from "react-icons/fa";
+import { FaTasks, FaToggleOff, FaToggleOn } from "react-icons/fa";
 import Loading from "../../../../../../componant/Loading";
+import Tabs from "../../../../../../componant/layout/Tabs";
+import { MdOutlineViewKanban } from "react-icons/md";
 
 const TasksTab = ({
   workItem,
@@ -43,7 +49,56 @@ const TasksTab = ({
           (imageId ? task.image === imageId : true)
         );
       });
-
+  const tabs = [
+    {
+      // Tasks
+      title: (
+        <span className="flex gap-1 items-center">
+          <FaTasks size={14} /> Tasks
+        </span>
+      ),
+      content: (
+        <div className="flex flex-col pb-16 mb:pb-0">
+          {loading ? (
+            <div className="flex items-center justify-center py-8 lg:py-12">
+              <Loading />
+            </div>
+          ) : filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <TaskDetails
+                key={task._id}
+                setActiveEditTaskForm={setActiveEditTaskForm}
+                workItemId={!disabled && workItem.workItemId._id}
+                refetch={refetch}
+                disabled={disabled}
+                {...task}
+              />
+            ))
+          ) : (
+            <p className="text-grayColor text-center py-8">No tasks found</p>
+          )}
+        </div>
+      ),
+    },
+    {
+      // Kanban
+      title: (
+        <span className="flex gap-1 items-center">
+          <MdOutlineViewKanban size={18} /> Kanban
+        </span>
+      ),
+      content: "Kanban",
+    },
+    {
+      // Calendar
+      title: (
+        <span className="flex gap-1 items-center">
+          <IoCalendarClearOutline size={18} /> Calendar
+        </span>
+      ),
+      content: "Calendar",
+    },
+  ];
   return (
     <TabBody
       title={title}
@@ -115,27 +170,7 @@ const TasksTab = ({
         </div>
       )}
 
-      {/* Task List */}
-      <div className="flex flex-col pb-16 mb:pb-0">
-        {loading ? (
-          <div className="flex items-center justify-center py-8 lg:py-12">
-            <Loading />
-          </div>
-        ) : filteredTasks.length > 0 ? (
-          filteredTasks.map((task) => (
-            <TaskDetails
-              key={task._id}
-              setActiveEditTaskForm={setActiveEditTaskForm}
-              workItemId={!disabled && workItem.workItemId._id}
-              refetch={refetch}
-              disabled={disabled}
-              {...task}
-            />
-          ))
-        ) : (
-          <p className="text-grayColor text-center py-8">No tasks found</p>
-        )}
-      </div>
+      <Tabs items={tabs} />
 
       {/* Add Task Form */}
       {activeAddForm && !disabled && (

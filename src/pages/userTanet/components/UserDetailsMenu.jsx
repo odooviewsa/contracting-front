@@ -1,16 +1,28 @@
 import PropTypes from "prop-types";
 import { axiosInstance } from "../../../axios/axios";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
-const UserDetailsMenu = ({ user, setOpenMenuRow, setOpenEditUserModel }) => {
-  const {t} = useTranslation()
+const UserDetailsMenu = ({
+  user,
+  setOpenMenuRow,
+  refetch,
+  setOpenEditUserModel,
+}) => {
+  const { t } = useTranslation();
   // Delete user
   const handleDeleteUser = async () => {
     setOpenMenuRow(false);
     try {
-      axiosInstance.delete(`/api/auth/${user?._id}`);
+      const res = await axiosInstance.delete(`/api/auth/${user?._id}`);
+      console.log(res);
+
+      if (res.status === 200) {
+        toast.success("User deleted successfully");
+        refetch();
+      }
     } catch (error) {
-      console.error("Error deleting user:", error.message);
+      toast.error(error.message);
     }
   };
   return (
@@ -23,15 +35,14 @@ const UserDetailsMenu = ({ user, setOpenMenuRow, setOpenEditUserModel }) => {
               onClick={() => {
                 setOpenMenuRow(false);
                 setOpenEditUserModel(true);
-              }}
-            >
+              }}>
               {t("UserTanetPage.modelDetails.editButton")}
             </button>
           </li>
           {user?.role !== "Admin" && (
             <li className="hover:bg-red-500 hover:text-white">
               <button onClick={handleDeleteUser} className="w-full text-start">
-              {t("UserTanetPage.modelDetails.deleteButton")}
+                {t("UserTanetPage.modelDetails.deleteButton")}
               </button>
             </li>
           )}

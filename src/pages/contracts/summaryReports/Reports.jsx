@@ -41,11 +41,17 @@ const Reports = () => {
   });
 
   // Work Confirmations data
-  const { data, error: confirmationError, isLoading } = useQuery({
+  const {
+    data,
+    error: confirmationError,
+    isLoading,
+  } = useQuery({
     queryKey: ["getWorkConfirmationByContractId", contractId],
     queryFn: async () => {
       try {
-        const res = await axiosInstance.get(`/api/workConfirmation/${contractId}/contract`);
+        const res = await axiosInstance.get(
+          `/api/workConfirmation/${contractId}/contract`
+        );
         return res.data;
       } catch (err) {
         console.error("Error fetching work confirmations:", err);
@@ -66,7 +72,6 @@ const Reports = () => {
       }
     },
   });
-  
 
   // Calculate the arguments
   useLayoutEffect(() => {
@@ -94,10 +99,9 @@ const Reports = () => {
 
       // Compute cumulative previous payments
       const cumulativePreviousPayments = netArray.reduce((acc, val, index) => {
-        if (index === 0) return [netArray[index] || 0]; 
+        if (index === 0) return [netArray[index] || 0];
         return [...acc, (acc[index - 1] || 0) + (netArray[index] || 0)];
       }, []);
-      
 
       setPreviousPaymentsValues(["-", ...cumulativePreviousPayments]);
 
@@ -145,22 +149,21 @@ const Reports = () => {
   const exportToPDF = () => {
     const input = document.getElementById("reports-content");
     const buttons = document.querySelectorAll(".hide-on-pdf");
-  
-    buttons.forEach((button) => button.style.visibility = "hidden");
-  
+
+    buttons.forEach((button) => (button.style.visibility = "hidden"));
+
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
+
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save("reports.pdf");
-  
-      buttons.forEach((button) => button.style.visibility = "visible");
+
+      buttons.forEach((button) => (button.style.visibility = "visible"));
     });
   };
-  
 
   // Export to Excel
   const exportToExcel = () => {
@@ -168,25 +171,55 @@ const Reports = () => {
       toast.error("No data available for export.");
       return;
     }
-  
+
     const workbook = XLSX.utils.book_new();
     const sheetData = [
-      ["Description", ...data.map((_, i) => `Work Confirmation #${i + 1}`), "Total"],
-      ["Works Value", ...data.map((item) => item.totalAmount), allSumValues.works],
-      [`VAT (${contract.taxRate}%)`, ...data.map((item) => item.totalAmount * (contract.taxRate / 100)), allSumValues.vat],
-      [`Business Guarantee (${contract.businessGuarantee}%)`, ...data.map((item) => item.totalAmount * (contract.businessGuarantee / 100)), allSumValues.businessGuarantee],
-      ["Deductions", ...data.map((item) => item.totalDeduction), allSumValues.deductions],
-      ["Additions", ...data.map((item) => item.totalAddition), allSumValues.additions],
+      [
+        "Description",
+        ...data.map((_, i) => `Work Confirmation #${i + 1}`),
+        "Total",
+      ],
+      [
+        "Works Value",
+        ...data.map((item) => item.totalAmount),
+        allSumValues.works,
+      ],
+      [
+        `VAT (${contract.taxRate}%)`,
+        ...data.map((item) => item.totalAmount * (contract.taxRate / 100)),
+        allSumValues.vat,
+      ],
+      [
+        `Business Guarantee (${contract.businessGuarantee}%)`,
+        ...data.map(
+          (item) => item.totalAmount * (contract.businessGuarantee / 100)
+        ),
+        allSumValues.businessGuarantee,
+      ],
+      [
+        "Deductions",
+        ...data.map((item) => item.totalDeduction),
+        allSumValues.deductions,
+      ],
+      [
+        "Additions",
+        ...data.map((item) => item.totalAddition),
+        allSumValues.additions,
+      ],
       ["Net", ...data.map((_, i) => allSumValues.net), allSumValues.net],
-      ["Previous Payments", ...previousPaymentsValues.slice(0, previousPaymentsValues.length - 1), "-"],
-      ["Due Amount", ...dueAmountValues, allSumValues.dueAmount]
+      [
+        "Previous Payments",
+        ...previousPaymentsValues.slice(0, previousPaymentsValues.length - 1),
+        "-",
+      ],
+      ["Due Amount", ...dueAmountValues, allSumValues.dueAmount],
     ];
-  
+
     const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
     XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
     XLSX.writeFile(workbook, "reports.xlsx");
   };
-  
+
   return (
     <div id="reports-content">
       <div className="flex flex-col items-stretch justify-start gap-4">
@@ -205,8 +238,7 @@ const Reports = () => {
                   return (
                     <p
                       key={key}
-                      className="flex items-center gap-2 text-grayColor lead"
-                    >
+                      className="flex items-center gap-2 text-grayColor lead">
                       <Icon size={24} /> {subTitle.text}
                     </p>
                   );
@@ -226,8 +258,7 @@ const Reports = () => {
                     className={`text-white flex gap-1 items-center`}
                     styleHtml={{
                       backgroundColor: `${button.bgColor}`,
-                    }}
-                  >
+                    }}>
                     <Icon size={22} />
                     {button.text}
                   </Button>
@@ -253,162 +284,202 @@ const Reports = () => {
           </div>
         </div>
 
-        {!isLoading ?
-        !confirmationError ? (
-          data?.length > 0 ? (
-            chunkedData.map((chunk, chunkIndex) => {
-              return (
-                <div
-                  key={chunkIndex}
-                  className="rounded-lg bg-slate-100 border shadow-md mb-6"
-                >
-                  <table className="w-full">
-                    <thead>
-                      <tr className="*:py-6 odd:bg-slate-200">
-                        <th>Description</th>
-                        {chunk.map((item, i) => (
-                          <th key={item._id}>
-                            Work Confirmation #{chunkIndex * 4 + i + 1}
+        {!isLoading ? (
+          !confirmationError ? (
+            data?.length > 0 ? (
+              chunkedData.map((chunk, chunkIndex) => {
+                return (
+                  <div
+                    key={chunkIndex}
+                    className="rounded-lg bg-slate-100 border shadow-md mb-6">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="*:py-6 odd:bg-slate-200">
+                          <th>
+                            {t("ContractsForms.summaryReports.table.desc")}
                           </th>
-                        ))}
-                        <th>Total ({data.length} Items)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* Works Value */}
-                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
-                        <td>
-                          <strong>Works Value</strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
-                            {item.totalAmount.toLocaleString("en-US")} EGP
+                          {chunk.map((item, i) => (
+                            <th key={item._id}>
+                              {t("ContractsForms.summaryReports.table.workConfirmationText")} #{chunkIndex * 4 + i + 1}
+                            </th>
+                          ))}
+                          <th>
+                            {t("ContractsForms.summaryReports.table.total", {
+                              length: data?.length,
+                            })}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* Works Value */}
+                        <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
+                          <td>
+                            <strong>Works Value</strong>
                           </td>
-                        ))}
-                        <td>{allSumValues.works.toLocaleString("en-US")} EGP</td>
-                      </tr>
-                      {/* Vat */}
-                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
-                        <td>
-                          <strong>VAT ({contract?.taxRate}%)</strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
-                            {(
-                              item.totalAmount *
-                              (contract?.taxRate / 100)
-                            ).toLocaleString("en-US")}{" "}
-                            EGP
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              {item.totalAmount.toLocaleString("en-US")} EGP
+                            </td>
+                          ))}
+                          <td>
+                            {allSumValues.works.toLocaleString("en-US")} EGP
                           </td>
-                        ))}
-                        <td>{allSumValues.vat.toLocaleString("en-US")} EGP</td>
-                      </tr>
-                      {/* Business Guarantee */}
-                      <tr className="bg-red-100 *:py-6">
-                        <td>
-                          <strong>
-                            Business Guarantee ({contract?.businessGuarantee}
-                            %)
-                          </strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
+                        </tr>
+                        {/* Vat */}
+                        <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
+                          <td>
+                            <strong>VAT ({contract?.taxRate}%)</strong>
+                          </td>
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              {(
+                                item.totalAmount *
+                                (contract?.taxRate / 100)
+                              ).toLocaleString("en-US")}{" "}
+                              EGP
+                            </td>
+                          ))}
+                          <td>
+                            {allSumValues.vat.toLocaleString("en-US")} EGP
+                          </td>
+                        </tr>
+                        {/* Business Guarantee */}
+                        <tr className="bg-red-100 *:py-6">
+                          <td>
+                            <strong>
+                              Business Guarantee ({contract?.businessGuarantee}
+                              %)
+                            </strong>
+                          </td>
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              (
+                              {(
+                                item.totalAmount *
+                                (contract?.businessGuarantee / 100)
+                              ).toLocaleString("en-US")}{" "}
+                              EGP)
+                            </td>
+                          ))}
+                          <td>
                             (
-                            {(
-                              item.totalAmount *
-                              (contract?.businessGuarantee / 100)
-                            ).toLocaleString("en-US")}{" "}
+                            {allSumValues?.businessGuarantee.toLocaleString(
+                              "en-US"
+                            )}{" "}
                             EGP)
                           </td>
-                        ))}
-                        <td>({allSumValues?.businessGuarantee.toLocaleString("en-US")} EGP)</td>
-                      </tr>
-                      {/* Deductions */}
-                      <tr className="bg-red-100 *:py-6">
-                        <td>
-                          <strong>Deductions</strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
-                            ({item.totalDeduction.toLocaleString("en-US")} EGP)
+                        </tr>
+                        {/* Deductions */}
+                        <tr className="bg-red-100 *:py-6">
+                          <td>
+                            <strong>Deductions</strong>
                           </td>
-                        ))}
-                        <td>({allSumValues?.deductions.toLocaleString("en-US")} EGP)</td>
-                      </tr>
-                      {/* Additions */}
-                      <tr className="bg-green-100 *:py-6">
-                        <td>
-                          <strong>Additions</strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
-                            {item.totalAddition.toLocaleString("en-US")} EGP
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              ({item.totalDeduction.toLocaleString("en-US")}{" "}
+                              EGP)
+                            </td>
+                          ))}
+                          <td>
+                            ({allSumValues?.deductions.toLocaleString("en-US")}{" "}
+                            EGP)
                           </td>
-                        ))}
-                        <td>{allSumValues?.additions.toLocaleString("en-US")} EGP</td>
-                      </tr>
-                      {/* Net */}
-                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
-                        <td>
-                          <strong>Net</strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
-                            {(
-                              item.totalAmount +
-                              item.totalAmount * (contract?.taxRate / 100) -
-                              item.totalAmount *
-                                (contract?.businessGuarantee / 100) -
-                              item.totalDeduction +
-                              item.totalAddition
-                            ).toLocaleString("en-US")}{" "}
+                        </tr>
+                        {/* Additions */}
+                        <tr className="bg-green-100 *:py-6">
+                          <td>
+                            <strong>Additions</strong>
+                          </td>
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              {item.totalAddition.toLocaleString("en-US")} EGP
+                            </td>
+                          ))}
+                          <td>
+                            {allSumValues?.additions.toLocaleString("en-US")}{" "}
                             EGP
                           </td>
-                        ))}
-                        <td>{allSumValues?.net.toLocaleString("en-US")} EGP</td>
-                      </tr>
-                      {/* Previous Payments */}
-                      <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
-                        <td>
-                          <strong>Previous Payments</strong>
-                        </td>
-                        {chunk.map((item, i) => {
-                          const paymentIndex = chunkIndex * 4 + i;
-                          if (paymentIndex === 0) {
-                            return <td key={i}>-</td>;
-                          } else {
-                            return (
-                              <td key={i}>
-                                ({previousPaymentsValues[paymentIndex]?.toLocaleString("en-US")} EGP)
-                              </td>
-                            );
-                          }
-                        })}
-                        <td>-</td>
-                      </tr>
-                      {/* Due Amount */}
-                      <tr className="bg-green-100 *:py-6">
-                        <td>
-                          <strong>Due Amount</strong>
-                        </td>
-                        {chunk.map((item, i) => (
-                          <td key={i}>
-                            {dueAmountValues[chunkIndex * 4 + i]?.toLocaleString("en-US")} EGP
+                        </tr>
+                        {/* Net */}
+                        <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
+                          <td>
+                            <strong>Net</strong>
                           </td>
-                        ))}
-                        <td>{allSumValues?.dueAmount.toLocaleString("en-US")} EGP</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              );
-            })
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              {(
+                                item.totalAmount +
+                                item.totalAmount * (contract?.taxRate / 100) -
+                                item.totalAmount *
+                                  (contract?.businessGuarantee / 100) -
+                                item.totalDeduction +
+                                item.totalAddition
+                              ).toLocaleString("en-US")}{" "}
+                              EGP
+                            </td>
+                          ))}
+                          <td>
+                            {allSumValues?.net.toLocaleString("en-US")} EGP
+                          </td>
+                        </tr>
+                        {/* Previous Payments */}
+                        <tr className="even:bg-slate-100 odd:bg-slate-50 *:py-6">
+                          <td>
+                            <strong>Previous Payments</strong>
+                          </td>
+                          {chunk.map((item, i) => {
+                            const paymentIndex = chunkIndex * 4 + i;
+                            if (paymentIndex === 0) {
+                              return <td key={i}>-</td>;
+                            } else {
+                              return (
+                                <td key={i}>
+                                  (
+                                  {previousPaymentsValues[
+                                    paymentIndex
+                                  ]?.toLocaleString("en-US")}{" "}
+                                  EGP)
+                                </td>
+                              );
+                            }
+                          })}
+                          <td>-</td>
+                        </tr>
+                        {/* Due Amount */}
+                        <tr className="bg-green-100 *:py-6">
+                          <td>
+                            <strong>Due Amount</strong>
+                          </td>
+                          {chunk.map((item, i) => (
+                            <td key={i}>
+                              {dueAmountValues[
+                                chunkIndex * 4 + i
+                              ]?.toLocaleString("en-US")}{" "}
+                              EGP
+                            </td>
+                          ))}
+                          <td>
+                            {allSumValues?.dueAmount.toLocaleString("en-US")}{" "}
+                            EGP
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })
+            ) : (
+              <p>
+                <Loading />
+              </p>
+            )
           ) : (
             <p>
-              <Loading />
+              Field to get confirmation. please create confirmation and try
+              again.
             </p>
-          )) : <p>Field to get confirmation. please create confirmation and try again.</p>
-         : (
+          )
+        ) : (
           <Loading />
         )}
       </div>
@@ -417,8 +488,7 @@ const Reports = () => {
         <button
           type="button"
           className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
-          onClick={() => navigate(-1)}
-        >
+          onClick={() => navigate(-1)}>
           {t("ContractsForms.summary.backButton")}
         </button>
       </div>

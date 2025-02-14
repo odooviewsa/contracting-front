@@ -1,10 +1,11 @@
-// import { useNavigate, useParams } from "react-router-dom";
-// import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import DeductionsConfirmationTable from "./Components/DeductionsConfirmationTable";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 function DeductionConfirmation() {
+  // Language
+  const { t } = useTranslation();
   const { id, contractId } = useParams();
   const user = useSelector((state) => state?.user);
 
@@ -18,21 +19,19 @@ function DeductionConfirmation() {
           <button
             type="button"
             className="text-grayColor border border-grayColor px-3 pt-1 pb-2 rounded-md"
-            onClick={() => navigate(-1)}
-          >
-            Back
+            onClick={() => navigate(-1)}>
+            {t("ContractsForms.deduction.buttons.backButton")}
           </button>
           <button
             type="submit"
-            className="text-white bg-primaryColor border border-primaryColor px-3 pt-1 pb-2 rounded-md"
             onClick={(event) => {
               event.preventDefault();
               navigate(
                 `/${user?.companyName}/workconfirm/addConfirmation/addition/${id}/${contractId}`
               );
             }}
-          >
-            Next
+            className="text-white bg-primaryColor border border-primaryColor px-3 pt-1 pb-2 rounded-md">
+            {t("ContractsForms.deduction.buttons.nextButton")}
           </button>
         </div>
       </div>

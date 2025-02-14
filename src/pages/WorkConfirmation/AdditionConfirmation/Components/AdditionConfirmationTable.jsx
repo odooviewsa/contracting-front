@@ -6,6 +6,7 @@ import Loading from "../../../../componant/Loading";
 import AddAdditionComfirmationModal from "./AddAdditionComfirmationModal";
 import { toast } from "react-toastify";
 import DeductionSureDelete from "../../../contracts/deduction/componantDeduction/DeductionSureDelete";
+import { useTranslation } from "react-i18next";
 
 const EmptyTable = () => (
   <div className="text-center py-10 text-gray-500">
@@ -15,6 +16,8 @@ const EmptyTable = () => (
 );
 
 function AdditionConfirmationTable() {
+  // Language
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id: workConfirmationId, contractId } = useParams();
   const [sureDeleteModel, setSureDeleteModel] = useState(false);
@@ -80,13 +83,13 @@ function AdditionConfirmationTable() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="border p-2 bg-gray-100 text-center">Code</th>
-              <th className="border p-2 bg-gray-100 text-center">
-                Name of Addition
-              </th>
-              <th className="border p-2 bg-gray-100 text-center ">Type</th>
-              <th className="border p-2 bg-gray-100 text-center">Amount</th>
-              <th className="border p-2 bg-gray-100 text-center"></th>
+              {t("ContractsForms.addition.table.items", {
+                returnObjects: true,
+              }).map((item, key) => (
+                <th key={key} className="border p-2 bg-gray-100">
+                  {item}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -119,9 +122,8 @@ function AdditionConfirmationTable() {
                 <td className="border p-2 text-center">
                   <button
                     onClick={() => setSureDeleteModel(true)}
-                    className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600"
-                  >
-                    Delete
+                    className="text-white border px-4 py-1 rounded-md bg-red-500 hover:bg-red-600">
+                    {t("ConfirmationForms.addition.buttons.deleteButton")}
                   </button>
                   {sureDeleteModel && (
                     <DeductionSureDelete
@@ -138,7 +140,7 @@ function AdditionConfirmationTable() {
           <tfoot>
             <tr className="bg-gray-50 font-semibold">
               <td colSpan="4" className="border p-2 text-center font-bold">
-                Total Additions
+                {t("ConfirmationForms.addition.totalConfirmationDeductions")}
               </td>
               <td colSpan="1" className="border p-2 text-center">
                 {additions.reduce(
@@ -149,7 +151,7 @@ function AdditionConfirmationTable() {
             </tr>
             <tr className="bg-gray-50 font-semibold">
               <td colSpan="4" className="border p-2 text-center font-bold">
-                Total Confirmations Additions
+                {t("ConfirmationForms.addition.totalDeductions")}
               </td>
               <td colSpan="1" className="border p-2 text-center">
                 {additionsConfirmations.reduce(
@@ -165,9 +167,8 @@ function AdditionConfirmationTable() {
 
       <button
         className="text-blue-600 mt-4 underline"
-        onClick={() => setIsModalOpen(true)}
-      >
-        + Add Addition
+        onClick={() => setIsModalOpen(true)}>
+        {t("ContractsForms.addition.table.addButton")}
       </button>
 
       {isModalOpen && (

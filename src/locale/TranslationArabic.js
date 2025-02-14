@@ -1,6 +1,11 @@
+import { IoIosDocument } from "react-icons/io";
 import {
   IoAlertCircleOutline,
+  IoCalendarOutline,
   IoCheckmarkCircleOutline,
+  IoDocumentTextOutline,
+  IoDownloadOutline,
+  IoPrintOutline,
   IoTimeOutline,
 } from "react-icons/io5";
 
@@ -1268,6 +1273,29 @@ const TranslationArabic = {
           success: "تم تحديث عنصر العمل بنجاح",
         },
       },
+      contentTable: {
+        tableLabels: [
+          "اسم العنصر",
+          "وحدة القياس",
+          "الكمية",
+          "التكلفة",
+          "إجمالي التكلفة",
+        ],
+        labels: {
+          materials: {
+            text: "المواد",
+          },
+          labors: {
+            text: "العمالة",
+          },
+          equipments: {
+            text: "المعدات",
+          },
+          otherCosts: {
+            text: "تكاليف أخرى",
+          },
+        },
+      },
     },
     deduction: {
       buttons: {
@@ -1357,6 +1385,55 @@ const TranslationArabic = {
         },
       },
     },
+    summaryReports: {
+      title: "تقرير ملخص الأعمال الإجمالي",
+      buttons: [
+        {
+          text: "إكسل",
+          icon: IoIosDocument,
+          bgColor: "#00C951",
+          type: "excel",
+        },
+        {
+          text: "PDF",
+          icon: IoDownloadOutline,
+          bgColor: "#E7000B",
+          type: "pdf",
+        },
+        {
+          text: "طباعة",
+          icon: IoPrintOutline,
+          bgColor: "#6a7282",
+          type: "print",
+        },
+      ],
+      subTitles: [
+        {
+          text: "برج السلام التجاري",
+          icon: IoDocumentTextOutline,
+        },
+        {
+          text: "{{date}}",
+          icon: IoCalendarOutline,
+        },
+      ],
+      details: [
+        {
+          text: "رقم العقد: {{contractNo}}",
+        },
+        {
+          text: "قيمة العقد: {{contractValue}}",
+        },
+        {
+          text: "مدة العقد: {{contractDuration}}",
+        },
+      ],
+      table: {
+        desc: "الوصف",
+        workConfirmationText: "تأكيد العمل",
+        total: "الإجمالي ({{length}} عنصر)",
+      },
+    },
   },
   EditContractForm: {
     title: "تعديل العقد",
@@ -1417,6 +1494,7 @@ const TranslationArabic = {
     deduction: "الخصم",
     addition: "الإضافة",
     summary: "الملخص",
+    summaryReports: "التقارير",
   },
   ConfirmationSteps: {
     addConfirmation: "إضافة تأكيد",
@@ -1634,6 +1712,20 @@ const TranslationArabic = {
         },
         previousButton: "السابق",
       },
+    },
+    deduction: {
+      buttons: {
+        deleteButton: "حذف",
+      },
+      totalConfirmationDeductions: "إجمالي الخصومات المؤكدة",
+      totalDeductions: "إجمالي الخصومات",
+    },
+    addition: {
+      buttons: {
+        deleteButton: "حذف",
+      },
+      totalConfirmationDeductions: "إجمالي الإضافات المؤكدة",
+      totalDeductions: "إجمالي الإضافات",
     },
   },
   BoqTemplatePage: {
@@ -1877,7 +1969,114 @@ const TranslationArabic = {
       workConfirmationErrorMessage: "يجب تحديد تأكيد العمل قبل الحفظ.",
     },
   },
-
+  PrintConfirmationDetails: {
+    title: "تأكيد العمل رقم {{code}}",
+    details: [
+      [
+        {
+          label: "المشروع",
+          text: "{{project}}",
+        },
+        {
+          label: "المقاول",
+          text: "{{contractor}}",
+        },
+        {
+          label: "رقم العقد",
+          text: "{{contractNumber}}",
+        },
+        {
+          label: "قيمة العقد",
+          text: "{{contractValue}}",
+        },
+        {
+          label: "المبلغ المتبقي",
+          text: "{{remainingAmount}}",
+          color: "#155DFC",
+        },
+      ],
+      [
+        {
+          label: "التاريخ",
+          text: "{{date}}",
+        },
+        {
+          label: "الاستشاري",
+          text: "{{consultant}}",
+        },
+        {
+          label: "مدة العقد",
+          text: "{{contractDuration}}",
+        },
+        {
+          label: "الدفعات السابقة",
+          text: "{{previousPayments}}",
+          color: "#00A63E",
+        },
+      ],
+    ],
+    summary: {
+      title: "الملخص المالي",
+      items: [
+        {
+          label: "قيمة الأعمال",
+          text: "{{worksValue}}",
+        },
+        {
+          label: "ضريبة القيمة المضافة",
+          text: "{{vat}}",
+          bgColor: "#DBEAFE",
+          textColor: "#155DFC",
+        },
+        {
+          label: "خصم ضمان الأعمال",
+          text: "{{businessGuarantee}}",
+          bgColor: "#FFE2E2",
+          textColor: "#E7000B",
+        },
+        [
+          {
+            label: "الخصومات",
+            text: "{{deductions}}",
+            bgColor: "#FFE2E2",
+            textColor: "#E7000B",
+          },
+          {
+            label: "الإضافات",
+            text: "{{additions}}",
+            bgColor: "#DBFCE7",
+            textColor: "#00A63E",
+          },
+        ],
+        {
+          label: "الدفعات المقدمة",
+          text: "{{downPayments}}",
+        },
+        {
+          label: "صافي المستحق",
+          text: "{{netDue}}",
+          bgColor: "#DBFCE7",
+          textColor: "#00A63E",
+        },
+      ],
+    },
+    table: {
+      columns: [
+        "العنصر",
+        "الوحدة",
+        "الكمية في العقد",
+        "الأعمال السابقة",
+        "الاستخراج الحالي",
+        "إجمالي الكمية",
+        "نسبة الإنجاز",
+        "الكمية المتبقية",
+        "التكلفة",
+        "المبلغ السابق",
+        "المبلغ الحالي",
+        "إجمالي القيمة",
+      ],
+    },
+  },
   BusinessGuaranteeReportPage: {
     title: "تقرير الضمان التجاري",
     exportButton: "تصدير التقرير",

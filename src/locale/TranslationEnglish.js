@@ -1344,6 +1344,29 @@ const TranslationEnglish = {
       texts: {
         total: "Total",
       },
+      contentTable: {
+        tableLabels: [
+          "Item Name",
+          "Unit Of Measure",
+          "Quantity",
+          "Cost",
+          "Total Cost",
+        ],
+        labels: {
+          materials: {
+            text: "Materials",
+          },
+          labors: {
+            text: "Labors",
+          },
+          equipments: {
+            text: "Equipments",
+          },
+          otherCosts: {
+            text: "Other Costs",
+          },
+        },
+      },
     },
     deduction: {
       buttons: {
@@ -1482,6 +1505,11 @@ const TranslationEnglish = {
           text: "Contract Duration: {{contractDuration}}",
         },
       ],
+      table: {
+        desc: "Description",
+        workConfirmationText: "Work Confirmation",
+        total: "Total ({{length}} Items)",
+      },
     },
   },
   // Edit Contract Form
@@ -1767,6 +1795,20 @@ const TranslationEnglish = {
         },
         previousButton: "Previous",
       },
+    },
+    deduction: {
+      buttons: {
+        deleteButton: "Delete",
+      },
+      totalConfirmationDeductions: "Total Confirmation Deductions",
+      totalDeductions: "Total Deductions",
+    },
+    addition: {
+      buttons: {
+        deleteButton: "Delete",
+      },
+      totalConfirmationDeductions: "Total Confirmation Additions",
+      totalDeductions: "Total Additions",
     },
   },
   // BOQ Template

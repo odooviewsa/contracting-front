@@ -5,14 +5,14 @@ const TableWorkContent = ({
   category = "Material",
 }) => {
   return (
-    <table className={`ltr:ml-6 rtl:mr-6 bg-white rounded-md${className}`}>
-      <tr>
-        {labels?.map((label, key) => (
-          <th key={key}>{label}</th>
-        ))}
-      </tr>
-      {
-        data
+    <div className="w-full overflow-x-auto scrollbar">
+      <table className={`ltr:ml-6 rtl:mr-6 bg-white rounded-md ${className}`}>
+        <tr>
+          {labels?.map((label, key) => (
+            <th key={key}>{label}</th>
+          ))}
+        </tr>
+        {data
           ?.filter((e) => e.category === category)
           .map((item, key) => (
             <tr key={key}>
@@ -22,9 +22,9 @@ const TableWorkContent = ({
               <td>{item.cost}</td>
               <td>{item.total}</td>
             </tr>
-          ))
-      }
-    </table>
+          ))}
+      </table>
+    </div>
   );
 };
 export default TableWorkContent;

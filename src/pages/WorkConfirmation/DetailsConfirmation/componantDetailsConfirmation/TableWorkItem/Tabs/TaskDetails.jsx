@@ -8,6 +8,7 @@ import {
 } from "react-icons/io5";
 import { axiosInstance } from "../../../../../../axios/axios";
 import { toast } from "react-toastify";
+import { components } from "react-select";
 
 const TaskDetails = ({
   setActiveEditTaskForm,
@@ -60,7 +61,6 @@ const TaskDetails = ({
       setIsUpdating(false);
     }
   };
-
   return (
     <div className="flex flex-col gap-2 py-4 border-b">
       {/* Heading Texts */}

@@ -16,23 +16,27 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
   const { currentValueColum } = useContext(ContextBOQ);
   const columns = [
     {
-      header: t(
+      header: "Unit Of Measure",
+      text: t(
         "ContractsForms.BOQ.table.allItems.contentWorkItems.unitOfMeasure"
       ),
       value: `${workItemDetails?.unitOfMeasure}`,
     },
     {
-      header: t(
+      header: "Assigned Quantity",
+      text: t(
         "ContractsForms.BOQ.table.allItems.contentWorkItems.assignedQuantity"
       ),
       value: `${workItemDetails?.assignedQuantity?.toLocaleString("en-US")}`,
     },
     {
-      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.price"),
+      header: "Price",
+      text: t("ContractsForms.BOQ.table.allItems.contentWorkItems.price"),
       value: `${workItemDetails?.price?.toLocaleString("en-US")}`,
     },
     {
-      header: t("ContractsForms.BOQ.table.allItems.contentWorkItems.total"),
+      header: "Total",
+      text: t("ContractsForms.BOQ.table.allItems.contentWorkItems.total"),
       value: `${workItemDetails?.total?.toLocaleString("en-US")}`,
     },
   ];
@@ -58,11 +62,10 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
   }, [materials]);
   return (
     <div
-      className={`flex  gap-5 
+      className={`flex gap-5 
         bg-bgWhite
-      justify-center relative z-10`}
-    >
-      <div className=" w-[80%]">
+      justify-center relative z-10`}>
+      <div className="w-[80%]">
         <table>
           <thead>
             <tr className="text-gray-600">
@@ -70,7 +73,7 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
                 .filter((e) => currentValueColum[e.header])
                 .map((col, index) => (
                   <th key={index} className="border-none">
-                    {col.header}
+                    {col.text}
                   </th>
                 ))}
             </tr>
@@ -90,30 +93,26 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
         <div className="py-4 flex flex-col gap-8">
           {materials?.filter((item) => item.category === "Material").length >
             0 && (
-            <CollapsedMenu label="Materials" totalCost={totalCosts.Material}>
+            <CollapsedMenu
+              label={t("ContractsForms.BOQ.contentTable.labels.materials.text")}
+              totalCost={totalCosts.Material}>
               <TableWorkContent
-                labels={[
-                  "Item Name",
-                  "Unit Of Measure",
-                  "Quantity",
-                  "Cost",
-                  "Total Cost",
-                ]}
+                labels={t("ContractsForms.BOQ.contentTable.tableLabels", {
+                  returnObjects: true,
+                })}
                 data={materials}
               />
             </CollapsedMenu>
           )}
           {materials?.filter((item) => item.category === "Labor").length >
             0 && (
-            <CollapsedMenu label="Labors" totalCost={totalCosts.Labor}>
+            <CollapsedMenu
+              label={t("ContractsForms.BOQ.contentTable.labels.labors.text")}
+              totalCost={totalCosts.Labor}>
               <TableWorkContent
-                labels={[
-                  "Item Name",
-                  "Unit Of Measure",
-                  "Quantity",
-                  "Cost",
-                  "Total Cost",
-                ]}
+                labels={t("ContractsForms.BOQ.contentTable.tableLabels", {
+                  returnObjects: true,
+                })}
                 category="Labor"
                 data={materials}
               />
@@ -121,15 +120,15 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
           )}
           {materials?.filter((item) => item.category === "Equipment").length >
             0 && (
-            <CollapsedMenu label="Equipments" totalCost={totalCosts.Equipment}>
+            <CollapsedMenu
+              label={t(
+                "ContractsForms.BOQ.contentTable.labels.equipments.text"
+              )}
+              totalCost={totalCosts.Equipment}>
               <TableWorkContent
-                labels={[
-                  "Item Name",
-                  "Unit Of Measure",
-                  "Quantity",
-                  "Cost",
-                  "Total Cost",
-                ]}
+                labels={t("ContractsForms.BOQ.contentTable.tableLabels", {
+                  returnObjects: true,
+                })}
                 category="Equipment"
                 data={materials}
               />
@@ -138,17 +137,14 @@ export default function BlockContantWorkItem({ workItemDetails, materials }) {
           {materials?.filter((item) => item.category === "OtherCosts").length >
             0 && (
             <CollapsedMenu
-              label="Other Costs"
-              totalCost={totalCosts.OtherCosts}
-            >
+              label={t(
+                "ContractsForms.BOQ.contentTable.labels.otherCosts.text"
+              )}
+              totalCost={totalCosts.OtherCosts}>
               <TableWorkContent
-                labels={[
-                  "Item Name",
-                  "Unit Of Measure",
-                  "Quantity",
-                  "Cost",
-                  "Total Cost",
-                ]}
+                labels={t("ContractsForms.BOQ.contentTable.tableLabels", {
+                  returnObjects: true,
+                })}
                 category="OtherCosts"
                 data={materials}
               />
