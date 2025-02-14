@@ -42,6 +42,7 @@ const TasksPage = () => {
           )
         : [],
   });
+
   const tasksLoading =
     projectsLoading || workConfirmationQueries.some((query) => query.isLoading);
   const workConfirmations = useMemo(
@@ -52,20 +53,27 @@ const TasksPage = () => {
         .flat(),
     [workConfirmationQueries]
   );
-
-  const tasks = useMemo(
-    () =>
-      workConfirmations.flatMap(
-        (workConfirm) =>
-          workConfirm.workItems?.flatMap(
-            (workItem) => workItem.workItemId?.tasks || []
-          ) || []
-      ),
-    [workConfirmations]
-  );
-  const totalPages = Math.ceil(tasks.length / tasksPerPage);
+  // Fetch Tasks
+  const {
+    data: tasks,
+    isLoading: taskLoading,
+    error: taskError,
+    refetch: taskRefetch,
+  } = useQuery({
+    queryKey: ["getTasks"],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(`/api/tasks`);
+        return res.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
+  });
+  const totalPages = tasks ? Math.ceil(tasks.length / tasksPerPage) : 1;
 
   const paginatedTasks = useMemo(() => {
+    if (!tasks) return [];
     const start = (tasksPage - 1) * tasksPerPage;
     return tasks.slice(start, start + tasksPerPage);
   }, [tasks, tasksPage]);

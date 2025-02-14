@@ -26,29 +26,21 @@ const TasksTab = ({
   myTask,
   setMyTask,
   loading,
+  error,
 }) => {
   const [activeAddForm, setActiveAddForm] = useState(false);
   const [activeEditTaskForm, setActiveEditTaskForm] = useState(false);
   const [activeFilterOptions, setActiveFilterOptions] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("");
-
   // Filter tasks based on selected status and priority
-  const filteredTasks = !data
-    ? workItem?.workItemId.tasks.filter((task) => {
-        return (
-          (selectedStatus ? task.status === selectedStatus : true) &&
-          (selectedPriority ? task.priority === selectedPriority : true) &&
-          (imageId ? task.image === imageId : true)
-        );
-      })
-    : data.filter((task) => {
-        return (
-          (selectedStatus ? task.status === selectedStatus : true) &&
-          (selectedPriority ? task.priority === selectedPriority : true) &&
-          (imageId ? task.image === imageId : true)
-        );
-      });
+  const filteredTasks = data?.filter((task) => {
+    return (
+      (selectedStatus ? task.status === selectedStatus : true) &&
+      (selectedPriority ? task.priority === selectedPriority : true) &&
+      (imageId ? task.image === imageId : true)
+    );
+  });
   const tabs = [
     {
       // Tasks
@@ -63,19 +55,25 @@ const TasksTab = ({
             <div className="flex items-center justify-center py-8 lg:py-12">
               <Loading />
             </div>
-          ) : filteredTasks.length > 0 ? (
-            filteredTasks.map((task) => (
-              <TaskDetails
-                key={task._id}
-                setActiveEditTaskForm={setActiveEditTaskForm}
-                workItemId={!disabled && workItem.workItemId._id}
-                refetch={refetch}
-                disabled={disabled}
-                {...task}
-              />
-            ))
+          ) : !error ? (
+            filteredTasks?.length > 0 ? (
+              filteredTasks.map((task) => (
+                <TaskDetails
+                  key={task._id}
+                  setActiveEditTaskForm={setActiveEditTaskForm}
+                  workItemId={!disabled && workItem.workItemId._id}
+                  refetch={refetch}
+                  disabled={disabled}
+                  {...task}
+                />
+              ))
+            ) : (
+              <p className="text-grayColor text-center py-8">No tasks found</p>
+            )
           ) : (
-            <p className="text-grayColor text-center py-8">No tasks found</p>
+            <div className="flex items-center justify-center py-8 lg:py-12">
+              <p>{error}</p>
+            </div>
           )}
         </div>
       ),

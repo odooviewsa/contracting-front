@@ -19,6 +19,7 @@ import Tabs from "../../../../../../componant/layout/Tabs";
 import ColTabs from "../../../../../../componant/layout/ColTabs";
 import TasksTab from "./TasksTab";
 import CommentsTab from "./ImageTabs/CommentsTab";
+import { useQuery } from "@tanstack/react-query";
 
 const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
   const fileInputRef = useRef(null);
@@ -128,6 +129,25 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
       );
     }
   };
+  // Fetch Tasks
+  const {
+    data: tasks,
+    isLoading: taskLoading,
+    error: taskError,
+    refetch: taskRefetch,
+  } = useQuery({
+    queryKey: ["getTasksByWorkItemId", workItem.workItemId._id],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/tasks/${workItem.workItemId._id}`
+        );
+        return res.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
+  });
   const tabData = [
     {
       title: "Crop Image",
@@ -150,8 +170,12 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
       title: "Add Task",
       component: (
         <TasksTab
+          title={<h4 className="lead">Image Tasks</h4>}
           workItem={workItem}
-          refetch={refetch}
+          data={tasks}
+          refetch={taskRefetch}
+          loading={taskLoading}
+          error={taskError}
           imageId={isEditing.id}
         />
       ),

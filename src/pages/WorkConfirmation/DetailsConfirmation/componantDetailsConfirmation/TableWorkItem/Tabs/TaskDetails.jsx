@@ -8,12 +8,10 @@ import {
 } from "react-icons/io5";
 import { axiosInstance } from "../../../../../../axios/axios";
 import { toast } from "react-toastify";
-import { components } from "react-select";
 
 const TaskDetails = ({
   setActiveEditTaskForm,
   refetch,
-  workItemId,
   name,
   description,
   assignee,
@@ -30,10 +28,8 @@ const TaskDetails = ({
 
   const handleDelete = async (id) => {
     try {
-      const res = await axiosInstance.delete(
-        `/api/work/${workItemId}/details?task=${id}`
-      );
-      if (res.status === 204) {
+      const res = await axiosInstance.delete(`/api/tasks/${id}`);
+      if (res.status === 200) {
         toast.success("Task deleted successfully");
         refetch();
       }
@@ -50,9 +46,9 @@ const TaskDetails = ({
   const updateProgress = async () => {
     if (!isUpdating) return;
     try {
-      await axiosInstance.put(
-        `/api/work/${workItemId}/details?task=${_id}&progress=${inputProgress}`
-      );
+      await axiosInstance.put(`/api/tasks/${_id}/progress`, {
+        progress: inputProgress,
+      });
       toast.success("Progress updated successfully");
       refetch();
     } catch (error) {

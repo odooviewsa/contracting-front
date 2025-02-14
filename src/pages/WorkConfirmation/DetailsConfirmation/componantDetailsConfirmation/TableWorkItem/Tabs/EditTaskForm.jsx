@@ -37,12 +37,12 @@ const EditTaskForm = ({
   const onSubmit = async (dataForm) => {
     try {
       setFormLoading(true);
-      const res = await axiosInstance.put(
-        `/api/work/${workItemId}/details?task=${data.id}&image=${imageId}`,
-        {
-          task: { ...dataForm, progress: data.progress || 0 },
-        }
-      );
+      const res = await axiosInstance.put(`/api/tasks/${data.id}`, {
+        ...dataForm,
+        progress: data.progress || 0,
+        workItemId,
+        image: imageId,
+      });
       if (res.status === 200) {
         setFormLoading(false);
         setActiveEditTaskForm({ active: false });

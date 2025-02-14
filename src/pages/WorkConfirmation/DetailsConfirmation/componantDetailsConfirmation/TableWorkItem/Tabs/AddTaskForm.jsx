@@ -22,11 +22,15 @@ const AddTaskForm = ({
   const onSubmit = async (data) => {
     setFormLoading(true);
     try {
-      const res = await axiosInstance.post(`/api/work/${workItemId}/details?image=${imageId}`, {
-        task: { ...data },
+      // const res = await axiosInstance.post(`/api/work/${workItemId}/details?image=${imageId}`, {
+      //   task: { ...data },
+      // });
+      const res = await axiosInstance.post(`/api/tasks`, {
+        ...data,
+        workItemId,
+        image: imageId,
       });
-      console.log(res);
-      if (res.statusText === "OK") {
+      if (res.status === 201) {
         setActiveAddForm(false);
         setFormLoading(false);
         toast.success(`Task created successfully`);

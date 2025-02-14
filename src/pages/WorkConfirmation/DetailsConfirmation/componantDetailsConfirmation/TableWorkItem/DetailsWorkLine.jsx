@@ -15,6 +15,8 @@ import DocumentsTab from "./Tabs/DocumentsTab";
 import { Alert } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import TasksTab from "./Tabs/TasksTab";
+import { axiosInstance } from "../../../../../axios/axios";
+import { useQuery } from "@tanstack/react-query";
 
 const DetailsWorkLine = ({
   workItem,
@@ -27,6 +29,25 @@ const DetailsWorkLine = ({
   const currentWorkItem = workConfirmation?.workItems.filter(
     (item) => item._id === workItem
   )[0];
+  // Fetch Tasks
+  const {
+    data: tasks,
+    isLoading: taskLoading,
+    error: taskError,
+    refetch: taskRefetch,
+  } = useQuery({
+    queryKey: ["getTasksByWorkItemId", currentWorkItem.workItemId._id],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/tasks/${currentWorkItem.workItemId._id}`
+        );
+        return res.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
+  });
   const tabs = [
     {
       title: t("DetailsWorkLine.line.tabs.progress.title"),
@@ -46,7 +67,13 @@ const DetailsWorkLine = ({
     },
     {
       title: t("DetailsWorkLine.line.tabs.photos.title"),
-      content: <PhotosTab workItem={currentWorkItem} refetch={refetch} setLineDetails={setLineDetails}/>,
+      content: (
+        <PhotosTab
+          workItem={currentWorkItem}
+          refetch={refetch}
+          setLineDetails={setLineDetails}
+        />
+      ),
     },
     {
       title: t("DetailsWorkLine.line.tabs.docs.title"),
@@ -55,7 +82,16 @@ const DetailsWorkLine = ({
     {
       // t("DetailsWorkLine.line.tabs.tasks.title")
       title: "Tasks",
-      content: <TasksTab title={<h4 className="lead">Projects Tasks</h4>} workItem={currentWorkItem} refetch={refetch} />,
+      content: (
+        <TasksTab
+          title={<h4 className="lead">Projects Tasks</h4>}
+          workItem={currentWorkItem}
+          refetch={taskRefetch}
+          loading={taskLoading}
+          error={taskError}
+          data={tasks}
+        />
+      ),
     },
   ];
   const widgets = [
