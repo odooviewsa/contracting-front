@@ -1909,14 +1909,88 @@ const TranslationArabic = {
           addButton: "إضافة نقطة QC",
           text: "نقاط مراقبة الجودة",
           noFoundMessage: "لا توجد نقاط QC",
-          form: {
-            formTitle: "إضافة نقطة QC جديدة",
-            titleLabel: "نقطة QC",
-            titlePlaceholder: "أدخل نقطة QC",
-            titleMessage: "نقطة QC مطلوبة",
-            passedLabel: "تم الاجتياز",
-            button: "إضافة",
+          "form": {
+            "formTitle": "فحص الجودة - {{quality}}",
+            "project": "اسم المشروع",
+            "contract": "اسم العقد",
+            "date": "التاريخ",
+            "noteRelation": "علاقة الملاحظة",
+            "correction": "حالة التصحيح",
+            "category": "التصنيف",
+            "repeated": "هل المشكلة متكررة؟",
+            "qualityEngineer": "مهندس الجودة",
+            "itp": "نسبة ITP",
+            "note": "الملاحظة",
+            "description": "الوصف التفصيلي",
+            "attachments": "المرفقات",
+            "submit": "إرسال فحص الجودة",
+            "save": "حفظ كمسودة",
+            "placeholders": {
+              "project": "أدخل اسم المشروع",
+              "contract": "أدخل اسم العقد",
+              "date": "حدد التاريخ",
+              "noteRelation": "اختر علاقة الملاحظة",
+              "correction": "اختر حالة التصحيح",
+              "category": "اختر التصنيف",
+              "repeated": "هل المشكلة متكررة؟",
+              "qualityEngineer": "أدخل اسم المهندس",
+              "itp": "أدخل نسبة ITP",
+              "note": "اكتب ملاحظتك هنا",
+              "description": "قدم وصفًا تفصيليًا"
+            },
+            "errorMessages": {
+              "project": "اسم المشروع مطلوب",
+              "contract": "اسم العقد مطلوب",
+              "date": "التاريخ مطلوب",
+              "noteRelation": "الرجاء اختيار علاقة الملاحظة",
+              "correction": "الرجاء اختيار حالة التصحيح",
+              "category": "الرجاء اختيار التصنيف",
+              "repeated": "الرجاء تحديد ما إذا كانت المشكلة متكررة",
+              "qualityEngineer": "اسم مهندس الجودة مطلوب",
+              "itp": "نسبة ITP مطلوبة",
+              "note": "لا يمكن أن تكون الملاحظة فارغة",
+              "description": "الوصف مطلوب"
+            },
+            "options": {
+              "noteRelation": [
+                { "value": "execution", "text": "تنفيذ" },
+                { "value": "procedure", "text": "إجراء" }
+              ],
+              "correction": [
+                { "value": "ncr-released", "text": "تم إصدار NCR" },
+                { "value": "ncr-not-released", "text": "لم يتم إصدار NCR" },
+                { "value": "other", "text": "أخرى" }
+              ],
+              "category": [
+                { "value": "architecture", "text": "معماري" },
+                { "value": "civil", "text": "مدني" },
+                { "value": "electrical", "text": "كهربائي" },
+                { "value": "mechanical", "text": "ميكانيكي" }
+              ],
+              "repeated": [
+                { "value": "no", "text": "لا" },
+                { "value": "yes", "text": "نعم" }
+              ]
+            }
           },
+          timeline: [
+            {
+              number: 1,
+              text: "تم الإنشاء",
+            },
+            {
+              number: 2,
+              text: "قيد التنفيذ",
+            },
+            {
+              number: 3,
+              text: "قيد المراجعة",
+            },
+            {
+              number: 4,
+              text: "مغلق",
+            },
+          ],
         },
         photos: {
           title: "الصور",

@@ -12,6 +12,7 @@ const Input = ({
   disabled,
   onChange,
   value,
+  dir,
 }) => {
   return (
     <div className={`flex flex-col gap-2 w-full ${groupClassName}`}>
@@ -34,6 +35,7 @@ const Input = ({
         </select>
       ) : (
         <input
+          dir={dir}
           id={id}
           value={value}
           onChange={onChange}
