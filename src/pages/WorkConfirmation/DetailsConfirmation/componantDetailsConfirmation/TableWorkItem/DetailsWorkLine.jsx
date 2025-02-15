@@ -29,6 +29,8 @@ const DetailsWorkLine = ({
   const currentWorkItem = workConfirmation?.workItems.filter(
     (item) => item._id === workItem
   )[0];
+  console.log(workConfirmation);
+
   // Fetch Tasks
   const {
     data: tasks,
@@ -62,7 +64,12 @@ const DetailsWorkLine = ({
     {
       title: t("DetailsWorkLine.line.tabs.quality.title"),
       content: (
-        <QualityControlTab workItem={currentWorkItem} refetch={refetch} />
+        <QualityControlTab
+          workItem={currentWorkItem}
+          contractId={workConfirmation.contractId._id}
+          projectId={workConfirmation.projectName._id}
+          refetch={refetch}
+        />
       ),
     },
     {

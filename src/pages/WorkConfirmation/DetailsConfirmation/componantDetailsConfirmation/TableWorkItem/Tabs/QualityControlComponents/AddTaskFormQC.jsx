@@ -5,6 +5,7 @@ import Input from "../../../../../../../componant/elements/Input";
 import Textarea from "../../../../../../../componant/elements/Textarea";
 import Button from "../../../../../../../componant/elements/Button";
 import Loading from "../../../../../../../componant/Loading";
+import { useSelector } from "react-redux";
 
 const AddTaskFormQC = ({
   workItemId,
@@ -14,19 +15,18 @@ const AddTaskFormQC = ({
   setActiveAddForm,
 }) => {
   const [formLoading, setFormLoading] = useState(false);
-
+  const userId = useSelector((state) => state.user._id);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
   const onSubmit = async (data) => {
-    console.log(data);
-
     setFormLoading(false);
     setActiveAddForm(false);
-    setTasks([...tasks, { ...data, workItemId }]);
+    setTasks([...tasks, { ...data, workItemId, userId }]);
   };
+  console.log(tasks);
   return (
     <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center md:p-4 bg-black/30">
       <form

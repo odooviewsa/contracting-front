@@ -15,6 +15,8 @@ import Textarea from "../../../../../../componant/elements/Textarea";
 import StatusTimeline from "./QualityControlComponents/statusTimeline";
 import AddTaskFormQC from "./QualityControlComponents/AddTaskFormQC";
 import { toast } from "react-toastify";
+import { axiosInstance } from "../../../../../../axios/axios";
+import Loading from "../../../../../../componant/Loading";
 const TaskList = ({ tasks, setTasks, setActiveAddForm }) => {
   const handleDelete = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
@@ -25,6 +27,7 @@ const TaskList = ({ tasks, setTasks, setActiveAddForm }) => {
       <div className="flex justify-between items-center mb-4">
         <h4 className="font-semibold">Related Tasks</h4>
         <button
+          type="button"
           className="flex items-center space-x-1 text-blue-500"
           onClick={() => setActiveAddForm(true)}>
           <IoAddOutline className="h-4 w-4" />
@@ -76,43 +79,116 @@ const TaskList = ({ tasks, setTasks, setActiveAddForm }) => {
   );
 };
 
-const formFields = [
-  { name: "noteRelation", type: "select" },
-  { name: "correction", type: "select" },
-  { name: "category", type: "select" },
-  { name: "repeated", type: "select" },
-  { name: "qualityEngineer", type: "text" },
-  { name: "itp", type: "text" },
-  { name: "note", type: "textarea", direction: "rtl" },
-  { name: "description", type: "textarea", direction: "rtl" },
-];
 const QualityControlForm = ({
-  isLoading,
-  setIsLoading,
   setIsQCPointForm,
   workItem,
+  contractId,
+  projectId,
 }) => {
   // Translation
   const { t } = useTranslation();
   const [activeAddForm, setActiveAddForm] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [qcAsDraft, setQcAsDraft] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const imageInput = useRef(null);
+  const formFields = [
+    { name: "noteRelation", type: "select", validator: { required: true } },
+    { name: "correctionStatus", type: "select", validator: { required: true } },
+    { name: "category", type: "select", validator: { required: true } },
+    { name: "repeatedIssue", type: "select", validator: { required: true } },
+    {
+      name: "assignedTo",
+      type: "select",
+      validator: { required: true },
+      options: [
+        {
+          value: "",
+          text: t(
+            "DetailsWorkLine.line.tabs.quality.form.placeholders.assignedTo"
+          ),
+        },
+        ...workItem.workItemId.userId.usersGroup.map((item) => ({
+          value: item._id,
+          text: `${item.firstName} ${item.secondName}`,
+        })),
+      ],
+    },
+    {
+      name: "qualityEngineer",
+      type: "select",
+      validator: { required: true },
+      options: [
+        {
+          value: "",
+          text: t(
+            "DetailsWorkLine.line.tabs.quality.form.placeholders.qualityEngineer"
+          ),
+        },
+        ...workItem.workItemId.userId.usersGroup.map((item) => ({
+          value: item._id,
+          text: `${item.firstName} ${item.secondName}`,
+        })),
+      ],
+    },
+    {
+      name: "itp",
+      type: "number",
+      validator: { required: true },
+    },
+    {
+      name: "note",
+      type: "textarea",
+      direction: "rtl",
+      validator: { required: true },
+    },
+    {
+      name: "description",
+      type: "textarea",
+      direction: "rtl",
+      validator: { required: true },
+    },
+    {
+      name: "managerFeedback",
+      type: "textarea",
+      direction: "rtl",
+    },
+  ];
+  const status = 1;
   const {
     handleSubmit,
     register,
     formState: { errors },
-    reset,
   } = useForm();
   const onSubmit = async (data) => {
-    console.log({ selectedImages, tasks, ...data });
+    setFormLoading(true);
+    try {
+      const res = await axiosInstance.post(`/api/quality-check/`, {
+        attachments: selectedImages,
+        tasks,
+        contractId,
+        projectId,
+        workItemId: workItem.workItemId._id,
+        ...data,
+        isDraft: qcAsDraft,
+        status,
+      });
+      if (res.status === 201) {
+        setFormLoading(false);
+        toast.success("Quality Check created successfully");
+        setIsQCPointForm(false);
+      }
+    } catch (error) {
+      setFormLoading(false);
+      toast.error(error.message);
+    }
   };
   const handleImageInput = () => {
     if (imageInput.current) {
       imageInput.current.click();
     }
   };
-
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
@@ -122,7 +198,6 @@ const QualityControlForm = ({
   const removeImage = (index) => {
     setSelectedImages(selectedImages.filter((_, i) => i !== index));
   };
-  const status = 1;
   return (
     <div className="fixed top-0 left-0 bg-black/60 w-screen h-screen flex items-center justify-center">
       <div className="bg-white w-3/4 h-[90vh] overflow-y-auto scrollbar rounded p-4 flex flex-col gap-4 sm:gap-6">
@@ -170,10 +245,11 @@ const QualityControlForm = ({
                   className={field.type === "textarea" ? "col-span-2" : ""}>
                   {field.type === "select" ? (
                     <Input
+                      id={field.name}
                       label={t(
                         `DetailsWorkLine.line.tabs.quality.form.${field.name}`
                       )}
-                      register={register(field.name)}
+                      register={register(field.name, field.validator)}
                       errors={errors}
                       placeholder={t(
                         `DetailsWorkLine.line.tabs.quality.form.placeholders.${field.name}`
@@ -183,14 +259,19 @@ const QualityControlForm = ({
                       )}
                       name={field.name}
                       className="w-full p-2 border rounded"
-                      options={t(
-                        `DetailsWorkLine.line.tabs.quality.form.options.${field.name}`,
-                        {
-                          returnObjects: true,
-                        }
-                      )}></Input>
+                      options={
+                        field.options
+                          ? field.options
+                          : t(
+                              `DetailsWorkLine.line.tabs.quality.form.options.${field.name}`,
+                              {
+                                returnObjects: true,
+                              }
+                            )
+                      }></Input>
                   ) : field.type === "textarea" ? (
                     <Textarea
+                      id={field.name}
                       label={t(
                         `DetailsWorkLine.line.tabs.quality.form.${field.name}`
                       )}
@@ -201,17 +282,18 @@ const QualityControlForm = ({
                         `DetailsWorkLine.line.tabs.quality.form.errorMessages.${field.name}`
                       )}
                       className="w-full p-2 border rounded"
-                      register={register(field.name)}
+                      register={register(field.name, field.validator)}
                       errors={errors}
                       rows="4"
                       dir={field.direction || "ltr"}></Textarea>
                   ) : (
                     <Input
+                      id={field.name}
                       label={t(
                         `DetailsWorkLine.line.tabs.quality.form.${field.name}`
                       )}
                       type={field.type}
-                      register={register(field.name)}
+                      register={register(field.name, field.validator)}
                       errors={errors}
                       placeholder={t(
                         `DetailsWorkLine.line.tabs.quality.form.placeholders.${field.name}`
@@ -227,9 +309,6 @@ const QualityControlForm = ({
               ))}
             </div>
             {/* Attachments */}
-            {/* Attachments */}
-            <div className="" onClick={() => handleImageInput()}></div>
-
             <div>
               <label className="block mb-1">
                 {t("DetailsWorkLine.line.tabs.quality.form.attachments")}
@@ -250,7 +329,7 @@ const QualityControlForm = ({
               />
 
               {selectedImages.length > 0 && (
-                <div className="grid grid-cols-3 gap-2 mt-4">
+                <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 mt-4">
                   {selectedImages.map((src, index) => (
                     <div key={index} className="relative">
                       <img
@@ -275,12 +354,26 @@ const QualityControlForm = ({
               setActiveAddForm={setActiveAddForm}
             />
             <div className="flex justify-between gap-4">
-              <Button type="submit" className="px-4 py-2 rounded flex-1">
-                {t("DetailsWorkLine.line.tabs.quality.form.submit")}
+              <Button
+                disabled={formLoading}
+                type="submit"
+                className="px-4 py-2 rounded flex-1">
+                {formLoading ? (
+                  <Loading />
+                ) : (
+                  t("DetailsWorkLine.line.tabs.quality.form.submit")
+                )}
               </Button>
               <Button
+                disabled={formLoading}
+                onClick={() => setQcAsDraft(true)}
                 type="submit"
                 className="!bg-gray-200 !text-gray-700 px-4 py-2 rounded flex-1">
+                {/* {formLoading ? (
+                  <Loading />
+                ) : (
+                  t("DetailsWorkLine.line.tabs.quality.form.save")
+                )} */}
                 {t("DetailsWorkLine.line.tabs.quality.form.save")}
               </Button>
             </div>

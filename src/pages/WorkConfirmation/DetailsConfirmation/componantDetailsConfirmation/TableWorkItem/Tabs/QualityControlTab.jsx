@@ -8,7 +8,7 @@ import { axiosInstance } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
 import { useTranslation } from "react-i18next";
 import QualityControlForm from "./QualityControlForm";
-const QualityControlTab = ({ workItem, refetch }) => {
+const QualityControlTab = ({ workItem, contractId, projectId, refetch }) => {
   // Translation
   const { t } = useTranslation();
   const [isQCPointForm, setIsQCPointForm] = useState(false);
@@ -64,6 +64,8 @@ const QualityControlTab = ({ workItem, refetch }) => {
           isLoading={isLoading}
           setIsQCPointForm={setIsQCPointForm}
           setIsLoading={setIsLoading}
+          contractId={contractId}
+          projectId={projectId}
           workItem={workItem}
         />
       )}
