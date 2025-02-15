@@ -4,8 +4,15 @@ import { toast } from "react-toastify";
 import Input from "../../../../../../../componant/elements/Input";
 import Textarea from "../../../../../../../componant/elements/Textarea";
 import Button from "../../../../../../../componant/elements/Button";
+import Loading from "../../../../../../../componant/Loading";
 
-const AddTaskFormQC = ({ workItemId, usersGroup, setActiveAddForm }) => {
+const AddTaskFormQC = ({
+  workItemId,
+  usersGroup,
+  setTasks,
+  tasks,
+  setActiveAddForm,
+}) => {
   const [formLoading, setFormLoading] = useState(false);
 
   const {
@@ -14,8 +21,11 @@ const AddTaskFormQC = ({ workItemId, usersGroup, setActiveAddForm }) => {
     handleSubmit,
   } = useForm();
   const onSubmit = async (data) => {
-    setFormLoading(true);
-    console.log({ ...data, workItemId });
+    console.log(data);
+
+    setFormLoading(false);
+    setActiveAddForm(false);
+    setTasks([...tasks, { ...data, workItemId }]);
   };
   return (
     <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center md:p-4 bg-black/30">
@@ -49,7 +59,7 @@ const AddTaskFormQC = ({ workItemId, usersGroup, setActiveAddForm }) => {
             id="assignee"
             type="text"
             options={usersGroup.map((user) => ({
-              value: user._id,
+              value: `${user.firstName} ${user.secondName}, ${user._id}`,
               text: `${user.firstName} ${user.secondName}`,
             }))}
             errors={errors}

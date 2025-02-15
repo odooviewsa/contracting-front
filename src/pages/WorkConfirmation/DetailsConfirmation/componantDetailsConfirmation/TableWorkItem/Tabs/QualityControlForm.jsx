@@ -1,64 +1,80 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   IoAddOutline,
   IoCalendarClearOutline,
   IoCameraOutline,
   IoCloseOutline,
   IoPersonOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import Button from "../../../../../../componant/Button";
+import Button from "../../../../../../componant/elements/Button";
 import Input from "../../../../../../componant/elements/Input";
 import Textarea from "../../../../../../componant/elements/Textarea";
 import StatusTimeline from "./QualityControlComponents/statusTimeline";
-import AddTaskForm from "./AddTaskForm";
 import AddTaskFormQC from "./QualityControlComponents/AddTaskFormQC";
-const TaskList = ({ tasks, setActiveAddForm }) => (
-  <div className="mt-4">
-    <div className="flex justify-between items-center mb-4">
-      <h4 className="font-semibold">Related Tasks</h4>
-      <button
-        className="flex items-center space-x-1 text-blue-500"
-        onClick={() => setActiveAddForm(true)}>
-        <IoAddOutline className="h-4 w-4" />
-        <span>Add Task</span>
-      </button>
-    </div>
-    <div className="space-y-2">
-      {tasks.map((task, index) => (
-        <div key={index} className="p-3 bg-gray-50 rounded-lg">
-          <div className="flex justify-between items-start">
-            <div>
-              <h5 className="font-semibold">{task.title}</h5>
-              <p className="text-sm text-gray-600">{task.description}</p>
+import { toast } from "react-toastify";
+const TaskList = ({ tasks, setTasks, setActiveAddForm }) => {
+  const handleDelete = (index) => {
+    setTasks(tasks.filter((_, i) => i !== index));
+    toast.success("Task deleted successfully!");
+  };
+  return (
+    <div className="mt-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold">Related Tasks</h4>
+        <button
+          className="flex items-center space-x-1 text-blue-500"
+          onClick={() => setActiveAddForm(true)}>
+          <IoAddOutline className="h-4 w-4" />
+          <span>Add Task</span>
+        </button>
+      </div>
+      <div className="space-y-2">
+        {tasks.map((task, index) => (
+          <div key={index} className="p-3 bg-gray-50 rounded-lg">
+            <div className="flex justify-between items-start">
+              <div>
+                <h5 className="font-semibold">{task.name}</h5>
+                <p className="text-sm text-gray-600">{task.description}</p>
+              </div>
+              <div className="flex gap-2 items-center">
+                <span
+                  className={`px-2 py-1 rounded text-xs ${
+                    task.priority === "high"
+                      ? "bg-red-100 text-red-700"
+                      : task.priority === "medium"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-green-100 text-green-700"
+                  }`}>
+                  {task.priority}
+                </span>
+                <span>
+                  <IoTrashOutline
+                    onClick={() => handleDelete(index)}
+                    size={18}
+                    className="text-grayColor hover:text-red-500 cursor-pointer"
+                  />
+                </span>
+              </div>
             </div>
-            <span
-              className={`px-2 py-1 rounded text-xs ${
-                task.priority === "high"
-                  ? "bg-red-100 text-red-700"
-                  : task.priority === "medium"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-green-100 text-green-700"
-              }`}>
-              {task.priority}
-            </span>
+            <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+              <div className="flex items-center">
+                <IoPersonOutline className="h-4 w-4 mr-1" />
+                {task.assignee.split(",")[0]}
+              </div>
+              <div className="flex items-center">
+                <IoCalendarClearOutline className="h-4 w-4 mr-1" />
+                {task.startDate}
+              </div>
+            </div>
           </div>
-          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-            <div className="flex items-center">
-              <IoPersonOutline className="h-4 w-4 mr-1" />
-              {task.assignee}
-            </div>
-            <div className="flex items-center">
-              <IoCalendarClearOutline className="h-4 w-4 mr-1" />
-              {task.dueDate}
-            </div>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const formFields = [
   { name: "noteRelation", type: "select" },
@@ -79,6 +95,9 @@ const QualityControlForm = ({
   // Translation
   const { t } = useTranslation();
   const [activeAddForm, setActiveAddForm] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const imageInput = useRef(null);
   const {
     handleSubmit,
     register,
@@ -86,17 +105,22 @@ const QualityControlForm = ({
     reset,
   } = useForm();
   const onSubmit = async (data) => {
-    setIsLoading(true);
-    let res = await axiosInstance.put(
-      `/api/work/${workItem?.workItemId._id}/details`,
-      data
-    );
-    if (res.statusText === "OK") {
-      refetch();
-      setIsLoading(false);
-      setIsQCPointForm(false);
-      reset();
+    console.log({ selectedImages, tasks, ...data });
+  };
+  const handleImageInput = () => {
+    if (imageInput.current) {
+      imageInput.current.click();
     }
+  };
+
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    setSelectedImages((prev) => [...prev, ...imageUrls]);
+  };
+
+  const removeImage = (index) => {
+    setSelectedImages(selectedImages.filter((_, i) => i !== index));
   };
   const status = 1;
   return (
@@ -203,33 +227,73 @@ const QualityControlForm = ({
               ))}
             </div>
             {/* Attachments */}
+            {/* Attachments */}
+            <div className="" onClick={() => handleImageInput()}></div>
+
             <div>
               <label className="block mb-1">
                 {t("DetailsWorkLine.line.tabs.quality.form.attachments")}
               </label>
-              <div className="cursor-pointer border-2 border-dashed rounded-lg p-4 text-center flex items-center justify-center flex-col text-grayColor">
+              <div
+                onClick={handleImageInput}
+                className="hover:border-blue-500 hover:text-black transition-all cursor-pointer border-2 border-dashed rounded-lg p-4 text-center flex items-center justify-center flex-col text-grayColor">
                 <IoCameraOutline size={32} />
                 <p>{t("DetailsWorkLine.line.tabs.quality.form.attachments")}</p>
               </div>
+              <input
+                ref={imageInput}
+                type="file"
+                multiple
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+
+              {selectedImages.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  {selectedImages.map((src, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={src}
+                        alt="Selected"
+                        className="w-full h-24 object-cover rounded"
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1">
+                        <IoCloseOutline size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             {/* Tasks List */}
-            <TaskList tasks={[]} setActiveAddForm={setActiveAddForm} />
-            {activeAddForm && (
-              <AddTaskFormQC
-                setActiveAddForm={setActiveAddForm}
-                workItemId={workItem.workItemId._id}
-                usersGroup={workItem.workItemId.userId.usersGroup}
-              />
-            )}
+            <TaskList
+              tasks={tasks}
+              setTasks={setTasks}
+              setActiveAddForm={setActiveAddForm}
+            />
             <div className="flex justify-between gap-4">
-              <Button className="px-4 py-2 rounded flex-1">
+              <Button type="submit" className="px-4 py-2 rounded flex-1">
                 {t("DetailsWorkLine.line.tabs.quality.form.submit")}
               </Button>
-              <Button className="!bg-gray-200 !text-gray-700 px-4 py-2 rounded flex-1">
+              <Button
+                type="submit"
+                className="!bg-gray-200 !text-gray-700 px-4 py-2 rounded flex-1">
                 {t("DetailsWorkLine.line.tabs.quality.form.save")}
               </Button>
             </div>
           </form>
+          {activeAddForm && (
+            <AddTaskFormQC
+              setTasks={setTasks}
+              tasks={tasks}
+              setActiveAddForm={setActiveAddForm}
+              workItemId={workItem.workItemId._id}
+              usersGroup={workItem.workItemId.userId.usersGroup}
+            />
+          )}
         </div>
       </div>
     </div>
