@@ -2000,7 +2000,7 @@ const TranslationEnglish = {
           form: {
             formTitle: "Quality Check - {{quality}}",
             project: "Project Name",
-            contract: "Contract Name",
+            contract: "Contract Code",
             date: "Date",
             noteRelation: "Note Relation",
             correctionStatus: "Correction Status",

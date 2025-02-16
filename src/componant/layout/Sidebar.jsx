@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaRegWindowRestore } from "react-icons/fa";
 import { GiExplosiveMaterials } from "react-icons/gi";
 import { FaProductHunt } from "react-icons/fa6";
-import { IoPeople } from "react-icons/io5";
+import { IoPeople, IoWarningOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { ImProfile } from "react-icons/im";
@@ -134,6 +134,15 @@ export default function Sidebar({ setOpenSidebar, openSidebar }) {
           }`}>
           <FaTasks size={20} />
           {openSidebar && <h1>{t("Sidebar.tasks")}</h1>}
+        </Link>
+        {/* Quality Check Page */}
+        <Link
+          to={`/${user?.companyName}/qualityCheck`}
+          className={`flex items-center gap-2 text-grayColor p-3 ${
+            pathname.includes("qualityCheck") && "activeSidebar"
+          }`}>
+          <IoWarningOutline size={20} />
+          {openSidebar && <h1>{t("Sidebar.qualityCheck")}</h1>}
         </Link>
         <p
           onClick={() => setOpenMenu(!openMenu)}

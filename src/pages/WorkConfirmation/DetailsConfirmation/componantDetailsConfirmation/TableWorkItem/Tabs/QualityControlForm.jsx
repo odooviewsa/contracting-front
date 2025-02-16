@@ -17,6 +17,7 @@ import AddTaskFormQC from "./QualityControlComponents/AddTaskFormQC";
 import { toast } from "react-toastify";
 import { axiosInstance } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
+import moment from "moment";
 const TaskList = ({ tasks, setTasks, setActiveAddForm }) => {
   const handleDelete = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
@@ -92,6 +93,7 @@ const QualityControlForm = ({
   const [selectedImages, setSelectedImages] = useState([]);
   const [qcAsDraft, setQcAsDraft] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [draftLoading, setDraftingLoading] = useState(false);
   const imageInput = useRef(null);
   const formFields = [
     { name: "noteRelation", type: "select", validator: { required: true } },
@@ -162,13 +164,17 @@ const QualityControlForm = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    setFormLoading(true);
+    if (qcAsDraft) {
+      setDraftingLoading(true);
+    } else {
+      setFormLoading(true);
+    }
     try {
       const res = await axiosInstance.post(`/api/quality-check/`, {
         attachments: selectedImages,
         tasks,
-        contractId,
-        projectId,
+        contractId: contractId._id,
+        projectId: projectId._id,
         workItemId: workItem.workItemId._id,
         ...data,
         isDraft: qcAsDraft,
@@ -176,6 +182,7 @@ const QualityControlForm = ({
       });
       if (res.status === 201) {
         setFormLoading(false);
+        setDraftingLoading(false);
         toast.success("Quality Check created successfully");
         setIsQCPointForm(false);
       }
@@ -194,13 +201,12 @@ const QualityControlForm = ({
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setSelectedImages((prev) => [...prev, ...imageUrls]);
   };
-
   const removeImage = (index) => {
     setSelectedImages(selectedImages.filter((_, i) => i !== index));
   };
   return (
     <div className="fixed top-0 left-0 bg-black/60 w-screen h-screen flex items-center justify-center">
-      <div className="bg-white w-3/4 h-[90vh] overflow-y-auto scrollbar rounded p-4 flex flex-col gap-4 sm:gap-6">
+      <div className="bg-white sm:w-3/4 h-screen sm:h-[90vh] overflow-y-auto scrollbar rounded p-4 flex flex-col gap-4 sm:gap-6">
         <div className="flex items-center justify-between">
           <button className="cursor-pointer">
             <IoCloseOutline size={18} onClick={() => setIsQCPointForm(false)} />
@@ -220,29 +226,39 @@ const QualityControlForm = ({
               quality: "QA-00005",
             })}
           </h4>
-          <div className="flex justify-between *:font-medium">
+          <div className="flex justify-between *:font-medium flex-col md:flex-row">
             <p>
               {t("DetailsWorkLine.line.tabs.quality.form.date")}:{" "}
-              <span className="text-grayColor font-normal">15-2-2025</span>
+              <span className="text-grayColor font-normal">
+                {moment().format("YYYY-MM-DD")}
+              </span>
             </p>
             <div className="flex flex-col gap-1">
               <p>
                 {t("DetailsWorkLine.line.tabs.quality.form.project")}:{" "}
-                <span className="text-grayColor font-normal">test 1</span>
+                <span className="text-grayColor font-normal">
+                  {projectId.projectName}
+                </span>
               </p>
               <p>
                 {t("DetailsWorkLine.line.tabs.quality.form.contract")}:{" "}
-                <span className="text-grayColor font-normal">6</span>
+                <span className="text-grayColor font-normal">
+                  {contractId.code}
+                </span>
               </p>
             </div>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Fields */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-rows-2 grid-cols-1 md:grid-cols-2 gap-4">
               {formFields.map((field, index) => (
                 <div
                   key={index}
-                  className={field.type === "textarea" ? "col-span-2" : ""}>
+                  className={
+                    field.type === "textarea"
+                      ? "col-span-2"
+                      : "col-span-2 md:col-span-1"
+                  }>
                   {field.type === "select" ? (
                     <Input
                       id={field.name}
@@ -329,7 +345,7 @@ const QualityControlForm = ({
               />
 
               {selectedImages.length > 0 && (
-                <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 mt-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 mt-4">
                   {selectedImages.map((src, index) => (
                     <div key={index} className="relative">
                       <img
@@ -353,11 +369,11 @@ const QualityControlForm = ({
               setTasks={setTasks}
               setActiveAddForm={setActiveAddForm}
             />
-            <div className="flex justify-between gap-4">
+            <div className="flex flex-col md:flex-row justify-between gap-4">
               <Button
                 disabled={formLoading}
                 type="submit"
-                className="px-4 py-2 rounded flex-1">
+                className="px-4 py-2 rounded flex-1 flex items-center justify-center">
                 {formLoading ? (
                   <Loading />
                 ) : (
@@ -365,15 +381,15 @@ const QualityControlForm = ({
                 )}
               </Button>
               <Button
-                disabled={formLoading}
+                disabled={draftLoading}
                 onClick={() => setQcAsDraft(true)}
                 type="submit"
-                className="!bg-gray-200 !text-gray-700 px-4 py-2 rounded flex-1">
-                {/* {formLoading ? (
+                className="!bg-gray-200 !text-gray-700 px-4 py-2 rounded flex-1 flex items-center justify-center">
+                {draftLoading ? (
                   <Loading />
                 ) : (
                   t("DetailsWorkLine.line.tabs.quality.form.save")
-                )} */}
+                )}
                 {t("DetailsWorkLine.line.tabs.quality.form.save")}
               </Button>
             </div>

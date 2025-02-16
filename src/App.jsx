@@ -52,6 +52,7 @@ import BusinessGuaranteeReport from "./pages/Reports/BusinessesGuarantee/Busines
 import ReportsPage from "./pages/Reports/ReportsPage.jsx";
 import WorkConfirmationReport from "./pages/Reports/WorkConfirmation/WorkConfirmationReport.jsx";
 import TasksPage from "./pages/Tasks/TasksPage.jsx";
+import QualityCheckPage from "./pages/qualityCheck/QualityCheckPage.jsx";
 
 function App() {
   // Multi Language
@@ -288,6 +289,10 @@ function App() {
         {
           path: ":companyName/tasks",
           element: <TasksPage />,
+        },
+        {
+          path: ":companyName/qualityCheck",
+          element: <QualityCheckPage />,
         },
       ],
     },

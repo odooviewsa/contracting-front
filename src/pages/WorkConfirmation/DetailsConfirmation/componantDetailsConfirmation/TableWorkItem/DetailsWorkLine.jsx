@@ -66,8 +66,8 @@ const DetailsWorkLine = ({
       content: (
         <QualityControlTab
           workItem={currentWorkItem}
-          contractId={workConfirmation.contractId._id}
-          projectId={workConfirmation.projectName._id}
+          contractId={workConfirmation.contractId}
+          projectId={workConfirmation.projectName}
           refetch={refetch}
         />
       ),

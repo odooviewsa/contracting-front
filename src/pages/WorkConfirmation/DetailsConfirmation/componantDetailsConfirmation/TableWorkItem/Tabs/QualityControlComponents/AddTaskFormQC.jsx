@@ -24,9 +24,8 @@ const AddTaskFormQC = ({
   const onSubmit = async (data) => {
     setFormLoading(false);
     setActiveAddForm(false);
-    setTasks([...tasks, { ...data, workItemId, userId }]);
+    setTasks([...tasks, { ...data, workItemId, userId, }]);
   };
-  console.log(tasks);
   return (
     <div className="fixed z-50 top-0 left-0 w-screen h-screen flex items-center justify-center md:p-4 bg-black/30">
       <form

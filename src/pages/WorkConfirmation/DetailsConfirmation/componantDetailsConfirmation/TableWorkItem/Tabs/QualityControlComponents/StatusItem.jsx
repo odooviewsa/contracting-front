@@ -9,7 +9,7 @@ const StatusItem = ({ number, text, status }) => {
         } rounded-full size-fit py-4 px-6 text-white font-medium `}>
         {number}
       </div>
-      <div className="text-grayColor">
+      <div className="text-grayColor text-sm text-center md:text-base">
         <p>{text}</p>
       </div>
     </div>

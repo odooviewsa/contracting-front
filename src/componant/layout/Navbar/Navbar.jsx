@@ -6,8 +6,10 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { IoChevronDownOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 export default function Navbar({ setOpenSidebar }) {
+  const user = useSelector((state) => state.user);
   const { i18n } = useTranslation();
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false); // State for language menu visibility
 
@@ -36,8 +38,7 @@ export default function Navbar({ setOpenSidebar }) {
         <div className="relative">
           <p
             className="flex items-center gap-1 cursor-pointer"
-            onClick={toggleLanguageMenu}
-          >
+            onClick={toggleLanguageMenu}>
             <IoChevronDownOutline size={14} />
             {i18n.language === "en" ? "English" : "عربي"}
           </p>
@@ -48,16 +49,14 @@ export default function Navbar({ setOpenSidebar }) {
               <li>
                 <button
                   onClick={() => handleLanguageChange("en")}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-200 text-primaryColor"
-                >
+                  className="w-full text-left px-4 py-2 hover:bg-gray-200 text-primaryColor">
                   English
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => handleLanguageChange("ar")}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-200 text-primaryColor"
-                >
+                  className="w-full text-left px-4 py-2 hover:bg-gray-200 text-primaryColor">
                   عربي
                 </button>
               </li>
@@ -67,7 +66,11 @@ export default function Navbar({ setOpenSidebar }) {
 
         <IoMdNotifications size={25} />
         <IoIosChatboxes size={25} />
-        <Avatar name={"Ahmed Rashad"} width={35} fontSize={13} />
+        <Avatar
+          name={`${user.firstName} ${user.secondName}`}
+          width={35}
+          fontSize={13}
+        />
       </div>
     </div>
   );

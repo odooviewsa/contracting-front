@@ -62,20 +62,20 @@ const ProductsManagement = () => {
       }
     },
   });
-
   const filteredProducts = useMemo(() => {
     if (!productsData || !productsData.products) return [];
 
     return productsData.products.filter((product) => {
       return (
         (filters.name === "" ||
-          product.name.toLowerCase().includes(filters.name.toLowerCase())) &&
+          product.name?.toLowerCase().includes(filters.name.toLowerCase())) &&
         (filters.category === "" ||
-          product.category._id === filters.category) &&
+          product.category?.["_id"] === filters.category) &&
         (filters.supplier === "" || product.supplier === filters.supplier)
       );
     });
   }, [productsData?.products, filters]);
+
   const handleAddProduct = () => {
     setSelectedProduct(null);
     setIsFormVisible(true);

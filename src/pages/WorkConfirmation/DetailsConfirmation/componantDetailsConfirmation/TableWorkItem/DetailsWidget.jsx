@@ -1,6 +1,7 @@
-const DetailsWidget = ({ widget }) => {
+const DetailsWidget = ({ widget, className = "" }) => {
   return (
-    <div className="flex items-center gap-8 bg-gray-100 rounded-lg p-4 border">
+    <div
+      className={`flex items-center gap-8 bg-gray-100 rounded-lg p-4 border ${className}`}>
       <div className={`p-2 rounded-lg bg-white ${widget.iconColor}`}>
         {widget.icon}
       </div>
