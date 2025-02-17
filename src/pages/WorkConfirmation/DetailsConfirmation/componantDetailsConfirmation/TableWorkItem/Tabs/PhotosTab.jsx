@@ -7,15 +7,12 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 import TabBody from "./TabBody";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState } from "react";
 import { axiosInstance, url } from "../../../../../../axios/axios";
 import Loading from "../../../../../../componant/Loading";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import Cropper from "react-easy-crop";
-import { IoClose, IoCheckmark } from "react-icons/io5";
 import ImageEditor from "../ImageEditor";
-import Tabs from "../../../../../../componant/layout/Tabs";
 import ColTabs from "../../../../../../componant/layout/ColTabs";
 import TasksTab from "./TasksTab";
 import CommentsTab from "./ImageTabs/CommentsTab";
@@ -44,7 +41,7 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
         t("DetailsWorkLine.line.tabs.photos.alerts", { returnObjects: true })[0]
       );
     }
-    if (files.length > 5) {
+    if (files.length > 10) {
       return toast.error(
         t("DetailsWorkLine.line.tabs.photos.alerts", { returnObjects: true })[1]
       );
@@ -58,14 +55,14 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
     setIsLoading(true);
     try {
       let res = await axiosInstance.post(
-        `/api/work/${workItem?.workItemId._id}/details`,
+        `/api/images?workItemId=${workItem?.workItemId._id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      if (res.statusText === "OK") {
-        refetch();
+      if (res.status === 201) {
+        imageRefetch();
         toast.success(
           t("DetailsWorkLine.line.tabs.photos.success", {
             returnObjects: true,
@@ -73,7 +70,7 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
         );
       }
     } catch (error) {
-      toast.error("حدث خطأ أثناء رفع الصورة.");
+      toast.error("An error occurred while uploading the image.");
     } finally {
       setIsLoading(false);
       event.target.value = "";
@@ -82,11 +79,9 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
 
   const handleRemoveImage = async (image) => {
     setIsLoading(true);
-    let res = await axiosInstance.delete(
-      `/api/work/${workItem?.workItemId._id}/details?image=${image}`
-    );
+    let res = await axiosInstance.delete(`/api/images/${image}`);
     if (res.status === 204) {
-      refetch();
+      imageRefetch();
       setIsLoading(false);
       toast.success(
         t("DetailsWorkLine.line.tabs.photos.success", {
@@ -148,6 +143,25 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
       }
     },
   });
+
+  // Fetch images
+  const {
+    data: images,
+    isLoading: imageLoading,
+    refetch: imageRefetch,
+  } = useQuery({
+    queryKey: ["getImagesByWorkItemId", workItem.workItemId._id],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/api/images?workItemId=${workItem.workItemId._id}`
+        );
+        return res.data;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
+  });
   const tabData = [
     {
       title: "Crop Image",
@@ -160,7 +174,7 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
               setIsEditing({ isActive: false });
             }}
             workItem={workItem}
-            refetch={refetch}
+            refetch={imageRefetch}
             onCancel={() => setIsEditing({ isActive: false })}
           />
         </div>
@@ -193,7 +207,7 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
   ];
   return (
     <TabBody
-      title={t("DetailsWorkLine.line.tabs.photos.text")}
+      title={<h3 className="lead">{t("DetailsWorkLine.line.tabs.photos.text")}</h3>}
       button={
         <div>
           <button
@@ -217,10 +231,10 @@ const PhotosTab = ({ workItem, refetch, setLineDetails }) => {
           />
         </div>
       }>
-      {!isLoading ? (
+      {!imageLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {workItem?.workItemId?.images.length > 0 ? (
-            workItem?.workItemId?.images.map((image, key) => {
+          {images.length > 0 ? (
+            images.map((image, key) => {
               return (
                 <div
                   key={key}

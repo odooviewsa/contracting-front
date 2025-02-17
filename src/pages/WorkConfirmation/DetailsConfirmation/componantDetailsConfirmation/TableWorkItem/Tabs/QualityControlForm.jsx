@@ -91,6 +91,7 @@ const QualityControlForm = ({
   const [activeAddForm, setActiveAddForm] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImagesValues, setSelectedImagesValues] = useState([]);
   const [qcAsDraft, setQcAsDraft] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
   const [draftLoading, setDraftingLoading] = useState(false);
@@ -170,16 +171,37 @@ const QualityControlForm = ({
       setFormLoading(true);
     }
     try {
-      const res = await axiosInstance.post(`/api/quality-check/`, {
-        attachments: selectedImages,
-        tasks,
-        contractId: contractId._id,
-        projectId: projectId._id,
-        workItemId: workItem.workItemId._id,
-        ...data,
-        isDraft: qcAsDraft,
-        status,
+      const formData = new FormData();
+
+      // إضافة الملفات إلى FormData
+      selectedImagesValues.forEach((file) => {
+        formData.append("attachments", file); // إضافة كل ملف
       });
+
+      // إضافة البيانات النصية إلى FormData
+      Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      });
+
+      // إضافة البيانات الأخرى إلى FormData
+      formData.append("tasks", JSON.stringify(tasks));
+      formData.append("contractId", contractId._id); // تأكد من أن contractId موجود وصحيح
+      formData.append("projectId", projectId._id); // تأكد من أن projectId موجود وصحيح
+      formData.append("workItemId", workItem.workItemId._id);
+      formData.append("isDraft", qcAsDraft);
+      formData.append("status", status);
+      // التحقق من محتوى FormData
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      // إرسال FormData مباشرة
+      const res = await axiosInstance.post(`/api/quality-check/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // تأكد من تعيين الرأس الصحيح
+        },
+      });
+
       if (res.status === 201) {
         setFormLoading(false);
         setDraftingLoading(false);
@@ -191,6 +213,7 @@ const QualityControlForm = ({
       toast.error(error.message);
     }
   };
+
   const handleImageInput = () => {
     if (imageInput.current) {
       imageInput.current.click();
@@ -198,11 +221,13 @@ const QualityControlForm = ({
   };
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
+    setSelectedImagesValues((prev) => [...prev, ...files]);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setSelectedImages((prev) => [...prev, ...imageUrls]);
   };
   const removeImage = (index) => {
     setSelectedImages(selectedImages.filter((_, i) => i !== index));
+    setSelectedImagesValues(selectedImagesValues.filter((_, i) => i !== index));
   };
   return (
     <div className="fixed top-0 left-0 bg-black/60 w-screen h-screen flex items-center justify-center">
@@ -248,7 +273,10 @@ const QualityControlForm = ({
               </p>
             </div>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4"
+            encType="multipart/form-data">
             {/* Fields */}
             <div className="grid grid-rows-2 grid-cols-1 md:grid-cols-2 gap-4">
               {formFields.map((field, index) => (

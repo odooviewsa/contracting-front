@@ -37,14 +37,7 @@ const createImage = (url) =>
     image.onload = () => resolve(image);
     image.onerror = (error) => reject(error);
   });
-const ImageEditor = ({
-  image,
-  onSave,
-  onCancel,
-  refetch,
-  oldImage,
-  workItem,
-}) => {
+const ImageEditor = ({ image, onSave, onCancel, refetch, oldImage }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -61,7 +54,7 @@ const ImageEditor = ({
 
     try {
       const response = await axiosInstance.put(
-        `/api/work/${workItem?.workItemId._id}/details?image=${oldImage}`,
+        `/api/images/${oldImage}`,
         formData,
         {
           headers: {
@@ -76,7 +69,9 @@ const ImageEditor = ({
         refetch();
       }
     } catch (error) {
-      toast.error("An error occurred while uploading the image.");
+      toast.error(
+        error.message || "An error occurred while uploading the image."
+      );
     }
   };
 
